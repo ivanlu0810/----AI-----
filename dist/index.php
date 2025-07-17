@@ -1,3 +1,12 @@
+<?php
+session_start();
+if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
+    header('Location: auth-login.html');
+    exit;
+}
+$username = $_SESSION['username'] ?? 'Unknown User';
+$email = $_SESSION['email'] ?? 'No email';
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -25,7 +34,7 @@
                 <div class="sidebar-header">
                     <div class="d-flex justify-content-between">
                         <div class="logo">
-                            <a href="index.html"><img src="assets/images/logo/logo.png" alt="Logo" srcset=""></a>
+                            <a href="index.php"><img src="assets/images/logo/logo.png" alt="Logo" srcset=""></a>
                         </div>
                         <div class="toggler">
                             <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
@@ -37,7 +46,7 @@
                         <li class="sidebar-title">Menu</li>
 
                         <li class="sidebar-item active ">
-                            <a href="index.html" class='sidebar-link'>
+                            <a href="index.php" class='sidebar-link'>
                                 <i class="bi bi-grid-fill"></i>
                                 <span>基本資料</span>
                             </a>
@@ -330,9 +339,6 @@
                                 <li class="submenu-item ">
                                     <a href="auth-forgot-password.html">Forgot Password</a>
                                 </li>
-                                <li class="submenu-item ">
-                                    <a href="logout.php">Logout</a>
-                                </li>
                             </ul>
                         </li>
 
@@ -600,8 +606,8 @@
                                         <img src="assets/images/faces/1.jpg" alt="Face 1">
                                     </div>
                                     <div class="ms-3 name">
-                                        <h5 class="font-bold" id="user-name">John Duck</h5>
-                                        <h6 class="text-muted mb-0" id="user-email">@johnducky</h6>
+                                        <h5 class="font-bold"><?php echo htmlspecialchars($username); ?></h5>
+                                        <h6 class="text-muted mb-0"><?php echo htmlspecialchars($email); ?></h6>
                                     </div>
                                 </div>
                             </div>
@@ -676,28 +682,6 @@
     <script src="assets/js/pages/dashboard.js"></script>
 
     <script src="assets/js/main.js"></script>
-    
-    <script>
-    // 載入用戶資訊
-    fetch('get_user_info.php')
-        .then(response => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                // 如果未登入，跳轉到登入頁面
-                window.location.href = 'auth-login.html';
-                throw new Error('Not logged in');
-            }
-        })
-        .then(data => {
-            // 更新用戶資訊
-            document.getElementById('user-name').textContent = data.username;
-            document.getElementById('user-email').textContent = data.email;
-        })
-        .catch(error => {
-            console.error('Error loading user info:', error);
-        });
-    </script>
 </body>
 
 </html> 
