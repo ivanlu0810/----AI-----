@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32">
+    <path style="stroke:none;fill-rule:nonzero;fill:#000;fill-opacity:1" d="M8 22a1.999 1.999 0 1 1 4 0v2a1.999 1.999 0 1 1-4 0Zm12-8a1.999 1.999 0 1 1 4 0v10a1.999 1.999 0 1 1-4 0Zm-6 4a1.999 1.999 0 1 1 4 0v6a1.999 1.999 0 1 1-4 0Zm0 0"/>
+    <path style="stroke:none;fill-rule:nonzero;fill:#000;fill-opacity:1" d="M8 3H6C3.79 3 2 4.79 2 7v21c0 2.21 1.79 4 4 4h20c2.21 0 4-1.79 4-4V7c0-2.21-1.79-4-4-4h-2v2h2c1.105 0 2 .895 2 2v21c0 1.105-.895 2-2 2H6c-1.105 0-2-.895-2-2V7c0-1.105.895-2 2-2h2Zm0 0"/>
+    <path style="stroke:none;fill-rule:nonzero;fill:#000;fill-opacity:1" d="M19 2c.55 0 1 .45 1 1v2c0 .55-.45 1-1 1h-6c-.55 0-1-.45-1-1V3c0-.55.45-1 1-1Zm-6-2a3 3 0 0 0-3 3v2a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V3a3 3 0 0 0-3-3Zm0 0"/>
+</svg>
