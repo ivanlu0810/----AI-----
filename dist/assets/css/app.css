@@ -26,17 +26,12 @@
 .stats-icon.morandi-cream {
   background-color: #dbd3c5;
 }
-
-.morandi-blue {
-  background-color: #9BA9B4;
+.goal-icon {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  font-size: 20px;
 }
 
-.morandi-green {
-  background-color: #A3B9A5;
-}
-
-.morandi-yellow {
-  background-color: #E6C07B;
-}
 
 
