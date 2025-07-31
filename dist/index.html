@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <!-- 組員上傳就要執行這段指令同步 git pull origin main -->
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -40,18 +39,18 @@
             background-color: #e83e8c;
             color: white;
         }
-
+        
         /* 確保主要內容區域可以滾動 */
         #main {
             overflow-y: auto !important;
             height: 100vh !important;
         }
-
+        
         /* 確保 PerfectScrollbar 能夠正常工作 */
         #main.ps {
             overflow: hidden !important;
         }
-
+        
         /* 確保內容足夠長以觸發滾動 */
         .page-content {
             min-height: 120vh !important;
@@ -541,7 +540,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div>                            
                             <div class="col-12 col-sm-6 col-md-6 col-lg-3">
                                 <div class="card">
                                     <div class="card-body d-flex justify-content-center align-items-center">
@@ -676,57 +675,46 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card text-center">
-                            <!-- 標題置中 -->
+                        <div class="card">
                             <div class="card-header">
-                                <h4 class="fw-bold mb-0">健康目標追蹤</h4>
+                                <h4>健康目標追蹤</h4>
                             </div>
-
                             <div class="card-content pb-4">
-
-                                <!-- 目標體重 -->
-                                <div class="goal-item d-flex flex-column align-items-center py-3">
-                                    <div class="goal-icon morandi-blue rounded-circle d-flex align-items-center justify-content-center"
+                                <div class="goal-item d-flex px-4 py-3">
+                                    <div class="goal-icon bg-primary rounded-circle d-flex align-items-center justify-content-center"
                                         style="width: 40px; height: 40px;">
                                         <i class="bi bi-target text-white"></i>
                                     </div>
-                                    <div class="goal-info text-center mt-2">
+                                    <div class="goal-info ms-3">
                                         <h6 class="mb-1">目標體重</h6>
                                         <p class="text-muted mb-0">70.0 kg</p>
                                     </div>
                                 </div>
-
-                                <!-- 目標體脂率 -->
-                                <div class="goal-item d-flex flex-column align-items-center py-3">
-                                    <div class="goal-icon morandi-green rounded-circle d-flex align-items-center justify-content-center"
+                                <div class="goal-item d-flex px-4 py-3">
+                                    <div class="goal-icon bg-success rounded-circle d-flex align-items-center justify-content-center"
                                         style="width: 40px; height: 40px;">
                                         <i class="bi bi-percent text-white"></i>
                                     </div>
-                                    <div class="goal-info text-center mt-2">
+                                    <div class="goal-info ms-3">
                                         <h6 class="mb-1">目標體脂率</h6>
                                         <p class="text-muted mb-0">15.0%</p>
                                     </div>
                                 </div>
-
-                                <!-- 目標肌肉量 -->
-                                <div class="goal-item d-flex flex-column align-items-center py-3">
-                                    <div class="goal-icon morandi-yellow rounded-circle d-flex align-items-center justify-content-center"
+                                <div class="goal-item d-flex px-4 py-3">
+                                    <div class="goal-icon bg-warning rounded-circle d-flex align-items-center justify-content-center"
                                         style="width: 40px; height: 40px;">
                                         <i class="bi bi-activity text-white"></i>
                                     </div>
-                                    <div class="goal-info text-center mt-2">
+                                    <div class="goal-info ms-3">
                                         <h6 class="mb-1">目標肌肉量</h6>
                                         <p class="text-muted mb-0">35.0 kg</p>
                                     </div>
                                 </div>
-
-                                <!-- 按鈕 -->
                                 <div class="px-4">
-                                    <button class="btn btn-block btn-xl btn-light-primary font-bold mt-3">設定目標</button>
+                                    <button class='btn btn-block btn-xl btn-light-primary font-bold mt-3'>設定目標</button>
                                 </div>
                             </div>
                         </div>
-
                         <div class="card">
                             <div class="card-header">
                                 <h4>身體組成比例</h4>
