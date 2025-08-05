@@ -482,7 +482,7 @@
                                             <!-- 文字內容 -->
                                             <div class="text-center">
                                                 <h6 class="text-muted font-semibold">記錄筆數</h6>
-                                                <h6 class="font-extrabold mb-0">0 筆</h6>
+                                                <h6 class="font-extrabold mb-0" id="total-records">0 筆</h6>
                                             </div>
                                         </div>
                                     </div>
@@ -902,7 +902,7 @@
             })
             .then(data => {
                 // 更新統計數據（顯示最新記錄）
-                document.getElementById('total-records').textContent = data.total_records;
+                document.getElementById('total-records').textContent = data.total_records + ' 筆';
                 document.getElementById('avg-weight').textContent = data.latest_weight + ' kg';
                 document.getElementById('avg-height').textContent = data.latest_height + ' cm';
                 document.getElementById('avg-skeletal').textContent = data.latest_skeletal_muscle + ' kg';
@@ -1287,7 +1287,7 @@
                         fetch('get_health_stats.php')
                             .then(response => response.json())
                             .then(data => {
-                                document.getElementById('total-records').textContent = data.total_records;
+                                document.getElementById('total-records').textContent = data.total_records + ' 筆';
                                 document.getElementById('avg-weight').textContent = data.latest_weight + ' kg';
                                 document.getElementById('avg-height').textContent = data.latest_height + ' cm';
                                 document.getElementById('avg-skeletal').textContent = data.latest_skeletal_muscle + ' kg';

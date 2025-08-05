@@ -814,7 +814,7 @@ $email = $_SESSION['email'] ?? 'No email';
             })
             .then(data => {
                 // 更新統計數據（顯示最新記錄）
-                document.getElementById('total-records').textContent = data.total_records;
+                document.getElementById('total-records').textContent = data.total_records + ' 筆';
                 document.getElementById('avg-weight').textContent = data.latest_weight + ' kg';
                 document.getElementById('avg-height').textContent = data.latest_height + ' cm';
                 document.getElementById('avg-skeletal').textContent = data.latest_skeletal_muscle + ' kg';
@@ -1199,7 +1199,7 @@ $email = $_SESSION['email'] ?? 'No email';
                     fetch('get_health_stats.php')
                         .then(response => response.json())
                         .then(data => {
-                            document.getElementById('total-records').textContent = data.total_records;
+                            document.getElementById('total-records').textContent = data.total_records + ' 筆';
                             document.getElementById('avg-weight').textContent = data.latest_weight + ' kg';
                             document.getElementById('avg-height').textContent = data.latest_height + ' cm';
                             document.getElementById('avg-skeletal').textContent = data.latest_skeletal_muscle + ' kg';
