@@ -121,26 +121,39 @@ async function sendMessage() {
   const text = input.value.trim();
   if (!text) return;
 
-  appendMessage(text, "user");
-  input.value = "";
+  appendMessage(text, 'user');
+  input.value = '';
+
+  // ✅ 只要包含「健康數據」就觸發
+  if (text.includes('健康數據')) {
+    const targetBtn = document.querySelector('button[data-bs-target="#addDataModal"]');
+    if (targetBtn) {
+      targetBtn.click(); // 觸發 click 事件
+    } else {
+      console.warn('找不到新增健康數據的按鈕');
+    }
+    return; // 不再呼叫 AI 回覆
+  }
 
   try {
-    const response = await fetch("https://jianshen-api.ngrok.app/api/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+    const response = await fetch('http://localhost:3001/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        messages: [{ role: "user", content: text }],
+        messages: [{ role: 'user', content: text }]
       }),
     });
 
     const data = await response.json();
-    const aiReply = data.choices?.[0]?.message?.content || "❌ 無法取得回覆";
-    appendMessage(aiReply, "bot");
+    const aiReply = data.choices?.[0]?.message?.content || '❌ 無法取得回覆';
+    appendMessage(aiReply, 'bot');
   } catch (err) {
-    console.error("錯誤：", err);
-    appendMessage("❌ 發送失敗，請稍後再試", "bot");
+    console.error('錯誤：', err);
+    appendMessage('❌ 發送失敗，請稍後再試', 'bot');
   }
 }
+
+
 
 // --------- 發送事件 ----------
 button.addEventListener("click", sendMessage);
