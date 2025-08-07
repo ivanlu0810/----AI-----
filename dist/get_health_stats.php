@@ -51,10 +51,6 @@ try {
     $latest_stmt->execute([':user_id' => $user_id]);
     $latest_record = $latest_stmt->fetch(PDO::FETCH_ASSOC);
     
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([':user_id' => $user_id]);
-    $stats = $stmt->fetch(PDO::FETCH_ASSOC);
-    
     // 格式化數據
     $response = [
         'total_records' => intval($stats['total_records']),

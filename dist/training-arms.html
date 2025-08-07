@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>手臂訓練 - 健習生</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/bootstrap.css">
+    <link rel="stylesheet" href="assets/vendors/iconly/bold.css">
+    <link rel="stylesheet" href="assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
+    <link rel="stylesheet" href="assets/vendors/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="assets/css/app.css">
+    <link rel="shortcut icon" href="assets/images/favicon.svg" type="image/x-icon">
+    
+    <style>
+        .training-card {
+            transition: transform 0.3s ease;
+        }
+        .training-card:hover {
+            transform: translateY(-5px);
+        }
+        .exercise-item {
+            border-left: 4px solid #435ebe;
+            padding-left: 15px;
+            margin-bottom: 15px;
+        }
+        .progress-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: conic-gradient(#435ebe 0deg, #435ebe 180deg, #e9ecef 180deg, #e9ecef 360deg);
+            position: relative;
+        }
+        .progress-circle::before {
+            content: '';
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: white;
+            position: absolute;
+        }
+        .progress-text {
+            position: relative;
+            z-index: 1;
+            font-weight: bold;
+            color: #435ebe;
+        }
+        .muscle-group {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .exercise-demo {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .difficulty-badge {
+            font-size: 0.8em;
+            padding: 4px 8px;
+            border-radius: 12px;
+        }
+        .difficulty-beginner { background-color: #28a745; color: white; }
+        .difficulty-intermediate { background-color: #ffc107; color: black; }
+        .difficulty-advanced { background-color: #dc3545; color: white; }
+        
+        .exercise-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .muscle-anatomy {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        .training-hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .training-hero h2 {
+            margin-bottom: 15px;
+        }
+        .training-hero p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .exercise-card {
+            border: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .exercise-card:hover {
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div id="sidebar" class="active">
+            <div class="sidebar-wrapper active">
+                <div class="sidebar-header">
+                    <div class="d-flex justify-content-between">
+                        <div class="logo">
+                            <a href="index.html"><img src="assets/images/logo/logo.png" alt="Logo" srcset=""></a>
+                        </div>
+                        <div class="toggler">
+                            <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu">
+                    <ul class="menu">
+                        <li class="sidebar-title">Menu</li>
+
+                        <li class="sidebar-item">
+                            <a href="index.html" class='sidebar-link'>
+                                <i class="bi bi-grid-fill"></i>
+                                <span>基本資料</span>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-item active has-sub">
+                            <a href="#" class='sidebar-link'>
+                                <i class="bi bi-activity"></i>
+                                <span>訓練部位</span>
+                            </a>
+                            <ul class="submenu active">
+                                <li class="submenu-item active">
+                                    <a href="training-arms.html">手臂</a>
+                                </li>
+                                <li class="submenu-item">
+                                    <a href="training-chest.html">胸部</a>
+                                </li>
+                                <li class="submenu-item">
+                                    <a href="training-back.html">背部</a>
+                                </li>
+                                <li class="submenu-item">
+                                    <a href="training-legs.html">腿</a>
+                                </li>
+                                <li class="submenu-item">
+                                    <a href="training-abs.html">腹部</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="main">
+            <header class="mb-3">
+                <a href="#" class="burger-btn d-block d-xl-none">
+                    <i class="bi bi-justify fs-3"></i>
+                </a>
+            </header>
+            
+            <div class="page-heading">
+                <h3>手臂訓練</h3>
+            </div>
+            <div class="page-content">
+                <!-- 訓練英雄區域 -->
+                <section class="row">
+                    <div class="col-12">
+                        <div class="training-hero">
+                            <h2><i class="bi bi-lightning-fill"></i> 強健手臂訓練</h2>
+                            <p>打造強壯有力的手臂，提升整體力量表現</p>
+                            <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=400&fit=crop&crop=center" 
+                                 alt="手臂訓練" class="img-fluid rounded" style="max-height: 200px;">
+                        </div>
+                    </div>
+                </section>
+
+                <section class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">手臂肌肉群組</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="muscle-group">
+                                            <h5><i class="bi bi-lightning-fill"></i> 肱二頭肌 (Biceps)</h5>
+                                            <p class="mb-0">主要負責肘關節彎曲，是手臂前側的主要肌肉群</p>
+                                            <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=200&fit=crop&crop=center" 
+                                                 alt="肱二頭肌" class="muscle-anatomy">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="muscle-group">
+                                            <h5><i class="bi bi-lightning-fill"></i> 肱三頭肌 (Triceps)</h5>
+                                            <p class="mb-0">主要負責肘關節伸展，是手臂後側的主要肌肉群</p>
+                                            <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=200&fit=crop&crop=center" 
+                                                 alt="肱三頭肌" class="muscle-anatomy">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="row">
+                    <div class="col-12 col-lg-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">本週訓練計劃</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="card training-card exercise-card">
+                                            <div class="card-body">
+                                                <h6 class="card-title">初級訓練 (適合新手)</h6>
+                                                
+                                                <div class="exercise-item">
+                                                    <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=200&fit=crop&crop=center" 
+                                                         alt="啞鈴彎舉" class="exercise-image">
+                                                    <h6>1. 啞鈴彎舉 <span class="badge difficulty-beginner">初級</span></h6>
+                                                    <p>3組 x 12次</p>
+                                                    <div class="exercise-demo">
+                                                        <small><i class="bi bi-info-circle"></i> 站立，雙手各持啞鈴，彎曲肘關節將啞鈴舉至肩部</small>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="exercise-item">
+                                                    <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=200&fit=crop&crop=center" 
+                                                         alt="啞鈴錘式彎舉" class="exercise-image">
+                                                    <h6>2. 啞鈴錘式彎舉 <span class="badge difficulty-beginner">初級</span></h6>
+                                                    <p>3組 x 10次</p>
+                                                    <div class="exercise-demo">
+                                                        <small><i class="bi bi-info-circle"></i> 掌心相對，彎曲肘關節將啞鈴舉至肩部</small>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="exercise-item">
+                                                    <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=200&fit=crop&crop=center" 
+                                                         alt="三頭肌下壓" class="exercise-image">
+                                                    <h6>3. 三頭肌下壓 <span class="badge difficulty-beginner">初級</span></h6>
+                                                    <p>3組 x 12次</p>
+                                                    <div class="exercise-demo">
+                                                        <small><i class="bi bi-info-circle"></i> 使用繩索機，雙手向下推壓至手臂完全伸展</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card training-card exercise-card">
+                                            <div class="card-body">
+                                                <h6 class="card-title">進階訓練 (適合有經驗者)</h6>
+                                                
+                                                <div class="exercise-item">
+                                                    <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=200&fit=crop&crop=center" 
+                                                         alt="引體向上" class="exercise-image">
+                                                    <h6>1. 引體向上 <span class="badge difficulty-advanced">進階</span></h6>
+                                                    <p>4組 x 8-10次</p>
+                                                    <div class="exercise-demo">
+                                                        <small><i class="bi bi-info-circle"></i> 懸掛在單槓上，拉起身體至下巴超過槓桿</small>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="exercise-item">
+                                                    <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=200&fit=crop&crop=center" 
+                                                         alt="窄距伏地挺身" class="exercise-image">
+                                                    <h6>2. 窄距伏地挺身 <span class="badge difficulty-intermediate">中級</span></h6>
+                                                    <p>4組 x 15次</p>
+                                                    <div class="exercise-demo">
+                                                        <small><i class="bi bi-info-circle"></i> 雙手距離較窄，主要鍛鍊三頭肌</small>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="exercise-item">
+                                                    <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=200&fit=crop&crop=center" 
+                                                         alt="啞鈴過頭伸展" class="exercise-image">
+                                                    <h6>3. 啞鈴過頭伸展 <span class="badge difficulty-intermediate">中級</span></h6>
+                                                    <p>3組 x 12次</p>
+                                                    <div class="exercise-demo">
+                                                        <small><i class="bi bi-info-circle"></i> 雙手舉啞鈴過頭，彎曲肘關節將啞鈴放至頸後</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">訓練進度</h4>
+                            </div>
+                            <div class="card-body text-center">
+                                <div class="progress-circle mx-auto mb-3">
+                                    <div class="progress-text">
+                                        <div>75%</div>
+                                        <small>完成度</small>
+                                    </div>
+                                </div>
+                                <div class="row text-center">
+                                    <div class="col-6">
+                                        <h5 class="text-primary">12</h5>
+                                        <small>本週訓練次數</small>
+                                    </div>
+                                    <div class="col-6">
+                                        <h5 class="text-success">8</h5>
+                                        <small>連續訓練天數</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">訓練提醒</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="alert alert-info">
+                                    <i class="bi bi-clock"></i>
+                                    <strong>下次訓練時間：</strong><br>
+                                    明天 19:00
+                                </div>
+                                <div class="alert alert-warning">
+                                    <i class="bi bi-exclamation-triangle"></i>
+                                    <strong>注意事項：</strong><br>
+                                    • 訓練前請充分熱身<br>
+                                    • 注意動作標準性<br>
+                                    • 適度休息，避免過度訓練
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">訓練技巧與建議</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="text-center mb-3">
+                                            <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=200&fit=crop&crop=center" 
+                                                 alt="正確姿勢" class="img-fluid rounded mb-2">
+                                            <i class="bi bi-lightbulb text-warning" style="font-size: 2rem;"></i>
+                                            <h6 class="mt-2">正確姿勢</h6>
+                                            <p class="text-muted">保持背部挺直，避免搖擺，專注於目標肌肉的收縮</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="text-center mb-3">
+                                            <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=200&fit=crop&crop=center" 
+                                                 alt="控制速度" class="img-fluid rounded mb-2">
+                                            <i class="bi bi-speedometer2 text-info" style="font-size: 2rem;"></i>
+                                            <h6 class="mt-2">控制速度</h6>
+                                            <p class="text-muted">動作要緩慢且受控，避免快速甩動，確保肌肉充分參與</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="text-center mb-3">
+                                            <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=200&fit=crop&crop=center" 
+                                                 alt="漸進負荷" class="img-fluid rounded mb-2">
+                                            <i class="bi bi-arrow-repeat text-success" style="font-size: 2rem;"></i>
+                                            <h6 class="mt-2">漸進負荷</h6>
+                                            <p class="text-muted">隨著能力提升，逐步增加重量或次數，持續挑戰肌肉</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    <script src="assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/mazer.js"></script>
+</body>
+</html> 
