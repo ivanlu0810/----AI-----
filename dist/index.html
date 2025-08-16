@@ -6,21 +6,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>健習生</title>
-    <link rel="icon" href="dist/images/fitness.png" type="image/png">
+    <link rel="icon" href="images/fitness.png" type="image/png">
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/bootstrap.css">
-
     <link rel="stylesheet" href="assets/vendors/iconly/bold.css">
 
-    <link rel="stylesheet" href="assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="assets/css/app.css">
 
-
     <link rel="stylesheet" href="assets/css/chatbox.css" />
     <link rel="shortcut icon" href="assets/images/favicon.svg" type="image/x-icon">
+
     <style>
         .stats-icon.orange {
             background-color: #ff9500;
@@ -44,19 +42,20 @@
 
         /* 確保主要內容區域可以滾動 */
         #main {
-            overflow-y: auto !important;
             height: 100vh !important;
-        }
-
-        /* 確保 PerfectScrollbar 能夠正常工作 */
-        #main.ps {
-            overflow: hidden !important;
+            overflow-y: auto !important;
         }
 
         /* 確保內容足夠長以觸發滾動 */
         .page-content {
             min-height: 120vh !important;
             padding-bottom: 200px !important;
+        }
+
+        html,
+        body {
+            height: 100%;
+            overflow: hidden;
         }
     </style>
 </head>
@@ -102,19 +101,19 @@
                     <ul class="menu">
                         <li class="sidebar-title">Menu</li>
 
-                        <li class="sidebar-item active ">
+                        <li class="sidebar-item active">
                             <a href="index.html" class='sidebar-link'>
-                                <i class="bi bi-grid-fill"></i>
+                                <i class="bi bi-person-badge-fill"></i>
                                 <span>基本資料</span>
                             </a>
                         </li>
 
-                        <li class="sidebar-item  has-sub">
+                        <li class="sidebar-item has-sub">
                             <a href="#" class='sidebar-link'>
                                 <i class="bi bi-activity"></i>
                                 <span>訓練部位</span>
                             </a>
-                            <ul class="submenu ">
+                            <ul class="submenu">
                                 <li class="submenu-item ">
                                     <a href="training-arms.html">手臂</a>
                                 </li>
@@ -133,6 +132,14 @@
                             </ul>
                         </li>
 
+                        <li class="sidebar-item">
+                            <a href="training.html" class='sidebar-link'>
+                                <i class="bi bi-file-earmark-medical-fill"></i>
+                                <span>訓練</span>
+                            </a>
+                        </li>
+
+                        <!-- 其他側邊欄項目保持不變 -->
                         <li class="sidebar-item  has-sub">
                             <a href="#" class='sidebar-link'>
                                 <i class="bi bi-collection-fill"></i>
@@ -432,9 +439,11 @@
                 <div class="d-flex align-items-center">
                     <h3 class="mb-0 me-3">基本資料
                     </h3>
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDataModal">
+                    <button class="btn btn-primary d-flex align-items-center" data-bs-toggle="modal"
+                        data-bs-target="#addDataModal">
                         <i class="bi bi-plus-circle me-2"></i>新增數據
                     </button>
+
                 </div>
             </div>
             <p class="text-muted mt-2 mb-4" style="font-size: 1rem;">
@@ -466,12 +475,10 @@
                                 <div class="card">
                                     <div class="card-body d-flex justify-content-center align-items-center">
                                         <div class="d-flex align-items-center">
-                                            <!-- 綠色 ICON -->
                                             <div class="stats-icon morandi-blue me-3">
                                                 <img src="icons/ruler-combined-solid.svg" alt="Ruler-Combined-Solid"
                                                     class="icon-svg white-filter">
                                             </div>
-                                            <!-- 文字內容 -->
                                             <div class="text-center">
                                                 <h6 class="text-muted font-semibold">身高</h6>
                                                 <h6 class="font-extrabold mb-0" id="avg-height">0.0 cm</h6>
@@ -484,12 +491,10 @@
                                 <div class="card">
                                     <div class="card-body d-flex justify-content-center align-items-center">
                                         <div class="d-flex align-items-center">
-                                            <!-- 藍色色 ICON -->
                                             <div class="stats-icon morandi-green me-3">
                                                 <img src="icons/speedometer2.svg" alt="speedometer2"
                                                     class="icon-svg white-filter">
                                             </div>
-                                            <!-- 文字內容 -->
                                             <div class="text-center">
                                                 <h6 class="text-muted font-semibold">體重</h6>
                                                 <h6 class="font-extrabold mb-0" id="avg-weight">0.0 kg</h6>
@@ -502,12 +507,10 @@
                                 <div class="card">
                                     <div class="card-body d-flex justify-content-center align-items-center">
                                         <div class="d-flex align-items-center">
-                                            <!-- 粉色 ICON -->
                                             <div class="stats-icon morandi-pink me-3">
                                                 <img src="icons/clipboard-account.svg" alt="clipboard-account"
                                                     class="icon-svg white-filter">
                                             </div>
-                                            <!-- 文字內容 -->
                                             <div class="text-center">
                                                 <h6 class="text-muted font-semibold">BMI</h6>
                                                 <h6 class="font-extrabold mb-0" id="avg-bmi">0.0</h6>
@@ -520,12 +523,10 @@
                                 <div class="card">
                                     <div class="card-body d-flex justify-content-center align-items-center">
                                         <div class="d-flex align-items-center">
-                                            <!-- 粉色 ICON -->
                                             <div class="stats-icon morandi-apricot me-3">
                                                 <img src="icons/fire-solid.svg" alt="muscle-gain"
                                                     class="icon-svg white-filter">
                                             </div>
-                                            <!-- 文字內容 -->
                                             <div class="text-center">
                                                 <h6 class="text-muted font-semibold">基礎代謝</h6>
                                                 <h6 class="font-extrabold mb-0" id="avg-metabolism">0 kcal</h6>
@@ -538,12 +539,10 @@
                                 <div class="card">
                                     <div class="card-body d-flex justify-content-center align-items-center">
                                         <div class="d-flex align-items-center">
-                                            <!-- 粉色 ICON -->
                                             <div class="stats-icon morandi-graygreen me-3">
                                                 <img src="icons/muscle-gain.svg" alt="muscle-gain"
                                                     class="icon-svg white-filter">
                                             </div>
-                                            <!-- 文字內容 -->
                                             <div class="text-center">
                                                 <h6 class="text-muted font-semibold">骨骼肌</h6>
                                                 <h6 class="font-extrabold mb-0" id="avg-skeletal">0.0 kg</h6>
@@ -556,12 +555,10 @@
                                 <div class="card">
                                     <div class="card-body d-flex justify-content-center align-items-center">
                                         <div class="d-flex align-items-center">
-                                            <!-- 粉色 ICON -->
                                             <div class="stats-icon morandi-gray me-3">
                                                 <img src="icons/pie-chart.svg" alt="muscle-gain"
                                                     class="icon-svg white-filter">
                                             </div>
-                                            <!-- 文字內容 -->
                                             <div class="text-center">
                                                 <h6 class="text-muted font-semibold">體脂肪</h6>
                                                 <h6 class="font-extrabold mb-0" id="avg-body-fat">0.0 kg</h6>
@@ -574,12 +571,10 @@
                                 <div class="card">
                                     <div class="card-body d-flex justify-content-center align-items-center">
                                         <div class="d-flex align-items-center">
-                                            <!-- 粉色 ICON -->
                                             <div class="stats-icon morandi-cream me-3">
                                                 <img src="icons/add-chart.svg" alt="muscle-gain"
                                                     class="icon-svg white-filter">
                                             </div>
-                                            <!-- 文字內容 -->
                                             <div class="text-center">
                                                 <h6 class="text-muted font-semibold">體脂率</h6>
                                                 <h6 class="font-extrabold mb-0" id="avg-fat-percentage">0.0%</h6>
@@ -711,11 +706,10 @@
             <footer>
                 <div class="footer clearfix mb-0 text-muted">
                     <div class="float-start">
-                        <p>2021 &copy; Mazer</p>
+                        <p>健習生</p>
                     </div>
                     <div class="float-end">
-                        <p>Crafted with <span class="text-danger"><i class="bi bi-heart"></i></span> by <a
-                                href="http://ahmadsaugi.com">A. Saugi</a></p>
+                        <p>謝昀倢 黃詠翰 呂沁垣 游博翔</p>
                     </div>
                 </div>
             </footer>

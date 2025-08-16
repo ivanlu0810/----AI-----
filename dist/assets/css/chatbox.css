@@ -1,23 +1,25 @@
-body {
+/*body {
   margin: 0;
   font-family: sans-serif;
   overflow: hidden;
-}
+}*/
+
 
 #chat-container {
     position: relative;
     height: 0; /* 不占空間 */
     width: 100%; /* 或跟內容區塊寬度一致 */
+    font-family: sans-serif;
   }
 
 .chat-icon {
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: 50px;
+    right: 50px;
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background-color: #0084ff;
+    background-color: #8fa0b0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -58,7 +60,7 @@ body {
 
 .chat-window .header {
   flex-shrink: 0;
-  background-color: #007bff;
+  background-color: #8fa0b0;
   color: white;
   padding: 10px;
   font-weight: bold;
@@ -97,7 +99,7 @@ body {
   white-space: nowrap;
   border-radius: 4px;
   border: none;
-  background-color: #007bff;
+  background-color: #8fa0b0;
   color: white;
   cursor: pointer;
 }

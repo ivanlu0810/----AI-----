@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>健習生｜訓練部位</title> <!-- 修改標題 -->
+    <link rel="icon" href="images/fitness.png" type="image/png">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/bootstrap.css">
+
+
+    <link rel="stylesheet" href="assets/vendors/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="assets/css/app.css">
+    <link rel="shortcut icon" href="assets/images/favicon.svg" type="image/x-icon">
+
+    <!-- 自定義樣式，用於人體圖和互動效果 -->
+    <style>
+        /*人體互動圖*/
+        #human-body-map-container {
+            width: 100%;
+            max-width: 500px;
+            margin: 10px auto 0 auto;
+            padding: 0;
+            background: none;
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+        #human-body-map-svg {
+            width: 90%;
+            height: auto;
+        }
+
+        /* SVG 身體部位預設樣式 */
+        /* SVG 身體部位預設樣式 */
+        #human-body-map-svg .body-part {
+            cursor: pointer;
+            fill: #dbe4ed;
+            transition: fill 0.3s ease, transform 0.2s ease;
+            stroke: #87959b;
+            stroke-width: 1.5;
+            /* 加粗一點 */
+            vector-effect: non-scaling-stroke;
+            /* ✨縮放時線寬不變細 */
+        }
+
+        /* Hover 動畫效果：把放大幅度稍微降低避免邊緣變糊 */
+        #human-body-map-svg .body-part:hover {
+            fill: #b0c1cc;
+            transform: scale(1.02);
+            /* 原本 1.05 → 1.02 :contentReference[oaicite:2]{index=2} */
+        }
+
+        /* 被選取時，線條再加粗一點（顏色維持預設深色） */
+        #human-body-map-svg .body-part.selected {
+            stroke-width: 2;
+        }
+
+        /*人體互動圖動畫*/
+        #human-body-map-container {
+            animation: fadeInUp 0.6s ease-out both;
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 提示框樣式 */
+        .tooltip-muscle-groups {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            pointer-events: none;
+            /* 讓滑鼠穿透 */
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 10;
+        }
+
+        .muscle-group-list {
+            margin-top: 0px;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        .muscle-group-item {
+            display: inline-block;
+            margin: 5px;
+            padding: 8px 15px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .muscle-group-item:hover {
+            background-color: #2f6bac;
+            color: white;
+        }
+
+        .equipment-display {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+        }
+
+        .equipment-card {
+            border: 1px solid #eee;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .equipment-card img {
+            max-width: 100px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        /* 確保主要內容區域可以滾動 */
+        #main {
+            height: 100vh !important;
+            overflow-y: auto !important;
+        }
+
+        /* 確保內容足夠長以觸發滾動 */
+        .page-content {
+            min-height: 120vh !important;
+            padding-bottom: 200px !important;
+        }
+
+        .section {
+            /* 將 min-height 應用到包含主要內容的 .section 元素 */
+            min-height: 120vh !important;
+            padding-bottom: 200px !important;
+        }
+
+        .muscle-popover {
+            position: absolute;
+            max-width: 320px;
+            background: #fff;
+            border: 1px solid #cdd4db;
+            border-radius: 10px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, .12);
+            padding: 12px 14px;
+            z-index: 20;
+        }
+
+        .muscle-popover h4 {
+            margin: 0 0 6px;
+            font-size: 1.05rem;
+        }
+
+        .muscle-popover p {
+            margin: 0 0 8px;
+            color: #4b5563;
+            line-height: 1.5;
+        }
+
+        .muscle-popover .close-btn {
+            position: absolute;
+            right: 8px;
+            top: 6px;
+            border: none;
+            background: transparent;
+            font-size: 18px;
+            cursor: pointer;
+            color: #6b7280;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="app">
+        <div id="sidebar" class="active">
+            <div class="sidebar-wrapper active">
+                <div class="sidebar-header">
+                    <div class="d-flex justify-content-between">
+                        <div class="logo">
+                            <a href="index.html"><img src="assets/images/logo/logo.png" alt="Logo" srcset=""></a>
+                        </div>
+                        <div class="toggler">
+                            <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu">
+                    <ul class="menu">
+                        <li class="sidebar-title">Menu</li>
+
+                        <li class="sidebar-item ">
+                            <a href="index.html" class='sidebar-link'>
+                                <i class="bi bi-person-badge-fill"></i>
+                                <span>基本資料</span>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-item has-sub">
+                            <a href="#" class='sidebar-link'>
+                                <i class="bi bi-activity"></i>
+                                <span>訓練部位</span>
+                            </a>
+                            <ul class="submenu">
+                                <li class="submenu-item ">
+                                    <a href="training-arms.html">手臂</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="training-chest.html">胸部</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="training-back.html">背部</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="training-legs.html">腿</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="training-abs.html">腹部</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="sidebar-item active">
+                            <a href="training.html" class='sidebar-link'>
+                                <i class="bi bi-file-earmark-medical-fill"></i>
+                                <span>訓練</span>
+                            </a>
+                        </li>
+
+                        <!-- 其他側邊欄項目保持不變 -->
+                        <li class="sidebar-item  has-sub">
+                            <a href="#" class='sidebar-link'>
+                                <i class="bi bi-collection-fill"></i>
+                                <span>Extra Components</span>
+                            </a>
+                            <ul class="submenu ">
+                                <li class="submenu-item ">
+                                    <a href="extra-component-avatar.html">Avatar</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="extra-component-sweetalert.html">Sweet Alert</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="extra-component-toastify.html">Toastify</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="extra-component-rating.html">Rating</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="extra-component-divider.html">Divider</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="sidebar-item  has-sub">
+                            <a href="#" class='sidebar-link'>
+                                <i class="bi bi-grid-1x2-fill"></i>
+                                <span>Layouts</span>
+                            </a>
+                            <ul class="submenu ">
+                                <li class="submenu-item ">
+                                    <a href="layout-default.html">Default Layout</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="layout-vertical-1-column.html">1 Column</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="layout-vertical-navbar.html">Vertical with Navbar</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="layout-horizontal.html">Horizontal Menu</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="sidebar-title">Forms &amp; Tables</li>
+
+                        <li class="sidebar-item  has-sub">
+                            <a href="#" class='sidebar-link'>
+                                <i class="bi bi-hexagon-fill"></i>
+                                <span>Form Elements</span>
+                            </a>
+                            <ul class="submenu ">
+                                <li class="submenu-item ">
+                                    <a href="form-element-input.html">Input</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="form-element-input-group.html">Input Group</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="form-element-select.html">Select</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="form-element-radio.html">Radio</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="form-element-checkbox.html">Checkbox</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="form-element-textarea.html">Textarea</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="sidebar-item  ">
+                            <a href="form-layout.html" class='sidebar-link'>
+                                <i class="bi bi-file-earmark-medical-fill"></i>
+                                <span>Form Layout</span>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-item  has-sub">
+                            <a href="#" class='sidebar-link'>
+                                <i class="bi bi-pen-fill"></i>
+                                <span>Form Editor</span>
+                            </a>
+                            <ul class="submenu ">
+                                <li class="submenu-item ">
+                                    <a href="form-editor-quill.html">Quill</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="form-editor-ckeditor.html">CKEditor</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="form-editor-summernote.html">Summernote</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="form-editor-tinymce.html">TinyMCE</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="sidebar-item  ">
+                            <a href="table.html" class='sidebar-link'>
+                                <i class="bi bi-grid-1x2-fill"></i>
+                                <span>Table</span>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-item  ">
+                            <a href="table-datatable.html" class='sidebar-link'>
+                                <i class="bi bi-file-earmark-spreadsheet-fill"></i>
+                                <span>Datatable</span>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-title">Extra UI</li>
+
+                        <li class="sidebar-item  has-sub">
+                            <a href="#" class='sidebar-link'>
+                                <i class="bi bi-pentagon-fill"></i>
+                                <span>Widgets</span>
+                            </a>
+                            <ul class="submenu ">
+                                <li class="submenu-item ">
+                                    <a href="ui-widgets-chatbox.html">Chatbox</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="ui-widgets-pricing.html">Pricing</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="ui-widgets-todolist.html">To-do List</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="sidebar-item  has-sub">
+                            <a href="#" class='sidebar-link'>
+                                <i class="bi bi-egg-fill"></i>
+                                <span>Icons</span>
+                            </a>
+                            <ul class="submenu ">
+                                <li class="submenu-item ">
+                                    <a href="ui-icons-bootstrap-icons.html">Bootstrap Icons </a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="ui-icons-fontawesome.html">Fontawesome</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="ui-icons-dripicons.html">Dripicons</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="sidebar-item  has-sub">
+                            <a href="#" class='sidebar-link'>
+                                <i class="bi bi-bar-chart-fill"></i>
+                                <span>Charts</span>
+                            </a>
+                            <ul class="submenu ">
+                                <li class="submenu-item ">
+                                    <a href="ui-chart-chartjs.html">ChartJS</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="ui-chart-apexcharts.html">Apexcharts</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="sidebar-item  ">
+                            <a href="ui-file-uploader.html" class='sidebar-link'>
+                                <i class="bi bi-cloud-arrow-up-fill"></i>
+                                <span>File Uploader</span>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-item  has-sub">
+                            <a href="#" class='sidebar-link'>
+                                <i class="bi bi-map-fill"></i>
+                                <span>Maps</span>
+                            </a>
+                            <ul class="submenu ">
+                                <li class="submenu-item ">
+                                    <a href="ui-map-google-map.html">Google Map</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="ui-map-jsvectormap.html">JS Vector Map</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="sidebar-title">Pages</li>
+
+                        <li class="sidebar-item  ">
+                            <a href="application-email.html" class='sidebar-link'>
+                                <i class="bi bi-envelope-fill"></i>
+                                <span>Email Application</span>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-item  ">
+                            <a href="application-chat.html" class='sidebar-link'>
+                                <i class="bi bi-chat-dots-fill"></i>
+                                <span>Chat Application</span>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-item  ">
+                            <a href="application-gallery.html" class='sidebar-link'>
+                                <i class="bi bi-image-fill"></i>
+                                <span>Photo Gallery</span>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-item  ">
+                            <a href="application-checkout.html" class='sidebar-link'>
+                                <i class="bi bi-basket-fill"></i>
+                                <span>Checkout Page</span>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-item  has-sub">
+                            <a href="#" class='sidebar-link'>
+                                <i class="bi bi-person-badge-fill"></i>
+                                <span>Authentication</span>
+                            </a>
+                            <ul class="submenu ">
+                                <li class="submenu-item ">
+                                    <a href="auth-login.html">Login</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="auth-register.html">Register</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="auth-forgot-password.html">Forgot Password</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="logout.php">Logout</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="sidebar-item  has-sub">
+                            <a href="#" class='sidebar-link'>
+                                <i class="bi bi-x-octagon-fill"></i>
+                                <span>Errors</span>
+                            </a>
+                            <ul class="submenu ">
+                                <li class="submenu-item ">
+                                    <a href="error-403.html">403</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="error-404.html">404</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="error-500.html">500</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="sidebar-title">Raise Support</li>
+
+                        <li class="sidebar-item  ">
+                            <a href="https://zuramai.github.io/mazer/docs" class='sidebar-link'>
+                                <i class="bi bi-life-preserver"></i>
+                                <span>Documentation</span>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-item  ">
+                            <a href="https://github.com/zuramai/mazer/blob/main/CONTRIBUTING.md" class='sidebar-link'>
+                                <i class="bi bi-puzzle"></i>
+                                <span>Contribute</span>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-item  ">
+                            <a href="https://github.com/zuramai/mazer#donate" class='sidebar-link'>
+                                <i class="bi bi-cash"></i>
+                                <span>Donate</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+                <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
+            </div>
+        </div>
+        <div id="main">
+            <header class="mb-3">
+                <a href="#" class="burger-btn d-block d-xl-none">
+                    <i class="bi bi-justify fs-3"></i>
+                </a>
+            </header>
+
+            <div class="page-heading">
+                <div class="page-title">
+                    <div class="row">
+                        <div class="col-12 col-md-6 order-md-1 order-last">
+                            <h3>點選想訓練的目標肌群</h3>
+                            <p class="text-muted mt-2 mb-4" style="font-size: 1rem;">
+                                以下是訓練部位說明，可依此作為訓練參考依據，協助規劃適合您的健身菜單。
+                            </p>
+                        </div>
+                        <div class="col-12 col-md-6 order-md-2 order-first">
+                            <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="index.html">首頁</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">訓練部位</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 主要內容區域 -->
+                <div class="container">
+                    <section class="section">
+
+                        <!-- 人體圖容器 -->
+                        <div id="human-body-map-container">
+                            <!-- 人體圖 SVG -->
+                            <svg id="human-body-map-svg" viewBox="0 0 400 600" xmlns="http://www.w3.org/2000/svg">
+                                <!-- 背部：放到最上面 -->
+                                <rect class="body-part" data-muscle="背部" x="160" y="90" width="80" height="160" rx="10"
+                                    fill="transparent" stroke="#999" stroke-dasharray="3,3" />
+
+                                <!-- 頭部 -->
+                                <ellipse class="body-part" data-muscle="頭頸" cx="200" cy="50" rx="30" ry="40"
+                                    fill="#dbe4ed" />
+
+                                <!-- 胸部 -->
+                                <path class="body-part" data-muscle="胸部"
+                                    d="M160 90 Q200 70 240 90 L240 150 Q200 170 160 150 Z" fill="#dbe4ed" />
+
+                                <!-- 腹部 -->
+                                <rect class="body-part" data-muscle="腹部" x="170" y="160" width="60" height="80" rx="8"
+                                    fill="#dbe4ed" />
+
+                                <!-- 左肩膀 -->
+                                <circle class="body-part" data-muscle="肩膀" cx="150" cy="100" r="25" fill="#dbe4ed" />
+
+                                <!-- 右肩膀 -->
+                                <circle class="body-part" data-muscle="肩膀" cx="250" cy="100" r="25" fill="#dbe4ed" />
+
+                                <!-- 左大臂 -->
+                                <ellipse class="body-part" data-muscle="大臂" cx="130" cy="140" rx="20" ry="40"
+                                    fill="#dbe4ed" />
+                                <!-- 左小臂 -->
+                                <ellipse class="body-part" data-muscle="小臂" cx="120" cy="200" rx="18" ry="35"
+                                    fill="#dbe4ed" />
+
+                                <!-- 右大臂 -->
+                                <ellipse class="body-part" data-muscle="大臂" cx="270" cy="140" rx="20" ry="40"
+                                    fill="#dbe4ed" />
+                                <!-- 右小臂 -->
+                                <ellipse class="body-part" data-muscle="小臂" cx="280" cy="200" rx="18" ry="35"
+                                    fill="#dbe4ed" />
+
+                                <!-- 臀部 -->
+                                <ellipse class="body-part" data-muscle="臀部" cx="200" cy="260" rx="40" ry="30"
+                                    fill="#dbe4ed" />
+
+                                <!-- 左大腿 -->
+                                <ellipse class="body-part" data-muscle="大腿" cx="180" cy="340" rx="25" ry="60"
+                                    fill="#dbe4ed" />
+
+                                <!-- 右大腿 -->
+                                <ellipse class="body-part" data-muscle="大腿" cx="220" cy="340" rx="25" ry="60"
+                                    fill="#dbe4ed" />
+
+                                <!-- 左小腿 -->
+                                <ellipse class="body-part" data-muscle="小腿" cx="180" cy="450" rx="20" ry="55"
+                                    fill="#dbe4ed" />
+
+                                <!-- 右小腿 -->
+                                <ellipse class="body-part" data-muscle="小腿" cx="220" cy="450" rx="20" ry="55"
+                                    fill="#dbe4ed" />
+                            </svg>
+                            <div id="muscle-popover-root"></div>
+
+                            <!-- 提示框 -->
+                            <div class="tooltip-muscle-groups" id="tooltip">點擊選擇目標肌群</div>
+                        </div>
+
+                        <!-- 選中肌群顯示 -->
+                        <div id="selected-muscle-display"
+                            style="margin-top: 20px; padding: 15px; background-color: #e9eff5; border-radius: 8px; display: none; border: 1px solid #cdd4db;">
+                            <h3>已選擇肌群：<span id="selected-muscle-name"></span></h3>
+                            <p id="selected-muscle-description"></p>
+                        </div>
+
+                        <!-- 推薦器材顯示區域 -->
+                        <div class="equipment-display" id="equipment-display" style="display: none;">
+                            <h3>推薦訓練器材</h3>
+                            <div id="equipment-list"></div>
+                        </div>
+
+                        <!-- 訓練計畫生成 -->
+                        <div style="margin-top: 30px; text-align: center;">
+                            <button class="btn btn-primary" id="generate-plan-btn" style="display: none;">
+                                <i class="fas fa-magic"></i>
+                                生成個人化訓練計畫
+                            </button>
+                        </div>
+
+                        <!-- 生成的訓練計畫顯示區域 -->
+                        <div id="training-plan-display"
+                            style="display: none; margin-top: 30px; padding: 20px; background-color: #f8f9fa; border-radius: 8px;">
+                            <h3><i class="fas fa-clipboard-list"></i> 您的個人化訓練計畫</h3>
+                            <div id="training-plan-content"></div>
+                        </div>
+                    </section>
+                </div>
+
+            </div>
+
+            <footer>
+                <div class="footer clearfix mb-0 text-muted">
+                    <div class="float-start">
+                        <p>健習生</p>
+                    </div>
+                    <div class="float-end">
+                        <p>謝昀倢 黃詠翰 呂沁垣 游博翔</p>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+    <script src="assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+
+    <script src="assets/js/main.js"></script>
+
+    <!-- 自定義 JavaScript 邏輯 -->
+    <script>
+        // 肌群資料庫
+        const muscleData = {
+            '頭頸': {
+                description: '頭頸部肌肉負責頭部和頸部的運動與穩定。',
+                equipment: [
+                    { name: '無', image: 'https://placehold.co/100x100?text=N/A', description: '主要以徒手或輕量訓練為主', alt: 'No specific equipment' }
+                ]
+            },
+            '胸部': {
+                description: '胸大肌是上半身的主要肌群，負責推、抱等動作。',
+                equipment: [
+                    { name: '槓鈴', image: 'https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/6503f51f-1bc9-466c-8630-f2e19a37ad1d.png', description: '胸推的經典器材', alt: 'Olympic barbell with weight plates for chest exercises' },
+                    { name: '啞鈴', image: 'https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/33e81f98-f774-4d4b-a5b5-815cfc7b8292.png', description: '靈活的胸部訓練', alt: 'Pair of adjustable dumbbells for chest workouts' },
+                    { name: '推胸機', image: 'https://placehold.co/100x100', description: '安全的胸部訓練', alt: 'Chest press machine in gym setting' }
+                ]
+            },
+            '背部': {
+                description: '背闊肌和菱形肌，負責拉的動作，維持良好體態。',
+                equipment: [
+                    { name: '引體向上桿', image: 'https://placehold.co/100x100', description: '背部訓練之王', alt: 'Pull-up bar mounted on gym wall' },
+                    { name: '划船機', image: 'https://placehold.co/100x100', description: '全面的背部訓練', alt: 'Cable rowing machine with padded seat' },
+                    { name: '拉背機', image: 'https://placehold.co/100x100', description: '針對背闊肌', alt: 'Lat pulldown machine with wide grip bar' }
+                ]
+            },
+            '肩膀': {
+                description: '三角肌分為前、中、後束，負責肩關節的各種動作。',
+                equipment: [
+                    { name: '啞鈴', image: 'https://placehold.co/100x100', description: '肩膀訓練必備', alt: 'Set of dumbbells arranged for shoulder exercises' },
+                    { name: '肩推機', image: 'https://placehold.co/100x100', description: '安全的肩膀訓練', alt: 'Shoulder press machine with adjustable seat' },
+                    { name: '拉力繩', image: 'https://placehold.co/100x100', description: '多角度肩膀訓練', alt: 'Resistance bands and cables for shoulder rehabilitation' }
+                ]
+            },
+            '大臂': {
+                description: '主要指肱二頭肌和肱三頭肌，負責手臂的彎曲和伸展。',
+                equipment: [
+                    { name: '啞鈴', image: 'https://placehold.co/100x100', description: '二頭彎舉、三頭伸展', alt: 'Dumbbells for bicep and tricep exercises' },
+                    { name: '槓鈴', image: 'https://placehold.co/100x100', description: '槓鈴彎舉、窄距臥推', alt: 'Barbell for arm exercises' },
+                    { name: '繩索機', image: 'https://placehold.co/100x100', description: '繩索彎舉、下壓', alt: 'Cable machine for arm workouts' }
+                ]
+            },
+            '小臂': {
+                description: '前臂肌群，負責手腕和手指的運動，增強握力。',
+                equipment: [
+                    { name: '啞鈴', image: 'https://placehold.co/100x100', description: '腕彎舉、反向腕彎舉', alt: 'Dumbbells for forearm exercises' },
+                    { name: '握力器', image: 'https://placehold.co/100x100', description: '增強握力', alt: 'Hand grip strengthener' },
+                    { name: '槓鈴', image: 'https://placehold.co/100x100', description: '農夫走路', alt: 'Barbell for farmer\'s walk' }
+                ]
+            },
+            '腹部': {
+                description: '核心肌群，包括腹直肌、腹斜肌，維持身體穩定。',
+                equipment: [
+                    { name: '瑜伽墊', image: 'https://placehold.co/100x100', description: '基礎腹部訓練', alt: 'Exercise mat rolled up for core workouts' },
+                    { name: '腹肌輪', image: 'https://placehold.co/100x100', description: '進階腹部訓練', alt: 'Ab wheel roller with dual handles for core strengthening' },
+                    { name: '仰臥起坐板', image: 'https://placehold.co/100x100', description: '針對腹直肌', alt: 'Adjustable sit-up bench with leg support' }
+                ]
+            },
+            '大腿': {
+                description: '股四頭肌和腿後肌群，是身體最大的肌群之一，負責行走、跳躍等。',
+                equipment: [
+                    { name: '深蹲架', image: 'https://placehold.co/100x100', description: '深蹲、硬舉', alt: 'Power rack with safety bars for squats' },
+                    { name: '腿推機', image: 'https://placehold.co/100x100', description: '安全的腿部訓練', alt: 'Leg press machine with angled platform' },
+                    { name: '腿彎舉機', image: 'https://placehold.co/100x100', description: '針對腿後肌群', alt: 'Leg curl machine for hamstring exercises' }
+                ]
+            },
+            '小腿': {
+                description: '小腿三頭肌，負責踝關節的蹠屈，影響行走和跑步。',
+                equipment: [
+                    { name: '提踵機', image: 'https://placehold.co/100x100', description: '站姿或坐姿提踵', alt: 'Calf raise machine' },
+                    { name: '啞鈴', image: 'https://placehold.co/100x100', description: '啞鈴提踵', alt: 'Dumbbells for calf raises' },
+                    { name: '階梯', image: 'https://placehold.co/100x100?text=Stair', description: '階梯提踵', alt: 'Stair for calf exercises' }
+                ]
+            },
+            '臀部': {
+                description: '臀大肌是身體最大的肌肉，負責髖關節的伸展。',
+                equipment: [
+                    { name: '深蹲架', image: 'https://placehold.co/100x100', description: '臀部訓練經典', alt: 'Squat rack with Olympic barbell for glute training' },
+                    { name: '臀橋墊', image: 'https://placehold.co/100x100', description: '專門的臀部訓練', alt: 'Hip thrust bench with barbell pad' },
+                    { name: '阻力帶', image: 'https://placehold.co/100x100', description: '啟動臀部肌肉', alt: 'Resistance loop bands for glute activation exercises' }
+                ]
+            }
+        };
+
+        // 訓練計畫模板
+        const trainingPlans = {
+            '頭頸': {
+                exercises: [
+                    { name: '頸部伸展', sets: '3組', reps: '15-20次', rest: '30秒' },
+                    { name: '頸部等長收縮', sets: '3組', reps: '保持10-15秒', rest: '30秒' }
+                ],
+                tips: ['動作輕柔，避免過度拉伸', '感受肌肉的輕微張力', '配合緩慢呼吸']
+            },
+            '胸部': {
+                exercises: [
+                    { name: '槓鈴胸推', sets: '4組', reps: '8-12次', rest: '90秒' },
+                    { name: '啞鈴飛鳥', sets: '3組', reps: '10-15次', rest: '60秒' },
+                    { name: '伏地挺身', sets: '3組', reps: '至力竭', rest: '60秒' },
+                    { name: '胸肌夾胸', sets: '3組', reps: '12-15次', rest: '45秒' }
+                ],
+                tips: ['動作要慢，感受肌肉收縮', '呼吸要配合動作節奏', '重量循序漸進']
+            },
+            '背部': {
+                exercises: [
+                    { name: '引體向上', sets: '4組', reps: '5-10次', rest: '120秒' },
+                    { name: '槓鈴划船', sets: '4組', reps: '8-12次', rest: '90秒' },
+                    { name: '拉背下拉', sets: '3組', reps: '10-15次', rest: '60秒' },
+                    { name: '單臂啞鈴划船', sets: '3組', reps: '12次/邊', rest: '60秒' }
+                ],
+                tips: ['注意背部挺直', '感受背闊肌發力', '動作軌跡要標準']
+            },
+            '肩膀': {
+                exercises: [
+                    { name: '啞鈴肩推', sets: '4組', reps: '8-12次', rest: '90秒' },
+                    { name: '啞鈴側平舉', sets: '3組', reps: '12-15次', rest: '60秒' },
+                    { name: '啞鈴前平舉', sets: '3組', reps: '12-15次', rest: '60秒' },
+                    { name: '俯身啞鈴飛鳥', sets: '3組', reps: '15次', rest: '45秒' }
+                ],
+                tips: ['動作要控制好', '不要使用過重的重量', '三個角度都要練到']
+            },
+            '大臂': {
+                exercises: [
+                    { name: '槓鈴彎舉', sets: '4組', reps: '8-12次', rest: '60秒' },
+                    { name: '啞鈴三頭臂屈伸', sets: '4組', reps: '10-15次', rest: '60秒' },
+                    { name: '錘式彎舉', sets: '3組', reps: '10-12次', rest: '45秒' },
+                    { name: '繩索下壓', sets: '3組', reps: '12-15次', rest: '45秒' }
+                ],
+                tips: ['動作幅度要完整', '避免借力', '二頭三頭要均衡發展']
+            },
+            '小臂': {
+                exercises: [
+                    { name: '啞鈴腕彎舉', sets: '3組', reps: '15-20次', rest: '45秒' },
+                    { name: '啞鈴反向腕彎舉', sets: '3組', reps: '15-20次', rest: '45秒' },
+                    { name: '農夫走路', sets: '3組', reps: '走30-60秒', rest: '60秒' }
+                ],
+                tips: ['動作緩慢控制', '感受前臂肌肉收縮', '循序漸進增加重量']
+            },
+            '腹部': {
+                exercises: [
+                    { name: '捲腹', sets: '4組', reps: '15-20次', rest: '45秒' },
+                    { name: '俄羅斯轉體', sets: '3組', reps: '20次/邊', rest: '45秒' },
+                    { name: '平板支撐', sets: '3組', reps: '30-60秒', rest: '60秒' },
+                    { name: '懸垂舉腿', sets: '3組', reps: '10-15次', rest: '45秒' }
+                ],
+                tips: ['呼吸要配合動作', '注意腰椎保護', '動作要緩慢控制']
+            },
+            '大腿': {
+                exercises: [
+                    { name: '槓鈴深蹲', sets: '4組', reps: '8-12次', rest: '120秒' },
+                    { name: '腿推機', sets: '4組', reps: '10-15次', rest: '90秒' },
+                    { name: '羅馬尼亞硬舉', sets: '3組', reps: '10-12次', rest: '90秒' },
+                    { name: '腿部伸展機', sets: '3組', reps: '12-15次', rest: '60秒' }
+                ],
+                tips: ['深蹲時膝蓋不要內扣', '動作幅度要完整', '重視腿後肌群']
+            },
+            '小腿': {
+                exercises: [
+                    { name: '站姿提踵', sets: '4組', reps: '15-20次', rest: '45秒' },
+                    { name: '坐姿提踵', sets: '3組', reps: '15-20次', rest: '45秒' }
+                ],
+                tips: ['頂峰收縮，感受小腿肌肉緊繃', '動作要慢，控制好節奏', '可以嘗試單腿訓練']
+            },
+            '臀部': {
+                exercises: [
+                    { name: '臀橋', sets: '4組', reps: '15-20次', rest: '60秒' },
+                    { name: '保加利亞分腿蹲', sets: '3組', reps: '12次/邊', rest: '60秒' },
+                    { name: '側臥抬腿', sets: '3組', reps: '15次/邊', rest: '45秒' },
+                    { name: '深蹲', sets: '3組', reps: '15次', rest: '60秒' }
+                ],
+                tips: ['感受臀部發力', '動作要標準', '配合呼吸節奏']
+            }
+        };
+
+        let selectedMuscle = null;
+
+        // 初始化事件監聽
+        document.addEventListener('DOMContentLoaded', function () {
+            initializeBodyMap();
+            // initializeMuscleGroupList(); // 暫時移除，因為人體圖已經足夠直觀
+            initializeGeneratePlanButton();
+        });
+
+        // 初始化人體圖
+        function initializeBodyMap() {
+            const bodyParts = document.querySelectorAll('.body-part');
+            const tooltip = document.getElementById('tooltip');
+
+            bodyParts.forEach(part => {
+                // 滑鼠移入顯示提示
+                part.addEventListener('mouseenter', function (e) {
+                    const muscleName = this.getAttribute('data-muscle');
+                    tooltip.textContent = `點擊選擇：${muscleName}`;
+                    tooltip.style.opacity = '1';
+                });
+
+                // 滑鼠移動更新提示位置
+                part.addEventListener('mousemove', function (e) {
+                    const rect = document.getElementById('human-body-map-container').getBoundingClientRect();
+                    tooltip.style.left = (e.clientX - rect.left + 10) + 'px';
+                    tooltip.style.top = (e.clientY - rect.top - 30) + 'px';
+                });
+
+                // 滑鼠移出隱藏提示
+                part.addEventListener('mouseleave', function () {
+                    tooltip.style.opacity = '0';
+                });
+
+                // 點擊選擇肌群
+                part.addEventListener('click', function (e) {
+                    const muscleName = this.getAttribute('data-muscle');
+                    selectMuscleGroup(muscleName, e); // 把 event 傳進去
+                });
+
+            });
+        }
+
+        // 選擇肌群
+        function selectMuscleGroup(muscleName, evt) {
+            selectedMuscle = muscleName;
+            updateMuscleSelection(muscleName);
+
+            // 上方大卡不要自動顯示
+            const sel = document.getElementById('selected-muscle-display');
+            if (sel) sel.style.display = 'none';
+
+            // ★ 每次點新肌群：先把底下「推薦訓練器材」整塊收起來
+            const equip = document.getElementById('equipment-display');
+            if (equip) equip.style.display = 'none';
+
+            // ★ 同時把「生成個人訓練計畫」按鈕也隱藏
+            const genBtn = document.getElementById('generate-plan-btn');
+            if (genBtn) genBtn.style.display = 'none';
+
+            // ★ 也把舊的訓練計畫區塊收起（避免殘留）
+            const plan = document.getElementById('training-plan-display');
+            if (plan) plan.style.display = 'none';
+
+            // 只彈出 Popover，不自動展開底部
+            if (evt) showMusclePopover(muscleName, evt.clientX, evt.clientY);
+        }
+
+        // 更新肌群選擇的視覺狀態
+        function updateMuscleSelection(muscleName) {
+            // 重置：移除 selected 並清空可能的 inline 樣式，回到 CSS 預設
+            document.querySelectorAll('.body-part').forEach(part => {
+                part.classList.remove('selected');
+                part.style.fill = '';         // 用 CSS 預設 fill
+                part.style.stroke = '';       // 用 CSS 預設 stroke（#87959b）
+                part.style.strokeWidth = '';  // 用 CSS 預設線寬
+            });
+
+            // 高亮選中的部位：只改填色，不動邊線
+            document.querySelectorAll(`[data-muscle="${muscleName}"]`).forEach(part => {
+                part.classList.add('selected');
+                part.style.fill = '#b0bec5';  // 比原本略深一點，對比更好
+                // 不設定 stroke / strokeWidth，讓 CSS 接手（selected 會是 2px）
+            });
+        }
+
+        function showMusclePopover(muscleName, clientX, clientY) {
+            const root = document.getElementById('muscle-popover-root');
+            if (!root) return;
+            root.innerHTML = '';
+
+            // 取用原本的描述資料；沒有就給預設
+            const data = (typeof muscleData !== 'undefined' && muscleData[muscleName])
+                ? muscleData[muscleName]
+                : { description: '暫無描述' };
+
+            // 建立 Popover（保留描述 + 只有「查看器材」按鈕）
+            const pop = document.createElement('div');
+            pop.className = 'muscle-popover';
+            pop.innerHTML = `
+    <button class="close-btn" aria-label="close">&times;</button>
+    <h4>已選擇肌群：${muscleName}</h4>
+    <p>${data.description || ''}</p>
+    <div style="margin-top:10px; display:flex; gap:8px; justify-content:flex-end;">
+      <button id="btn-open-equip" class="btn btn-sm btn-primary">查看器材</button>
+    </div>
+  `;
+            root.appendChild(pop);
+
+            // 定位（沿用你原本的容器）
+            const container = document.getElementById('human-body-map-container');
+            const rect = container.getBoundingClientRect();
+            let left = clientX - rect.left + 10;
+            let top = clientY - rect.top + 10;
+            pop.style.left = `${left}px`;
+            pop.style.top = `${top}px`;
+
+            // 關閉
+            pop.querySelector('.close-btn').addEventListener('click', () => root.innerHTML = '');
+
+            // 查看器材：展開底部清單，並在展開後才顯示「生成個人訓練計畫」按鈕
+            const openEquip = pop.querySelector('#btn-open-equip');
+            if (openEquip && typeof displayRecommendedEquipment === 'function') {
+                openEquip.addEventListener('click', () => {
+                    // 1) 產出/更新底部「推薦訓練器材」
+                    displayRecommendedEquipment(muscleName);
+                    const equip = document.getElementById('equipment-display');
+                    if (equip) {
+                        equip.style.display = ''; // 顯示
+                        equip.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                    // 2) 此時才顯示「生成個人訓練計畫」按鈕
+                    const genBtn = document.getElementById('generate-plan-btn');
+                    if (genBtn) genBtn.style.display = 'inline-block';
+
+                    // 3) 需要的話關閉彈窗（不想自動關就把下面這行註解）
+                    root.innerHTML = '';
+                });
+            }
+        }
+
+        // 顯示選中的肌群資訊
+        function displaySelectedMuscle(muscleName) {
+            const display = document.getElementById('selected-muscle-display');
+            const nameElement = document.getElementById('selected-muscle-name');
+            const descriptionElement = document.getElementById('selected-muscle-description');
+
+            nameElement.textContent = muscleName;
+            descriptionElement.textContent = muscleData[muscleName].description;
+            display.style.display = 'block';
+        }
+
+        // 顯示推薦器材
+        function displayRecommendedEquipment(muscleName) {
+            const display = document.getElementById('equipment-display');
+            const listElement = document.getElementById('equipment-list');
+
+            const equipment = muscleData[muscleName].equipment;
+            listElement.innerHTML = '';
+
+            if (equipment && equipment.length > 0) {
+                equipment.forEach(item => {
+                    const equipmentCard = document.createElement('div');
+                    equipmentCard.className = 'equipment-card';
+                    equipmentCard.innerHTML = `
+                        <img src="${item.image}" alt="${item.alt}" onerror="this.style.display='none'; this.nextElementSibling.textContent='圖片載入失敗';">
+                        <h4>${item.name}</h4>
+                        <p>${item.description}</p>
+                    `;
+                    listElement.appendChild(equipmentCard);
+                });
+                display.style.display = 'block';
+            } else {
+                listElement.innerHTML = '<p>此肌群暫無推薦器材。</p>';
+                display.style.display = 'block';
+            }
+        }
+
+        // 初始化生成計畫按鈕
+        function initializeGeneratePlanButton() {
+            const button = document.getElementById('generate-plan-btn');
+            button.addEventListener('click', generateTrainingPlan);
+        }
+
+        // 生成訓練計畫
+        function generateTrainingPlan() {
+            if (!selectedMuscle) return;
+
+            const plan = trainingPlans[selectedMuscle];
+            const display = document.getElementById('training-plan-display');
+            const content = document.getElementById('training-plan-content');
+
+            if (!plan) {
+                content.innerHTML = `<p>抱歉，目前沒有針對 ${selectedMuscle} 的訓練計畫。</p>`;
+                display.style.display = 'block';
+                display.scrollIntoView({ behavior: 'smooth' });
+                return;
+            }
+
+            let planHTML = `
+                <div style="margin-bottom: 20px;">
+                    <h4 style="color: #667eea; margin-bottom: 15px;">
+                        <i class="fas fa-target"></i> ${selectedMuscle}專項訓練計畫
+                    </h4>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <h5><i class="fas fa-list"></i> 訓練動作：</h5>
+                    <div style="display: grid; gap: 10px; margin-top: 10px;">
+            `;
+
+            plan.exercises.forEach((exercise, index) => {
+                planHTML += `
+                    <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #667eea;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <strong>${index + 1}. ${exercise.name}</strong>
+                            <span style="color: #666; font-size: 0.9rem;">${exercise.sets}</span>
+                        </div>
+                        <div style="margin-top: 5px; color: #666;">
+                            <span>次數：${exercise.reps}</span> | 
+                            <span>休息：${exercise.rest}</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            planHTML += `
+                    </div>
+                </div>
+                
+                <div>
+                    <h5><i class="fas fa-lightbulb"></i> 訓練小貼士：</h5>
+                    <ul style="margin-top: 10px; padding-left: 20px;">
+            `;
+
+            plan.tips.forEach(tip => {
+                planHTML += `<li style="margin-bottom: 5px; color: #666;">${tip}</li>`;
+            });
+
+            planHTML += `
+                    </ul>
+                </div>
+                
+                <div style="margin-top: 20px; padding: 15px; background: #e7f3ff; border-radius: 8px;">
+                    <p style="margin: 0; color: #0066cc; font-weight: 500;">
+                        <i class="fas fa-info-circle"></i> 
+                        建議每週進行2-3次此部位訓練，給肌肉充足的恢復時間。
+                    </p>
+                </div>
+            `;
+
+            content.innerHTML = planHTML;
+            display.style.display = 'block';
+
+            // 滾動到訓練計畫區域
+            display.scrollIntoView({ behavior: 'smooth' });
+        }
+        document.addEventListener("DOMContentLoaded", () => {
+            const currentPath = window.location.pathname.split("/").pop(); // 取得目前檔案名稱
+
+            document.querySelectorAll(".sidebar-item a").forEach(link => {
+                if (link.getAttribute("href") === currentPath) {
+                    link.parentElement.classList.add("active");
+
+                    // 如果是子選單，展開父層 has-sub
+                    const parentItem = link.closest(".has-sub");
+                    if (parentItem) {
+                        parentItem.classList.add("active");
+                        const submenu = parentItem.querySelector(".submenu");
+                        if (submenu) submenu.classList.add("active");
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
