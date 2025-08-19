@@ -17,31 +17,26 @@ function clamp(value, min, max) {
 }
 
 function syncChatWindowToIcon() {
-    const iconRect = chatIcon.getBoundingClientRect();
-    const wrapperRect = chatIcon.offsetParent.getBoundingClientRect(); // 相對外層 chat-container
-  
-    const chatWidth = chatWindow.offsetWidth || 300;
-    const left = iconRect.right - wrapperRect.left - chatWidth;
-    const top = iconRect.bottom - wrapperRect.top + 10;
-  
-    chatWindow.style.left = `${left}px`;
-    chatWindow.style.top = `${top}px`;
-  }
-  
-  
+  const iconRect = chatIcon.getBoundingClientRect();
+  const wrapperRect = chatIcon.offsetParent.getBoundingClientRect(); // 相對外層 chat-container
+
+  const chatWidth = chatWindow.offsetWidth || 300;
+  const left = iconRect.right - wrapperRect.left - chatWidth;
+  const top = iconRect.bottom - wrapperRect.top + 10;
+
+  chatWindow.style.left = `${left}px`;
+  chatWindow.style.top = `${top}px`;
+}
 
 window.onload = () => {
+  syncChatWindowToIcon();
+
+  // ✅ 監控 chatWindow 是否被手動 resize，若有則重新對齊
+  const resizeObserver = new ResizeObserver(() => {
     syncChatWindowToIcon();
-  
-    // ✅ 監控 chatWindow 是否被手動 resize，若有則重新對齊
-    const resizeObserver = new ResizeObserver(() => {
-      syncChatWindowToIcon();
-    });
-    resizeObserver.observe(chatWindow);
-  };
-  
-
-
+  });
+  resizeObserver.observe(chatWindow);
+};
 
 window.addEventListener("resize", syncChatWindowToIcon);
 
@@ -121,11 +116,11 @@ async function sendMessage() {
   const text = input.value.trim();
   if (!text) return;
 
-  appendMessage(text, 'user');
-  input.value = '';
+  appendMessage(text, "user");
+  input.value = "";
 
   // ✅ 只要包含「健康數據」就觸發
-  if (text.includes('健康數據')) {
+  /* if (text.includes('健康數據')) {
     const targetBtn = document.querySelector('button[data-bs-target="#addDataModal"]');
     if (targetBtn) {
       targetBtn.click(); // 觸發 click 事件
@@ -133,27 +128,40 @@ async function sendMessage() {
       console.warn('找不到新增健康數據的按鈕');
     }
     return; // 不再呼叫 AI 回覆
-  }
+  } */
 
   try {
-    const response = await fetch('http://localhost:3001/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    const response = await fetch("http://localhost:3001/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        messages: [{ role: 'user', content: text }]
+        messages: [{ role: "user", content: text }],
       }),
     });
 
     const data = await response.json();
-    const aiReply = data.choices?.[0]?.message?.content || '❌ 無法取得回覆';
-    appendMessage(aiReply, 'bot');
+    const aiReply = data.choices?.[0]?.message?.content || "❌ 無法取得回覆";
+
+    // ✅ 特殊指令處理：開啟健康數據 modal
+    if (aiReply === "__trigger_modal_addData__") {
+      const modalBtn = document.querySelector(
+        'button[data-bs-target="#addDataModal"]'
+      );
+      if (modalBtn) {
+        modalBtn.click(); // 直接觸發 modal 開啟
+      } else {
+        console.warn("找不到新增健康數據的按鈕");
+      }
+      return; // 不顯示訊息
+    }
+
+    // 🟢 一般訊息照常顯示
+    appendMessage(aiReply, "bot");
   } catch (err) {
-    console.error('錯誤：', err);
-    appendMessage('❌ 發送失敗，請稍後再試', 'bot');
+    console.error("錯誤：", err);
+    appendMessage("❌ 發送失敗，請稍後再試", "bot");
   }
 }
-
-
 
 // --------- 發送事件 ----------
 button.addEventListener("click", sendMessage);
