@@ -12,8 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 try {
     // 資料庫連接設定
-    $host = '127.0.0.1';
-    $port = '3307';
+    $host = '1.tcp.jp.ngrok.io';
+    $port = '20959';
     $dbname = 'test';
     $username = 'root'; // 請根據您的設定修改
     $password = ''; // 請根據您的設定修改
