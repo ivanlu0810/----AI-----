@@ -137,21 +137,16 @@
         }
 
         /* 確保主要內容區域可以滾動 */
+        /* === 修正雙捲軸：覆寫內層滾動與過大高度 === */
         #main {
-            height: 100vh !important;
-            overflow-y: auto !important;
+            height: auto !important;
+            overflow-y: visible !important;
         }
 
-        /* 確保內容足夠長以觸發滾動 */
-        .page-content {
-            min-height: 120vh !important;
-            padding-bottom: 200px !important;
-        }
-
+        .page-content,
         .section {
-            /* 將 min-height 應用到包含主要內容的 .section 元素 */
-            min-height: 120vh !important;
-            padding-bottom: 200px !important;
+            min-height: auto !important;
+            padding-bottom: 0 !important;
         }
 
         .muscle-popover {
@@ -297,6 +292,13 @@
             border: 1px solid #f5c6cb;
             border-radius: 8px;
         }
+
+        button.bg-transparent:focus,
+        button.bg-transparent:active,
+        button.bg-transparent:focus-visible {
+            outline: none !important;
+            box-shadow: none !important;
+        }
     </style>
 
 </head>
@@ -305,16 +307,7 @@
     <div id="app">
         <div id="sidebar" class="active">
             <div class="sidebar-wrapper active">
-                <div class="sidebar-header">
-                    <div class="d-flex justify-content-between">
-                        <div class="logo">
-                            <a href="index.html"><img src="assets/images/logo/logo.png" alt="Logo" srcset=""></a>
-                        </div>
-                        <div class="toggler">
-                            <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
-                        </div>
-                    </div>
-                </div>
+
                 <div class="sidebar-menu">
                     <ul class="menu">
                         <li class="sidebar-title">Menu</li>
@@ -326,34 +319,10 @@
                             </a>
                         </li>
 
-                        <li class="sidebar-item has-sub">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-activity"></i>
-                                <span>訓練部位</span>
-                            </a>
-                            <ul class="submenu">
-                                <li class="submenu-item ">
-                                    <a href="training-arms.html">手臂</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="training-chest.html">胸部</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="training-back.html">背部</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="training-legs.html">腿</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="training-abs.html">腹部</a>
-                                </li>
-                            </ul>
-                        </li>
-
                         <li class="sidebar-item active">
                             <a href="training.html" class='sidebar-link'>
                                 <i class="bi bi-file-earmark-medical-fill"></i>
-                                <span>訓練</span>
+                                <span>訓練部位</span>
                             </a>
                         </li>
 
@@ -689,9 +658,9 @@
                                 <ellipse class="body-part" data-muscle="頭頸" cx="200" cy="50" rx="30" ry="40"
                                     fill="#dbe4ed" />
 
-                                                                 <!-- 身體（胸部+背部） -->
-                                 <path class="body-part" data-muscle="身體"
-                                     d="M160 90 Q200 70 240 90 L240 150 Q200 170 160 150 Z" fill="#dbe4ed" />
+                                <!-- 胸部 -->
+                                <path class="body-part" data-muscle="胸部"
+                                    d="M160 90 Q200 70 240 90 L240 150 Q200 170 160 150 Z" fill="#dbe4ed" />
 
                                 <!-- 腹部 -->
                                 <rect class="body-part" data-muscle="腹部" x="170" y="160" width="60" height="80" rx="8"
@@ -756,14 +725,6 @@
                             <div id="equipment-list"></div>
                         </div>
 
-                        <!-- 訓練計畫生成 -->
-                        <div style="margin-top: 30px; text-align: center;">
-                            <button class="btn btn-primary" id="generate-plan-btn" style="display: none;">
-                                <i class="fas fa-magic"></i>
-                                生成個人化訓練計畫
-                            </button>
-                        </div>
-
                         <!-- 生成的訓練計畫顯示區域 -->
                         <div id="training-plan-display"
                             style="display: none; margin-top: 30px; padding: 20px; background-color: #f8f9fa; border-radius: 8px;">
@@ -794,176 +755,6 @@
 
     <!-- 自定義 JavaScript 邏輯 -->
     <script>
-        // 肌群資料庫
-        const muscleData = {
-            '頭頸': {
-                description: '頭頸部肌肉負責頭部和頸部的運動與穩定。',
-                equipment: [
-                    { name: '無', image: 'https://placehold.co/100x100?text=N/A', description: '主要以徒手或輕量訓練為主', alt: 'No specific equipment' }
-                ]
-            },
-            '身體': {
-                description: '身體核心區域，包括胸部和背部，是上半身的主要肌群。',
-                equipment: [
-                    { name: '槓鈴', image: 'https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/6503f51f-1bc9-466c-8630-f2e19a37ad1d.png', description: '胸推和划船的經典器材', alt: 'Olympic barbell with weight plates for chest and back exercises' },
-                    { name: '啞鈴', image: 'https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/33e81f98-f774-4d4b-a5b5-815cfc7b8292.png', description: '靈活的身體訓練', alt: 'Pair of adjustable dumbbells for chest and back workouts' },
-                    { name: '引體向上桿', image: 'https://placehold.co/100x100', description: '背部訓練之王', alt: 'Pull-up bar mounted on gym wall' }
-                ]
-            },
-            '背部': {
-                description: '背闊肌和菱形肌，負責拉的動作，維持良好體態。',
-                equipment: [
-                    { name: '引體向上桿', image: 'https://placehold.co/100x100', description: '背部訓練之王', alt: 'Pull-up bar mounted on gym wall' },
-                    { name: '划船機', image: 'https://placehold.co/100x100', description: '全面的背部訓練', alt: 'Cable rowing machine with padded seat' },
-                    { name: '拉背機', image: 'https://placehold.co/100x100', description: '針對背闊肌', alt: 'Lat pulldown machine with wide grip bar' }
-                ]
-            },
-            '肩膀': {
-                description: '三角肌分為前、中、後束，負責肩關節的各種動作。',
-                equipment: [
-                    { name: '啞鈴', image: 'https://placehold.co/100x100', description: '肩膀訓練必備', alt: 'Set of dumbbells arranged for shoulder exercises' },
-                    { name: '肩推機', image: 'https://placehold.co/100x100', description: '安全的肩膀訓練', alt: 'Shoulder press machine with adjustable seat' },
-                    { name: '拉力繩', image: 'https://placehold.co/100x100', description: '多角度肩膀訓練', alt: 'Resistance bands and cables for shoulder rehabilitation' }
-                ]
-            },
-            '大臂': {
-                description: '主要指肱二頭肌和肱三頭肌，負責手臂的彎曲和伸展。',
-                equipment: [
-                    { name: '啞鈴', image: 'https://placehold.co/100x100', description: '二頭彎舉、三頭伸展', alt: 'Dumbbells for bicep and tricep exercises' },
-                    { name: '槓鈴', image: 'https://placehold.co/100x100', description: '槓鈴彎舉、窄距臥推', alt: 'Barbell for arm exercises' },
-                    { name: '繩索機', image: 'https://placehold.co/100x100', description: '繩索彎舉、下壓', alt: 'Cable machine for arm workouts' }
-                ]
-            },
-            '小臂': {
-                description: '前臂肌群，負責手腕和手指的運動，增強握力。',
-                equipment: [
-                    { name: '啞鈴', image: 'https://placehold.co/100x100', description: '腕彎舉、反向腕彎舉', alt: 'Dumbbells for forearm exercises' },
-                    { name: '握力器', image: 'https://placehold.co/100x100', description: '增強握力', alt: 'Hand grip strengthener' },
-                    { name: '槓鈴', image: 'https://placehold.co/100x100', description: '農夫走路', alt: 'Barbell for farmer\'s walk' }
-                ]
-            },
-            '腹部': {
-                description: '核心肌群，包括腹直肌、腹斜肌，維持身體穩定。',
-                equipment: [
-                    { name: '瑜伽墊', image: 'https://placehold.co/100x100', description: '基礎腹部訓練', alt: 'Exercise mat rolled up for core workouts' },
-                    { name: '腹肌輪', image: 'https://placehold.co/100x100', description: '進階腹部訓練', alt: 'Ab wheel roller with dual handles for core strengthening' },
-                    { name: '仰臥起坐板', image: 'https://placehold.co/100x100', description: '針對腹直肌', alt: 'Adjustable sit-up bench with leg support' }
-                ]
-            },
-            '大腿': {
-                description: '股四頭肌和腿後肌群，是身體最大的肌群之一，負責行走、跳躍等。',
-                equipment: [
-                    { name: '深蹲架', image: 'https://placehold.co/100x100', description: '深蹲、硬舉', alt: 'Power rack with safety bars for squats' },
-                    { name: '腿推機', image: 'https://placehold.co/100x100', description: '安全的腿部訓練', alt: 'Leg press machine with angled platform' },
-                    { name: '腿彎舉機', image: 'https://placehold.co/100x100', description: '針對腿後肌群', alt: 'Leg curl machine for hamstring exercises' }
-                ]
-            },
-            '小腿': {
-                description: '小腿三頭肌，負責踝關節的蹠屈，影響行走和跑步。',
-                equipment: [
-                    { name: '提踵機', image: 'https://placehold.co/100x100', description: '站姿或坐姿提踵', alt: 'Calf raise machine' },
-                    { name: '啞鈴', image: 'https://placehold.co/100x100', description: '啞鈴提踵', alt: 'Dumbbells for calf raises' },
-                    { name: '階梯', image: 'https://placehold.co/100x100?text=Stair', description: '階梯提踵', alt: 'Stair for calf exercises' }
-                ]
-            },
-            '臀部': {
-                description: '臀大肌是身體最大的肌肉，負責髖關節的伸展。',
-                equipment: [
-                    { name: '深蹲架', image: 'https://placehold.co/100x100', description: '臀部訓練經典', alt: 'Squat rack with Olympic barbell for glute training' },
-                    { name: '臀橋墊', image: 'https://placehold.co/100x100', description: '專門的臀部訓練', alt: 'Hip thrust bench with barbell pad' },
-                    { name: '阻力帶', image: 'https://placehold.co/100x100', description: '啟動臀部肌肉', alt: 'Resistance loop bands for glute activation exercises' }
-                ]
-            }
-        };
-
-        // 訓練計畫模板
-        const trainingPlans = {
-            '頭頸': {
-                exercises: [
-                    { name: '頸部伸展', sets: '3組', reps: '15-20次', rest: '30秒' },
-                    { name: '頸部等長收縮', sets: '3組', reps: '保持10-15秒', rest: '30秒' }
-                ],
-                tips: ['動作輕柔，避免過度拉伸', '感受肌肉的輕微張力', '配合緩慢呼吸']
-            },
-            '身體': {
-                exercises: [
-                    { name: '槓鈴胸推', sets: '4組', reps: '8-12次', rest: '90秒' },
-                    { name: '引體向上', sets: '4組', reps: '5-10次', rest: '120秒' },
-                    { name: '啞鈴飛鳥', sets: '3組', reps: '10-15次', rest: '60秒' },
-                    { name: '槓鈴划船', sets: '4組', reps: '8-12次', rest: '90秒' }
-                ],
-                tips: ['動作要慢，感受肌肉收縮', '呼吸要配合動作節奏', '重量循序漸進', '胸背要均衡發展']
-            },
-            '背部': {
-                exercises: [
-                    { name: '引體向上', sets: '4組', reps: '5-10次', rest: '120秒' },
-                    { name: '槓鈴划船', sets: '4組', reps: '8-12次', rest: '90秒' },
-                    { name: '拉背下拉', sets: '3組', reps: '10-15次', rest: '60秒' },
-                    { name: '單臂啞鈴划船', sets: '3組', reps: '12次/邊', rest: '60秒' }
-                ],
-                tips: ['注意背部挺直', '感受背闊肌發力', '動作軌跡要標準']
-            },
-            '肩膀': {
-                exercises: [
-                    { name: '啞鈴肩推', sets: '4組', reps: '8-12次', rest: '90秒' },
-                    { name: '啞鈴側平舉', sets: '3組', reps: '12-15次', rest: '60秒' },
-                    { name: '啞鈴前平舉', sets: '3組', reps: '12-15次', rest: '60秒' },
-                    { name: '俯身啞鈴飛鳥', sets: '3組', reps: '15次', rest: '45秒' }
-                ],
-                tips: ['動作要控制好', '不要使用過重的重量', '三個角度都要練到']
-            },
-            '大臂': {
-                exercises: [
-                    { name: '槓鈴彎舉', sets: '4組', reps: '8-12次', rest: '60秒' },
-                    { name: '啞鈴三頭臂屈伸', sets: '4組', reps: '10-15次', rest: '60秒' },
-                    { name: '錘式彎舉', sets: '3組', reps: '10-12次', rest: '45秒' },
-                    { name: '繩索下壓', sets: '3組', reps: '12-15次', rest: '45秒' }
-                ],
-                tips: ['動作幅度要完整', '避免借力', '二頭三頭要均衡發展']
-            },
-            '小臂': {
-                exercises: [
-                    { name: '啞鈴腕彎舉', sets: '3組', reps: '15-20次', rest: '45秒' },
-                    { name: '啞鈴反向腕彎舉', sets: '3組', reps: '15-20次', rest: '45秒' },
-                    { name: '農夫走路', sets: '3組', reps: '走30-60秒', rest: '60秒' }
-                ],
-                tips: ['動作緩慢控制', '感受前臂肌肉收縮', '循序漸進增加重量']
-            },
-            '腹部': {
-                exercises: [
-                    { name: '捲腹', sets: '4組', reps: '15-20次', rest: '45秒' },
-                    { name: '俄羅斯轉體', sets: '3組', reps: '20次/邊', rest: '45秒' },
-                    { name: '平板支撐', sets: '3組', reps: '30-60秒', rest: '60秒' },
-                    { name: '懸垂舉腿', sets: '3組', reps: '10-15次', rest: '45秒' }
-                ],
-                tips: ['呼吸要配合動作', '注意腰椎保護', '動作要緩慢控制']
-            },
-            '大腿': {
-                exercises: [
-                    { name: '槓鈴深蹲', sets: '4組', reps: '8-12次', rest: '120秒' },
-                    { name: '腿推機', sets: '4組', reps: '10-15次', rest: '90秒' },
-                    { name: '羅馬尼亞硬舉', sets: '3組', reps: '10-12次', rest: '90秒' },
-                    { name: '腿部伸展機', sets: '3組', reps: '12-15次', rest: '60秒' }
-                ],
-                tips: ['深蹲時膝蓋不要內扣', '動作幅度要完整', '重視腿後肌群']
-            },
-            '小腿': {
-                exercises: [
-                    { name: '站姿提踵', sets: '4組', reps: '15-20次', rest: '45秒' },
-                    { name: '坐姿提踵', sets: '3組', reps: '15-20次', rest: '45秒' }
-                ],
-                tips: ['頂峰收縮，感受小腿肌肉緊繃', '動作要慢，控制好節奏', '可以嘗試單腿訓練']
-            },
-            '臀部': {
-                exercises: [
-                    { name: '臀橋', sets: '4組', reps: '15-20次', rest: '60秒' },
-                    { name: '保加利亞分腿蹲', sets: '3組', reps: '12次/邊', rest: '60秒' },
-                    { name: '側臥抬腿', sets: '3組', reps: '15次/邊', rest: '45秒' },
-                    { name: '深蹲', sets: '3組', reps: '15次', rest: '60秒' }
-                ],
-                tips: ['感受臀部發力', '動作要標準', '配合呼吸節奏']
-            }
-        };
 
         let selectedMuscle = null;
 
@@ -1015,7 +806,7 @@
                 showArmSelection(evt);
                 return;
             }
-            
+
             // 如果是身體，顯示選擇胸部或背部的選項
             if (muscleName === '身體') {
                 showBodySelection(evt);
@@ -1202,7 +993,7 @@
                 openEquip.addEventListener('click', () => {
                     // 從資料庫獲取訓練資料
                     fetchTrainingData(muscleName);
-                    
+
                     // 關閉彈出視窗
                     root.innerHTML = '';
                 });
@@ -1214,22 +1005,33 @@
             try {
                 // 顯示載入狀態
                 showLoading();
-                
+
                 // 除錯資訊
                 console.log(`正在查詢肌群：${muscleName}`);
-                
+
                 // 呼叫 PHP 後端 API
-                const response = await fetch(`api/get_exercises.php?muscle=${encodeURIComponent(muscleName)}`);
-                
+                  // 判斷是否本機
+                  const isLocalHost = /^(localhost|127\.0\.0\.1|::1)$/.test(location.hostname);
+
+// 線上請改成你的正式網域（含子目錄就自己加上去）
+const baseURL = isLocalHost
+    ? location.origin
+    : "https://jianshen.ngrok.app";
+
+// 用這一條就涵蓋你的兩種寫法
+const response = await fetch(
+    `${baseURL}/api/get_exercises.php?muscle=${encodeURIComponent(muscleName)}`
+);
+
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                
+
                 const result = await response.json();
-                
+
                 // 除錯資訊
                 console.log('API 回應結果：', result);
-                
+
                 if (result.success && result.data && result.data.length > 0) {
                     console.log(`找到 ${result.data.length} 個訓練動作`);
                     displayTrainingData(muscleName, result.data);
@@ -1237,9 +1039,9 @@
                     console.log('沒有找到訓練資料');
                     showError(`抱歉，目前沒有找到針對 ${muscleName} 的訓練資料。`);
                 }
-                
+
                 hideLoading();
-                
+
             } catch (error) {
                 console.error('獲取訓練資料時發生錯誤:', error);
                 showError('獲取訓練資料時發生錯誤，請稍後再試。');
@@ -1251,30 +1053,30 @@
         function displayTrainingData(muscleName, trainingData) {
             const display = document.getElementById('equipment-display');
             const listElement = document.getElementById('equipment-list');
-            
+
             if (!display || !listElement) return;
-            
+
             listElement.innerHTML = '';
-            
+
             if (trainingData && trainingData.length > 0) {
                 // 建立器材網格
                 const equipmentGrid = document.createElement('div');
                 equipmentGrid.className = 'equipment-grid';
-                
+
                 trainingData.forEach((exercise, index) => {
                     const exerciseCard = createExerciseCard(exercise, index + 1);
                     equipmentGrid.appendChild(exerciseCard);
                 });
-                
+
                 listElement.appendChild(equipmentGrid);
                 display.style.display = 'block';
-                
+
                 // 滾動到器材顯示區域
                 display.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                
+
                 // 顯示訓練動作總數
                 console.log(`找到 ${trainingData.length} 個 ${muscleName} 訓練動作`);
-                
+
             } else {
                 showError(`沒有找到 ${muscleName} 的訓練資料`);
             }
@@ -1284,20 +1086,24 @@
         function createExerciseCard(exercise, index) {
             const card = document.createElement('div');
             card.className = 'equipment-card';
-            
+
             // 計算建議重量（基於體重百分比）
             const hypertrophyWeightMin = Math.round(parseFloat(exercise.hypertrophy_load_min_pct) || 0);
             const hypertrophyWeightMax = Math.round(parseFloat(exercise.hypertrophy_load_min_pct) || 0 + 15);
             const fatlossWeightMin = Math.round(parseFloat(exercise.hypertrophy_load_min_pct) || 0 - 20);
             const fatlossWeightMax = Math.round(parseFloat(exercise.hypertrophy_load_min_pct) || 0 - 5);
-            
+
             // 除錯資訊
             console.log(`訓練動作 ${index}: ${exercise.name}, 重量: ${exercise.hypertrophy_load_min_pct}%`);
-            
+
             card.innerHTML = `
                 <h4>${index}. ${exercise.name}</h4>
                 <p>針對 ${exercise.target_muscle} 的專業訓練動作</p>
-                
+                <div class="d-flex justify-content-end mt-2">
+                    <button type="button" class="p-0 bg-transparent border-0 shadow-none" data-bs-toggle="modal" data-bs-target="#exerciseModal" style="line-height:1; outline:none;">
+                        <i class="bi bi-info-circle text-primary fs-5"></i>
+                    </button>
+                </div>                
                 <div class="training-details">
                     <h5><i class="bi bi-target"></i> 增肌訓練</h5>
                     <div class="detail-row">
@@ -1329,15 +1135,41 @@
                     </div>
                 </div>
             `;
-            
+
             return card;
         }
+        function openExerciseModal(exercise) {
+            // 標題
+            document.getElementById('ex-title').textContent = exercise.name || '';
+            document.getElementById('ex-target').textContent = exercise.target_muscle || '';
+
+            // 抓影片容器
+            const videoContainer = document.getElementById('exerciseVideoContainer');
+            videoContainer.innerHTML = ""; // 先清空
+
+            // 如果是「cable 上斜臥推」
+            if (exercise.name.includes("cable 上斜臥推")) {
+                videoContainer.innerHTML = `
+      <iframe src="https://exrx.net/embeddedvideo.aspx?filename=CBInclineChestPress"
+              allowfullscreen
+              frameborder="0"></iframe>
+    `;
+            } else {
+                // 其他動作先留空或放文字
+                videoContainer.innerHTML = `<p class="text-muted">目前沒有影片</p>`;
+            }
+
+            // 顯示 Modal
+            const modal = new bootstrap.Modal(document.getElementById('exerciseModal'));
+            modal.show();
+        }
+
 
         // 顯示載入狀態
         function showLoading() {
             const display = document.getElementById('equipment-display');
             const listElement = document.getElementById('equipment-list');
-            
+
             if (display && listElement) {
                 display.style.display = 'block';
                 listElement.innerHTML = '<div class="loading-spinner">正在載入訓練資料...</div>';
@@ -1353,7 +1185,7 @@
         function showError(message) {
             const display = document.getElementById('equipment-display');
             const listElement = document.getElementById('equipment-list');
-            
+
             if (display && listElement) {
                 display.style.display = 'block';
                 listElement.innerHTML = `<div class="error-message">${message}</div>`;
@@ -1494,6 +1326,25 @@
             });
         });
     </script>
+    //空白詳情 Modal
+    <div class="modal fade" id="exerciseModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">詳情</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="關閉"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="exerciseVideoContainer" class="ratio ratio-16x9">
+                        <!-- 影片會由 JS 動態塞進來 -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
