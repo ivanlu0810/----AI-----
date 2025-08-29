@@ -28,7 +28,7 @@ try {
     $muscle = $_GET['muscle'] ?? '';
 
     if (empty($muscle)) {
-        throw new Exception('請指定訓練肌群');
+        throw new Exception('請指定訓練肌群 ');
     }
 
     // 準備 SQL 查詢 - 支援模糊搜尋
