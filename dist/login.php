@@ -5,7 +5,7 @@ $host = '1.tcp.jp.ngrok.io';
 $db   = 'test';
 $user = 'root';
 $pass = '';
-$port = '20959';
+$port = 20959;
 
 $username = $_POST['username'] ?? '';
 $password = $_POST['password'] ?? '';
