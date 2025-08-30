@@ -554,7 +554,7 @@
                             <div class="col-12 col-lg-6">
                                 <div class="card">
                                     <div class="card-header">
-                                        <h4>體重變化趨勢</h4>
+                                        <h4 class="card text-center">體重變化趨勢</h4>
                                     </div>
                                     <div class="card-body">
                                         <div id="weight-chart"></div>
@@ -565,7 +565,7 @@
                             <div class="col-12 col-lg-6">
                                 <div class="card">
                                     <div class="card-header">
-                                        <h4>身體組成變化</h4>
+                                        <h4 class="card text-center">身體組成變化</h4>
                                     </div>
                                     <div class="card-body">
                                         <div id="body-composition-chart"></div>
@@ -576,7 +576,7 @@
                             <div class="col-12 col-lg-6">
                                 <div class="card">
                                     <div class="card-header">
-                                        <h4>體脂率變化趨勢</h4>
+                                        <h4 class="card text-center">體脂率變化趨勢</h4>
                                     </div>
                                     <div class="card-body">
                                         <div id="fat-percentage-chart"></div>
@@ -587,7 +587,7 @@
                             <div class="col-12 col-lg-6">
                                 <div class="card">
                                     <div class="card-header">
-                                        <h4>BMI變化趨勢</h4>
+                                        <h4 class="card text-center">BMI變化趨勢</h4>
                                     </div>
                                     <div class="card-body">
                                         <div id="bmi-chart"></div>
@@ -619,37 +619,39 @@
                                 <!-- ✅ 每一列包在 w-75 的 container，並靠中對齊 -->
                                 <div class="mx-auto w-75 d-flex align-items-center justify-content-start py-3">
                                     <div class="goal-icon rounded-circle d-flex align-items-center justify-content-center me-3"
-                                        style="width: 40px; height: 40px; background-color: #c1cdd7;">
-                                        <i class="bi bi-target text-white"></i>
+                                        style="width: 40px; height: 40px; background-color: #c1cdd7; overflow: hidden;">
+                                        <img src="images/barbell.png" alt="目標體重"
+                                            style="width: 60%; height: 60%; object-fit: contain; filter: brightness(0) invert(1);">
                                     </div>
                                     <div class="text-start">
                                         <h6 class="mb-1 fw-bold">目標體重</h6>
                                         <p class="text-muted mb-0">70.0 kg</p>
                                     </div>
                                 </div>
-
+                                
                                 <div class="mx-auto w-75 d-flex align-items-center justify-content-start py-3">
                                     <div class="goal-icon rounded-circle d-flex align-items-center justify-content-center me-3"
-                                        style="width: 40px; height: 40px; background-color: #cfddd6;">
-                                        <i class="bi bi-percent text-white"></i>
+                                        style="width: 40px; height: 40px; background-color: #cfddd6; overflow: hidden;">
+                                        <img src="images/up.png" alt="目標體脂率"
+                                            style="width: 60%; height: 60%; object-fit: contain; filter: brightness(0) invert(1);">
                                     </div>
                                     <div class="text-start">
                                         <h6 class="mb-1 fw-bold">目標體脂率</h6>
                                         <p class="text-muted mb-0">15.0%</p>
                                     </div>
                                 </div>
-
+                                
                                 <div class="mx-auto w-75 d-flex align-items-center justify-content-start py-3">
                                     <div class="goal-icon rounded-circle d-flex align-items-center justify-content-center me-3"
-                                        style="width: 40px; height: 40px; background-color: #e6d4da;">
-                                        <i class="bi bi-activity text-white"></i>
+                                        style="width: 40px; height: 40px; background-color: #e6d4da; overflow: hidden;">
+                                        <img src="images/line-chart.png" alt="目標肌肉量"
+                                            style="width: 60%; height: 60%; object-fit: contain; filter: brightness(0) invert(1);">
                                     </div>
                                     <div class="text-start">
                                         <h6 class="mb-1 fw-bold">目標肌肉量</h6>
                                         <p class="text-muted mb-0">35.0 kg</p>
                                     </div>
                                 </div>
-
                                 <div class="px-4">
                                     <button class="btn btn-block btn-xl btn-light-primary font-bold mt-3">設定目標</button>
                                 </div>
@@ -659,7 +661,7 @@
                         <div class="card">
                             <div class="card-header">
                                 <h4 class="text-center">身體組成比例</h4>
-                            </div>                            
+                            </div>
                             <div class="card-body">
                                 <div id="body-composition-pie-chart"></div>
                             </div>
