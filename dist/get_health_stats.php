@@ -9,11 +9,11 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
 }
 
 // 數據庫連接配置
-$host = 'localhost';
+$host = '1.tcp.jp.ngrok.io';
 $dbname = 'test';
 $username = 'root';
 $password = '';
-$port = 3307;
+$port = 20959;
 
 try {
     $pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4", $username, $password);
