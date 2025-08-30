@@ -1,0 +1,24 @@
+function modalViewer(i) {
+	if($(".modal"+i).get(0) == null) {
+		var tem = $(".divTemplate"+i).get(0);
+		var html = tem.innerHTML;
+		var newdiv = document.createElement("div");
+		newdiv.classList.add('modal'+i);
+		newdiv.setAttribute("id", "videotokenmodal");
+		newdiv.innerHTML = html;
+		newdiv.onclick = function(event) {
+			newdiv.style.display = "none";
+		}
+		document.body.appendChild(newdiv);
+	}
+	var modal = $(".modal"+i).get(0);
+	var div = $(".videocontainer"+i).get(0);
+	var exitdiv = $(".exitvideoicon"+i).get(0);
+	div.onclick = function(event) {
+		modal.style.display = "block";
+		vimeoShadowBox(i);
+	}
+	exitdiv.onclick = function(event) {
+		modal.style.display = "none";
+	}
+}

@@ -1,0 +1,168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0104)https://btloader.com/trustedIframe.html?o=5698917485248512&tid=n5wh1RSiSV-Zj0EwVMg-98fa2d32eb&upapi=true -->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+  <script type="application/javascript">
+    window.__bt_edge_data = {
+      authorizationError: "",
+      websiteID: Number(5999607412948992),
+      orgID: Number(5698917485248512),
+      traceID: "n5wh1RSiSV-Zj0EwVMg-98fa2d32eb"
+    };
+    class m {
+  /*
+   * @param logApiURL - The URL to log events to
+   * @param prefix - Prefix for log messages (not used in this implementation)
+   * @param level - The log level
+   * @param sampleRate - The sample rate to log events
+   * @returns Logger - Logger instance
+   */
+  constructor(r, e, o, n) {
+    this.prefix = e, this.level = o, this.sampleRate = n, this.logApiURL = `${r}/log`, this.prefix = e, this.level = o, this.sampleRate = n;
+  }
+  logApiURL;
+  shouldLog(r) {
+    return this.level === "ERROR" && r === "INFO" ? !1 : Math.random() < this.sampleRate;
+  }
+  /*
+   * Private method to log events to the API
+   * @param {Object} ctx - Log context
+   * @param {Object} body - Event body
+   * @returns {Promise<Response>} - Empty response
+   */
+  async log(r, e) {
+    return await fetch(
+      `${this.logApiURL}?tid=${r.traceID || "unknown"}&upapi=true`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          orgID: r.orgID,
+          ...e
+        }),
+        headers: r.headers
+      }
+    );
+  }
+  /*
+   * Log an error event
+   * @param {LogContext} ctx - Log context
+   * @param {string} message - Error message
+   * @param {Error} error - Error object
+   * @param {object} meta - Additional metadata
+   */
+  error = async (r, e, o, n = {}) => {
+    if (this.shouldLog("ERROR"))
+      return await this.log(r, {
+        severity: 4,
+        event: `${this.prefix}.error`,
+        message: e,
+        error: {
+          name: o.message,
+          stack: o.stack
+        },
+        meta: n
+      });
+  };
+  /*
+   * Log an info event
+   * @param {LogContext} ctx - Log context
+   * @param {string} message - Info message
+   * @param {object} meta - Additional metadata
+   */
+  info = async (r, e, o = {}) => {
+    if (this.shouldLog("INFO"))
+      return await this.log(r, {
+        severity: 1,
+        event: `${this.prefix}.info`,
+        message: e,
+        meta: o
+      });
+  };
+}
+const { authorizationError: h, websiteID: w, orgID: g, traceID: f } = window.__bt_edge_data, E = new m(
+  "https://api.btloader.com",
+  "frontend.trusted_iframe_script",
+  "ERROR",
+  +"0.01"
+), s = (t, r) => E.info(
+  {
+    orgID: String(g),
+    traceID: f
+  },
+  t,
+  {
+    websiteID: w,
+    authorizationError: h,
+    ...r
+  }
+), i = window.__bt_edge_data?.authorizationError || "", _ = (t) => {
+  if (t === window.location.origin)
+    throw new u("Message from same origin is ignored");
+}, p = (t) => typeof t == "object" && t !== null && "method" in t && (t.method === "getStatus" || t.method === "getExperimentFlags"), I = (t) => {
+  if (!p(t))
+    throw new O("Invalid request data");
+}, v = () => {
+  if (i)
+    throw new y(i);
+}, R = (t) => {
+  _(t.origin), I(t.data), v();
+};
+class u extends Error {
+  name = "same_origin_error";
+}
+class O extends Error {
+  name = "invalid_request_error";
+}
+class y extends Error {
+  name = "authorization_error";
+}
+const A = 50, a = 3e4, D = 3e4, c = "sendExtCommand", L = () => new Promise((t, r) => {
+  const e = Date.now(), o = () => {
+    if (typeof window[c] == "function") {
+      const n = window[c];
+      t((l) => n(l, { timeoutMs: D }));
+    } else Date.now() - e >= a ? r(
+      new M(
+        `Function sendExtCommand not found on window within ${a}ms`
+      )
+    ) : setTimeout(o, A);
+  };
+  o();
+});
+class M extends Error {
+  constructor(r) {
+    super(r), this.name = "command_not_available_error";
+  }
+}
+const d = (t, r) => {
+  window.parent.postMessage(t, r), t.error ? s(`trustedIframe.posted_message.err.${t.error || "unknown"}`, {
+    message: t,
+    origin: r
+  }) : s("trustedIframe.posted_message.success", { message: t, origin: r });
+};
+window.addEventListener(
+  "message",
+  async (t) => {
+    const { origin: r, data: e } = t;
+    try {
+      R(t);
+      const n = await (await L())(e);
+      d({ request: e, response: n }, r);
+    } catch (o) {
+      const n = o;
+      if (n instanceof u)
+        return;
+      d(
+        { request: e, error: n?.message || "Unknown error" },
+        r
+      );
+    }
+  }
+);
+
+  </script>
+</head>
+
+<body>
+
+
+</body></html>
