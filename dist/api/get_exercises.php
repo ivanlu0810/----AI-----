@@ -16,7 +16,7 @@ try {
     $port = '20959';
     $dbname = 'test';
     $username = 'root'; // 請根據您的設定修改
-    $password = ''; // 請根據您的設定修改
+    $password = '123456'; // 請根據您的設定修改
 
     // 建立 PDO 連接
     $dsn = "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4";
