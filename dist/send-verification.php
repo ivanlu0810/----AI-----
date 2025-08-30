@@ -4,11 +4,11 @@ $username = $_POST['username'];
 $email = $_POST['email'];
 
 // 資料庫連線
-$host = 'localhost';
+$host = '1.tcp.jp.ngrok.io';
 $db   = 'test';
 $user = 'root';
 $pass = '';
-$port = 3307;
+$port = '20959';
 
 $conn = new mysqli($host, $user, $pass, $db, $port);
 $conn->set_charset("utf8mb4");

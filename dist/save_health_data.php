@@ -35,11 +35,11 @@ foreach ($required_fields as $field) {
 }
 
 // 數據庫連接配置 - 適配現有的數據庫結構
-$host = 'localhost';
+$host = '1.tcp.jp.ngrok.io';
 $dbname = 'test'; // 使用現有的數據庫
 $username = 'root';
 $password = '';
-$port = 3307; // 使用現有的端口
+$port = '20959'; // 使用現有的端口
 
 try {
     $pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4", $username, $password);

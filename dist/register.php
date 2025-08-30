@@ -1,10 +1,10 @@
 <?php
 // 資料庫連線參數
-$host = 'localhost';
+$host = '1.tcp.jp.ngrok.io';
 $db   = 'test';
 $user = 'root';
 $pass = '';
-$port = 3307;
+$port = '20959';
 
 // 取得 POST 資料
 $username = $_POST['username'] ?? '';

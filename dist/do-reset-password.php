@@ -9,11 +9,11 @@ if ($new_password !== $confirm_password) {
 $username = $_SESSION['reset_username'];
 $password_hash = password_hash($new_password, PASSWORD_DEFAULT);
 
-$host = 'localhost';
+$host = '1.tcp.jp.ngrok.io';
 $db   = 'test';
 $user = 'root';
 $pass = '';
-$port = 3307;
+$port = '20959';
 
 $conn = new mysqli($host, $user, $pass, $db, $port);
 $conn->set_charset("utf8mb4");
