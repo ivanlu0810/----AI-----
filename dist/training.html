@@ -1112,88 +1112,98 @@
         }
 
         // 建立訓練動作卡片
+        // ✅ 建立訓練卡片
         function createExerciseCard(exercise, index) {
             const card = document.createElement('div');
             card.className = 'equipment-card';
 
-            // 計算建議重量（基於體重百分比）
             const hypertrophyWeightMin = Math.round(parseFloat(exercise.hypertrophy_load_min_pct) || 0);
-            const hypertrophyWeightMax = Math.round(parseFloat(exercise.hypertrophy_load_min_pct) || 0 + 15);
-            const fatlossWeightMin = Math.round(parseFloat(exercise.hypertrophy_load_min_pct) || 0 - 20);
-            const fatlossWeightMax = Math.round(parseFloat(exercise.hypertrophy_load_min_pct) || 0 - 5);
-
-            // 除錯資訊
-            console.log(`訓練動作 ${index}: ${exercise.name}, 重量: ${exercise.hypertrophy_load_min_pct}%`);
+            const hypertrophyWeightMax = hypertrophyWeightMin + 15;
+            const fatlossWeightMin = hypertrophyWeightMin - 20;
+            const fatlossWeightMax = hypertrophyWeightMin - 5;
 
             card.innerHTML = `
-                <h4>${index}. ${exercise.name}</h4>
-                <p>針對 ${exercise.target_muscle} 的專業訓練動作</p>
-                <div class="d-flex justify-content-end mt-2 mb-2">
-                    <button type="button" class="p-0 bg-transparent border-0 shadow-none" data-bs-toggle="modal" data-bs-target="#exerciseModal" style="line-height:1; outline:none;">
-                        <i class="bi bi-info-circle text-primary fs-5"></i>
-                    </button>
-                </div>                
-                <div class="training-details">
-                    <h5><i class="bi bi-target"></i>增肌訓練</h5>
-                    <div class="detail-row">
-                        <span class="detail-label">組數：</span>
-                        <span class="detail-value">${exercise.hypertrophy_sets_min}-${exercise.hypertrophy_sets_max} 組</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">次數：</span>
-                        <span class="detail-value">${exercise.hypertrophy_reps_min}-${exercise.hypertrophy_reps_max} 次</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">重量：</span>
-                        <span class="detail-value">${hypertrophyWeightMin}-${hypertrophyWeightMax}% 體重</span>
-                    </div>
-                </div>
-                
-                <div class="training-details">
-                    <h5><i class="bi bi-fire"></i>減脂訓練</h5>
-                    <div class="detail-row">
-                        <span class="detail-label">組數：</span>
-                        <span class="detail-value">${exercise.fatloss_sets_min}-${exercise.fatloss_sets_max} 組</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">次數：</span>
-                        <span class="detail-value">${exercise.fatloss_reps_min}-${exercise.fatloss_reps_max} 次</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">重量：</span>
-                        <span class="detail-value">${fatlossWeightMin}-${fatlossWeightMax}% 體重</span>
-                    </div>
-                </div>
-            `;
+        <h4>${index}. ${exercise.name}</h4>
+        <p>針對 ${exercise.target_muscle} 的專業訓練動作</p>
+        <div class="d-flex justify-content-end mt-2 mb-2">
+            <button type="button" 
+                    class="p-0 bg-transparent border-0 shadow-none" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#exerciseModal"
+                    style="line-height:1; outline:none;"
+                    onclick='openExerciseModal(${JSON.stringify(exercise)}, ${index})'>
+                <i class="bi bi-info-circle text-primary fs-5"></i>
+            </button>
+        </div>
+        
+        <div class="training-details">
+            <h5><i class="bi bi-target"></i>增肌訓練</h5>
+            <div class="detail-row">
+                <span class="detail-label">組數：</span>
+                <span class="detail-value">${exercise.hypertrophy_sets_min}-${exercise.hypertrophy_sets_max} 組</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">次數：</span>
+                <span class="detail-value">${exercise.hypertrophy_reps_min}-${exercise.hypertrophy_reps_max} 次</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">重量：</span>
+                <span class="detail-value">${hypertrophyWeightMin}-${hypertrophyWeightMax}% 體重</span>
+            </div>
+        </div>
+        
+        <div class="training-details">
+            <h5><i class="bi bi-fire"></i>減脂訓練</h5>
+            <div class="detail-row">
+                <span class="detail-label">組數：</span>
+                <span class="detail-value">${exercise.fatloss_sets_min}-${exercise.fatloss_sets_max} 組</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">次數：</span>
+                <span class="detail-value">${exercise.fatloss_reps_min}-${exercise.fatloss_reps_max} 次</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">重量：</span>
+                <span class="detail-value">${fatlossWeightMin}-${fatlossWeightMax}% 體重</span>
+            </div>
+        </div>
+    `;
 
             return card;
         }
-        function openExerciseModal(exercise) {
-            // 標題
-            document.getElementById('ex-title').textContent = exercise.name || '';
-            document.getElementById('ex-target').textContent = exercise.target_muscle || '';
 
-            // 抓影片容器
+        // ✅ 彈窗控制：可嵌入胸部第 1 個器械的 mp4
+        function openExerciseModal(exercise, index) {
             const videoContainer = document.getElementById('exerciseVideoContainer');
-            videoContainer.innerHTML = ""; // 先清空
+            videoContainer.innerHTML = "";
 
-            // 如果是「cable 上斜臥推」
-            if (exercise.name.includes("cable 上斜臥推")) {
+            // 如果是「胸部」的第一個器械 → 播放本地 mp4
+            if (exercise.target_muscle === "胸部" && Number(index) === 1) {
+                videoContainer.classList.add("ratio", "ratio-16x9");
                 videoContainer.innerHTML = `
-      <iframe src="https://exrx.net/embeddedvideo.aspx?filename=CBInclineChestPress"
-              allowfullscreen
-              frameborder="0"></iframe>
-    `;
+            <video id="exerciseVideo" class="w-100 h-100" controls playsinline preload="auto">
+                <source src="videos/yoyo.mp4" type="video/mp4">
+                您的瀏覽器不支援影片播放。
+            </video>
+        `;
             } else {
-                // 其他動作先留空或放文字
-                videoContainer.innerHTML = `<p class="text-muted">目前沒有影片</p>`;
+                // 其它器械顯示提示
+                videoContainer.innerHTML = `
+            <p>⚠️ 此訓練動作目前沒有影片展示。</p>
+        `;
             }
 
-            // 顯示 Modal
-            const modal = new bootstrap.Modal(document.getElementById('exerciseModal'));
+            // 打開 Modal
+            const modalEl = document.getElementById('exerciseModal');
+            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
             modal.show();
-        }
 
+            // 關閉時暫停影片
+            modalEl.addEventListener("hidden.bs.modal", () => {
+                const v = document.getElementById("exerciseVideo");
+                if (v) { v.pause(); try { v.currentTime = 0; } catch (e) { } }
+            }, { once: true });
+        }
 
         // 顯示載入狀態
         function showLoading() {
