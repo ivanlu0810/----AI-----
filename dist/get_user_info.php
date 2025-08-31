@@ -16,4 +16,4 @@ $user_info = [
 ];
 
 echo json_encode($user_info);
-?> 
+?>

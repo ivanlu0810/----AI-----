@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>健習生｜訓練部位</title> <!-- 修改標題 -->
+    <title>健習生｜訓練探索</title> <!-- 修改標題 -->
     <link rel="icon" href="images/fitness.png" type="image/png">
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -34,27 +34,29 @@
 
         /* SVG 身體部位預設樣式 */
         /* SVG 身體部位預設樣式 */
+        /* 預設 */
         #human-body-map-svg .body-part {
-            cursor: pointer;
-            fill: #dbe4ed;
-            transition: fill 0.3s ease, transform 0.2s ease;
-            stroke: #87959b;
-            stroke-width: 1.5;
-            /* 加粗一點 */
-            vector-effect: non-scaling-stroke;
-            /* ✨縮放時線寬不變細 */
+            fill: #cbd2d9;
+            /* 淡藍灰（莫蘭迪底色） */
+            stroke: #9c99a2;
+            /* 灰紫邊框 */
+            stroke-width: 2px;
+            transition: all 0.3s ease;
         }
 
-        /* Hover 動畫效果：把放大幅度稍微降低避免邊緣變糊 */
+        /* Hover */
         #human-body-map-svg .body-part:hover {
-            fill: #b0c1cc;
-            transform: scale(1.02);
-            /* 原本 1.05 → 1.02 :contentReference[oaicite:2]{index=2} */
+            fill: #b7c3cc;
+            /* 比底色稍深一點 */
         }
 
-        /* 被選取時，線條再加粗一點（顏色維持預設深色） */
+        /* 選中狀態 */
         #human-body-map-svg .body-part.selected {
-            stroke-width: 2;
+            fill: #b1bbc6 !important;
+            /* 莫蘭迪藍，淡亮 */
+            stroke: #98a2ad !important;
+            /* 深藍灰邊框 */
+            stroke-width: 2px;
         }
 
         /*人體互動圖動畫*/
@@ -315,18 +317,21 @@
         .error-message {
             text-align: center;
             padding: 40px;
-            color: #dc3545;
+            color: #58474d;
             font-size: 1.1rem;
-            background: #f8d7da;
-            border: 1px solid #f5c6cb;
+            background: #dec6cf;
             border-radius: 8px;
         }
 
-        button.bg-transparent:focus,
-        button.bg-transparent:active,
-        button.bg-transparent:focus-visible {
+        .favorite-btn:focus,
+        .favorite-btn:active {
             outline: none !important;
             box-shadow: none !important;
+        }
+
+        .mb-4-3 {
+            margin-bottom: 2.1rem !important;
+            /* 40px */
         }
     </style>
 
@@ -336,309 +341,48 @@
     <div id="app">
         <div id="sidebar" class="active">
             <div class="sidebar-wrapper active">
-
                 <div class="sidebar-menu">
                     <ul class="menu">
-                        <li class="sidebar-title">Menu</li>
+                        <li class="sidebar-title">個人資訊</li>
 
-                        <li class="sidebar-item ">
+                        <li class="sidebar-item">
                             <a href="index.html" class='sidebar-link'>
+                                <i class="bi bi-file-earmark-medical-fill"></i>
+                                <span>健康儀表板</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="profile.html" class='sidebar-link'>
                                 <i class="bi bi-person-badge-fill"></i>
                                 <span>基本資料</span>
                             </a>
                         </li>
-
+                        <li class="sidebar-title">各類建議</li>
                         <li class="sidebar-item active">
                             <a href="training.html" class='sidebar-link'>
-                                <i class="bi bi-file-earmark-medical-fill"></i>
-                                <span>訓練部位</span>
-                            </a>
-                        </li>
-
-                        <!-- 其他側邊欄項目保持不變 -->
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-collection-fill"></i>
-                                <span>Extra Components</span>
-                            </a>
-                            <ul class="submenu ">
-                                <li class="submenu-item ">
-                                    <a href="extra-component-avatar.html">Avatar</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="extra-component-sweetalert.html">Sweet Alert</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="extra-component-toastify.html">Toastify</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="extra-component-rating.html">Rating</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="extra-component-divider.html">Divider</a>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-grid-1x2-fill"></i>
-                                <span>Layouts</span>
-                            </a>
-                            <ul class="submenu ">
-                                <li class="submenu-item ">
-                                    <a href="layout-default.html">Default Layout</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="layout-vertical-1-column.html">1 Column</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="layout-vertical-navbar.html">Vertical with Navbar</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="layout-horizontal.html">Horizontal Menu</a>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li class="sidebar-title">Forms &amp; Tables</li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-hexagon-fill"></i>
-                                <span>Form Elements</span>
-                            </a>
-                            <ul class="submenu ">
-                                <li class="submenu-item ">
-                                    <a href="form-element-input.html">Input</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="form-element-input-group.html">Input Group</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="form-element-select.html">Select</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="form-element-radio.html">Radio</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="form-element-checkbox.html">Checkbox</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="form-element-textarea.html">Textarea</a>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li class="sidebar-item  ">
-                            <a href="form-layout.html" class='sidebar-link'>
-                                <i class="bi bi-file-earmark-medical-fill"></i>
-                                <span>Form Layout</span>
-                            </a>
-                        </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-pen-fill"></i>
-                                <span>Form Editor</span>
-                            </a>
-                            <ul class="submenu ">
-                                <li class="submenu-item ">
-                                    <a href="form-editor-quill.html">Quill</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="form-editor-ckeditor.html">CKEditor</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="form-editor-summernote.html">Summernote</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="form-editor-tinymce.html">TinyMCE</a>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li class="sidebar-item  ">
-                            <a href="table.html" class='sidebar-link'>
-                                <i class="bi bi-grid-1x2-fill"></i>
-                                <span>Table</span>
-                            </a>
-                        </li>
-
-                        <li class="sidebar-item  ">
-                            <a href="table-datatable.html" class='sidebar-link'>
-                                <i class="bi bi-file-earmark-spreadsheet-fill"></i>
-                                <span>Datatable</span>
-                            </a>
-                        </li>
-
-                        <li class="sidebar-title">Extra UI</li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
                                 <i class="bi bi-pentagon-fill"></i>
-                                <span>Widgets</span>
-                            </a>
-                            <ul class="submenu ">
-                                <li class="submenu-item ">
-                                    <a href="ui-widgets-chatbox.html">Chatbox</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="ui-widgets-pricing.html">Pricing</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="ui-widgets-todolist.html">To-do List</a>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-egg-fill"></i>
-                                <span>Icons</span>
-                            </a>
-                            <ul class="submenu ">
-                                <li class="submenu-item ">
-                                    <a href="ui-icons-bootstrap-icons.html">Bootstrap Icons </a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="ui-icons-fontawesome.html">Fontawesome</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="ui-icons-dripicons.html">Dripicons</a>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-bar-chart-fill"></i>
-                                <span>Charts</span>
-                            </a>
-                            <ul class="submenu ">
-                                <li class="submenu-item ">
-                                    <a href="ui-chart-chartjs.html">ChartJS</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="ui-chart-apexcharts.html">Apexcharts</a>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li class="sidebar-item  ">
-                            <a href="ui-file-uploader.html" class='sidebar-link'>
-                                <i class="bi bi-cloud-arrow-up-fill"></i>
-                                <span>File Uploader</span>
+                                <span>訓練探索</span>
                             </a>
                         </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-map-fill"></i>
-                                <span>Maps</span>
-                            </a>
-                            <ul class="submenu ">
-                                <li class="submenu-item ">
-                                    <a href="ui-map-google-map.html">Google Map</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="ui-map-jsvectormap.html">JS Vector Map</a>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li class="sidebar-title">Pages</li>
-
-                        <li class="sidebar-item  ">
-                            <a href="application-email.html" class='sidebar-link'>
-                                <i class="bi bi-envelope-fill"></i>
-                                <span>Email Application</span>
-                            </a>
-                        </li>
-
-                        <li class="sidebar-item  ">
-                            <a href="application-chat.html" class='sidebar-link'>
-                                <i class="bi bi-chat-dots-fill"></i>
-                                <span>Chat Application</span>
-                            </a>
-                        </li>
-
-                        <li class="sidebar-item  ">
-                            <a href="application-gallery.html" class='sidebar-link'>
-                                <i class="bi bi-image-fill"></i>
-                                <span>Photo Gallery</span>
-                            </a>
-                        </li>
-
-                        <li class="sidebar-item  ">
-                            <a href="application-checkout.html" class='sidebar-link'>
+                        <li class="sidebar-item">
+                            <a href="food.html" class='sidebar-link'>
                                 <i class="bi bi-basket-fill"></i>
-                                <span>Checkout Page</span>
+                                <span>飲食指南</span>
                             </a>
                         </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-person-badge-fill"></i>
-                                <span>Authentication</span>
-                            </a>
-                            <ul class="submenu ">
-                                <li class="submenu-item ">
-                                    <a href="auth-login.html">Login</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="auth-register.html">Register</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="auth-forgot-password.html">Forgot Password</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="logout.php">Logout</a>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-x-octagon-fill"></i>
-                                <span>Errors</span>
-                            </a>
-                            <ul class="submenu ">
-                                <li class="submenu-item ">
-                                    <a href="error-403.html">403</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="error-404.html">404</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="error-500.html">500</a>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li class="sidebar-title">Raise Support</li>
-
-                        <li class="sidebar-item  ">
-                            <a href="https://zuramai.github.io/mazer/docs" class='sidebar-link'>
-                                <i class="bi bi-life-preserver"></i>
-                                <span>Documentation</span>
+                        <li class="sidebar-title">其他項目</li>
+                        <li class="sidebar-item">
+                            <a href="favorite.html" class='sidebar-link'>
+                                <i class="bi bi-grid-1x2-fill"></i>
+                                <span>我的最愛</span>
                             </a>
                         </li>
-
-                        <li class="sidebar-item  ">
-                            <a href="https://github.com/zuramai/mazer/blob/main/CONTRIBUTING.md" class='sidebar-link'>
-                                <i class="bi bi-puzzle"></i>
-                                <span>Contribute</span>
+                        <li class="sidebar-item">
+                            <a href="history.html" class='sidebar-link'>
+                                <i class="bi bi-pen-fill"></i>
+                                <span>歷史紀錄</span>
                             </a>
                         </li>
-
-                        <li class="sidebar-item  ">
-                            <a href="https://github.com/zuramai/mazer#donate" class='sidebar-link'>
-                                <i class="bi bi-cash"></i>
-                                <span>Donate</span>
-                            </a>
-                        </li>
-
                     </ul>
                 </div>
                 <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
@@ -655,7 +399,7 @@
                 <div class="page-title">
                     <div class="row">
                         <div class="col-12 col-md-6 order-md-1 order-last">
-                            <h3>點選想訓練的目標肌群</h3>
+                            <h3 class="mb-4-3 me-3">點選想訓練的目標肌群💪🏻</h3>
                             <p class="text-muted mt-2 mb-4" style="font-size: 1rem;">
                                 以下是訓練部位說明，可依此作為訓練參考依據，協助規劃適合您的健身菜單。
                             </p>
@@ -663,8 +407,8 @@
                         <div class="col-12 col-md-6 order-md-2 order-first">
                             <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="index.html">首頁</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">訓練部位</li>
+                                    <li class="breadcrumb-item"><a href="index.html">健康儀表板</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">訓練探索</li>
                                 </ol>
                             </nav>
                         </div>
@@ -781,6 +525,8 @@
     <script src="assets/js/bootstrap.bundle.min.js"></script>
 
     <script src="assets/js/main.js"></script>
+    <!-- ✅ 引入共用方法 -->
+    <script src="assets/js/common.js"></script>
 
     <!-- 自定義 JavaScript 邏輯 -->
     <script>
@@ -1000,7 +746,7 @@
                 <h4>已選擇肌群：${muscleName}</h4>
                 <p>點擊下方按鈕查看對應的訓練動作</p>
                 <div style="margin-top:10px; display:flex; gap:8px; justify-content:flex-end;">
-                    <button id="btn-open-equip" class="btn btn-sm btn-primary">查看器材</button>
+                    <button id="btn-open-equip" class="btn btn-primary">查看器材</button>
                 </div>
             `;
             root.appendChild(pop);
@@ -1088,7 +834,6 @@
             listElement.innerHTML = '';
 
             if (trainingData && trainingData.length > 0) {
-                // 建立器材網格
                 const equipmentGrid = document.createElement('div');
                 equipmentGrid.className = 'equipment-grid';
 
@@ -1099,101 +844,173 @@
 
                 listElement.appendChild(equipmentGrid);
                 display.style.display = 'block';
-
-                // 滾動到器材顯示區域
                 display.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-                // 顯示訓練動作總數
-                console.log(`找到 ${trainingData.length} 個 ${muscleName} 訓練動作`);
+                // ✅ 在這裡綁定事件，確保卡片已經存在
+                document.querySelectorAll(".favorite-btn").forEach(btn => {
+                    btn.addEventListener("click", function () {
+                        const exercise = JSON.parse(this.getAttribute("data-exercise"));
+                        toggleFavorite(exercise);
+                    });
+                });
 
             } else {
                 showError(`沒有找到 ${muscleName} 的訓練資料`);
             }
         }
-
+        // 建立訓練動作卡片
         // 建立訓練動作卡片
         function createExerciseCard(exercise, index) {
             const card = document.createElement('div');
             card.className = 'equipment-card';
 
-            // 計算建議重量（基於體重百分比）
+            // 計算建議重量範圍
             const hypertrophyWeightMin = Math.round(parseFloat(exercise.hypertrophy_load_min_pct) || 0);
-            const hypertrophyWeightMax = Math.round(parseFloat(exercise.hypertrophy_load_min_pct) || 0 + 15);
-            const fatlossWeightMin = Math.round(parseFloat(exercise.hypertrophy_load_min_pct) || 0 - 20);
-            const fatlossWeightMax = Math.round(parseFloat(exercise.hypertrophy_load_min_pct) || 0 - 5);
+            const hypertrophyWeightMax = hypertrophyWeightMin + 15;
+            const fatlossWeightMin = hypertrophyWeightMin - 20;
+            const fatlossWeightMax = hypertrophyWeightMin - 5;
 
-            // 除錯資訊
-            console.log(`訓練動作 ${index}: ${exercise.name}, 重量: ${exercise.hypertrophy_load_min_pct}%`);
+            // 判斷是否已經收藏過（避免重整後星號變回空心）
+            let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+            let isFavorite = favorites.some(item => item.name === exercise.name);
 
             card.innerHTML = `
-                <h4>${index}. ${exercise.name}</h4>
-                <p>針對 ${exercise.target_muscle} 的專業訓練動作</p>
-                <div class="d-flex justify-content-end mt-2 mb-2">
-                    <button type="button" class="p-0 bg-transparent border-0 shadow-none" data-bs-toggle="modal" data-bs-target="#exerciseModal" style="line-height:1; outline:none;">
-                        <i class="bi bi-info-circle text-primary fs-5"></i>
-                    </button>
-                </div>                
-                <div class="training-details">
-                    <h5><i class="bi bi-target"></i>增肌訓練</h5>
-                    <div class="detail-row">
-                        <span class="detail-label">組數：</span>
-                        <span class="detail-value">${exercise.hypertrophy_sets_min}-${exercise.hypertrophy_sets_max} 組</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">次數：</span>
-                        <span class="detail-value">${exercise.hypertrophy_reps_min}-${exercise.hypertrophy_reps_max} 次</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">重量：</span>
-                        <span class="detail-value">${hypertrophyWeightMin}-${hypertrophyWeightMax}% 體重</span>
-                    </div>
-                </div>
-                
-                <div class="training-details">
-                    <h5><i class="bi bi-fire"></i>減脂訓練</h5>
-                    <div class="detail-row">
-                        <span class="detail-label">組數：</span>
-                        <span class="detail-value">${exercise.fatloss_sets_min}-${exercise.fatloss_sets_max} 組</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">次數：</span>
-                        <span class="detail-value">${exercise.fatloss_reps_min}-${exercise.fatloss_reps_max} 次</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">重量：</span>
-                        <span class="detail-value">${fatlossWeightMin}-${fatlossWeightMax}% 體重</span>
-                    </div>
-                </div>
-            `;
+        <!-- 標題 + 收藏 -->
+        <div class="d-flex justify-content-between align-items-center">
+            <h4>${index}. ${exercise.name}</h4>
+            <button type="button" 
+                    class="btn btn-link p-0 m-0 favorite-btn" 
+                    style="color:#f0ad4e; outline:none; box-shadow:none;"
+                    onclick='toggleFavorite(${JSON.stringify(exercise)}, this)'>
+                <i class="bi ${isFavorite ? "bi-star-fill" : "bi-star"}"></i>
+            </button>
+        </div>
+
+        <p>針對 ${exercise.target_muscle} 的專業訓練動作</p>
+
+        <!-- 詳情按鈕 -->
+        <div class="d-flex justify-content-end mt-2 mb-2">
+            <button type="button" 
+                    class="p-0 bg-transparent border-0 shadow-none" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#exerciseModal"
+                    style="line-height:1; outline:none;"
+                    onclick='openExerciseModal(${JSON.stringify(exercise)}, ${index})'>
+                <i class="bi bi-info-circle text-primary fs-5"></i>
+            </button>
+        </div>
+        
+        <!-- 增肌訓練 -->
+        <div class="training-details">
+            <h5><i class="bi bi-target"></i> 增肌訓練</h5>
+            <div class="detail-row">
+                <span class="detail-label">組數：</span>
+                <span class="detail-value">${exercise.hypertrophy_sets_min}-${exercise.hypertrophy_sets_max} 組</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">次數：</span>
+                <span class="detail-value">${exercise.hypertrophy_reps_min}-${exercise.hypertrophy_reps_max} 次</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">重量：</span>
+                <span class="detail-value">${hypertrophyWeightMin}-${hypertrophyWeightMax}% 體重</span>
+            </div>
+        </div>
+        
+        <!-- 減脂訓練 -->
+        <div class="training-details">
+            <h5><i class="bi bi-fire"></i> 減脂訓練</h5>
+            <div class="detail-row">
+                <span class="detail-label">組數：</span>
+                <span class="detail-value">${exercise.fatloss_sets_min}-${exercise.fatloss_sets_max} 組</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">次數：</span>
+                <span class="detail-value">${exercise.fatloss_reps_min}-${exercise.fatloss_reps_max} 次</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">重量：</span>
+                <span class="detail-value">${fatlossWeightMin}-${fatlossWeightMax}% 體重</span>
+            </div>
+        </div>
+    `;
 
             return card;
         }
-        function openExerciseModal(exercise) {
-            // 標題
-            document.getElementById('ex-title').textContent = exercise.name || '';
-            document.getElementById('ex-target').textContent = exercise.target_muscle || '';
 
-            // 抓影片容器
-            const videoContainer = document.getElementById('exerciseVideoContainer');
-            videoContainer.innerHTML = ""; // 先清空
+        // 收藏功能
+        function toggleFavorite(exercise, btn) {
+            let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
 
-            // 如果是「cable 上斜臥推」
-            if (exercise.name.includes("cable 上斜臥推")) {
-                videoContainer.innerHTML = `
-      <iframe src="https://exrx.net/embeddedvideo.aspx?filename=CBInclineChestPress"
-              allowfullscreen
-              frameborder="0"></iframe>
-    `;
+            const exists = favorites.some(item => item.name === exercise.name);
+
+            if (exists) {
+                favorites = favorites.filter(item => item.name !== exercise.name);
+                alert(`已取消收藏：${exercise.name}`);
+                btn.querySelector("i").classList.replace("bi-star-fill", "bi-star"); // 變空心
             } else {
-                // 其他動作先留空或放文字
-                videoContainer.innerHTML = `<p class="text-muted">目前沒有影片</p>`;
+                favorites.push(exercise);
+                alert(`已加入收藏：${exercise.name}`);
+                btn.querySelector("i").classList.replace("bi-star", "bi-star-fill"); // 變實心
             }
 
-            // 顯示 Modal
-            const modal = new bootstrap.Modal(document.getElementById('exerciseModal'));
-            modal.show();
+            localStorage.setItem("favorites", JSON.stringify(favorites));
         }
 
+        // ✅ 彈窗控制：可嵌入胸部第 1 個器械的 mp4
+        function openExerciseModal(exercise, index) {
+            const videoContainer = document.getElementById('exerciseVideoContainer');
+            videoContainer.innerHTML = "";
+
+            // 動態插入內容
+            videoContainer.innerHTML = `
+        <!-- 示範影片 -->
+        <div class="mb-3">
+            <h6 style="color:#2c3e50; font-weight:600; font-size:1rem;">示範影片：</h6>
+            <div class="ratio ratio-16x9">
+                <video id="exerciseVideo" controls playsinline preload="auto">
+                    <source src="${exercise.video_url || ''}" type="video/mp4">
+                    您的瀏覽器不支援影片播放。
+                </video>
+            </div>
+        </div>
+
+        <!-- 動作解說 -->
+        <div class="mb-3">
+            <h6 style="color:#2c3e50; font-weight:600; font-size:1rem;">動作解說：</h6>
+            <p style="color:#555; line-height:1.6;">
+                ${exercise.instruction_full || exercise.description || "此動作暫無解說"}
+            </p>
+        </div>
+
+        <!-- 適用對象 -->
+        <div>
+            <h6 style="color:#2c3e50; font-weight:600; font-size:1rem;">適用對象：</h6>
+            <p style="color:#555; line-height:1.6;">
+                ${exercise.user_level || "不限，請依照自身能力選擇是否執行。"}
+            </p>
+        </div>
+        
+        <!-- 注意事項 -->
+        <div class="mb-3">
+            <h6 style="color:#2c3e50; font-weight:600; font-size:1rem;">注意事項：</h6>
+            <p style="color:#555; line-height:1.6;">
+                ${exercise.caution || "請保持正確姿勢，避免受傷"}
+            </p>
+        </div>        
+    `;
+
+            // 開啟 Modal
+            const modalEl = document.getElementById('exerciseModal');
+            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+            modal.show();
+
+            // 關閉時重置影片
+            modalEl.addEventListener("hidden.bs.modal", () => {
+                const v = document.getElementById("exerciseVideo");
+                if (v) { v.pause(); try { v.currentTime = 0; } catch (e) { } }
+            }, { once: true });
+        }
 
         // 顯示載入狀態
         function showLoading() {
@@ -1210,6 +1027,13 @@
         function hideLoading() {
             // 載入完成後，顯示狀態由 displayTrainingData 控制
         }
+
+        document.querySelectorAll(".favorite-btn").forEach(btn => {
+            btn.addEventListener("click", function () {
+                const exercise = JSON.parse(this.getAttribute("data-exercise"));
+                toggleFavorite(exercise);
+            });
+        });
 
         // 顯示錯誤訊息
         function showError(message) {
@@ -1361,11 +1185,11 @@
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">詳情</h5>
+                    <h5 class="modal-title">📌詳細說明</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="關閉"></button>
                 </div>
                 <div class="modal-body">
-                    <div id="exerciseVideoContainer" class="ratio ratio-16x9">
+                    <div id="exerciseVideoContainer">
                         <!-- 影片會由 JS 動態塞進來 -->
                     </div>
                 </div>

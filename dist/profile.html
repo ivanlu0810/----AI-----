@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>健習生｜基本資料</title>
+    <link rel="icon" href="images/fitness.png" type="image/png">
+
+    <!-- 字體 & Bootstrap -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/bootstrap.css">
+    <link rel="stylesheet" href="assets/vendors/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="assets/css/app.css">
+
+    <!-- flatpickr 日期套件 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <style>
+        .profile-card {
+            border-radius: 16px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            padding: 2rem;
+            background: #fff;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #95abc3;
+        }
+
+        /* 必填星號（柔和莫蘭迪紅） */
+        .form-label span {
+            color: #b76e79;
+            margin-left: 3px;
+            font-weight: 600;
+        }
+
+        /* 取消修改 → 灰色 */
+        .btn-cancel {
+            background-color: #6c757d !important;
+            border: none !important;
+            color: #fff !important;
+        }
+
+        .btn-cancel:hover,
+        .btn-cancel:active,
+        .btn-cancel:focus {
+            background-color: #5a6268 !important;
+            color: #fff !important;
+            box-shadow: none !important;
+            outline: none !important;
+        }
+
+        /* 保存修改 → 藍紫色 */
+        .btn-save {
+            background-color: #4e5d94 !important;
+            border: none !important;
+            color: #fff !important;
+        }
+
+        .btn-save:hover,
+        .btn-save:active,
+        .btn-save:focus {
+            background-color: #3d4b78 !important;
+            color: #fff !important;
+            box-shadow: none !important;
+            outline: none !important;
+        }
+
+        /* 上傳大頭貼 → 藍紫色 */
+        .btn-upload {
+            background-color: #7f90a9 !important;
+            color: #fff !important;
+            border: none !important;
+        }
+
+        .btn-upload:hover {
+            background-color: #67798f !important;
+            color: #fff !important;
+        }
+
+        .btn-upload:focus,
+        .btn-upload:active {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+        /* footer 與上方保持 60px 間距 */
+        footer {
+            margin-top: 60px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <!-- 側邊選單 -->
+        <div id="sidebar" class="active">
+            <div class="sidebar-wrapper active">
+                <div class="sidebar-menu">
+                    <ul class="menu">
+                        <li class="sidebar-title">個人資訊</li>
+                        <li class="sidebar-item">
+                            <a href="index.html" class='sidebar-link'>
+                                <i class="bi bi-file-earmark-medical-fill"></i>
+                                <span>健康儀表板</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item active">
+                            <a href="profile.html" class='sidebar-link'>
+                                <i class="bi bi-person-badge-fill"></i>
+                                <span>基本資料</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-title">各類建議</li>
+                        <li class="sidebar-item">
+                            <a href="training.html" class='sidebar-link'>
+                                <i class="bi bi-pentagon-fill"></i>
+                                <span>訓練探索</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="food.html" class='sidebar-link'>
+                                <i class="bi bi-basket-fill"></i>
+                                <span>飲食指南</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-title">其他項目</li>
+                        <li class="sidebar-item">
+                            <a href="favorite.html" class='sidebar-link'>
+                                <i class="bi bi-grid-1x2-fill"></i>
+                                <span>我的最愛</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="history.html" class='sidebar-link'>
+                                <i class="bi bi-pen-fill"></i>
+                                <span>歷史紀錄</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
+            </div>
+        </div>
+
+        <!-- 主要內容 -->
+        <div id="main">
+            <header class="mb-3">
+                <a href="#" class="burger-btn d-block d-xl-none">
+                    <i class="bi bi-justify fs-3"></i>
+                </a>
+            </header>
+
+            <div class="page-heading">
+                <h3 class="mb-4">基本資料⚙️</h3>
+                <p class="text-muted">以下為您的個人檔案資訊，您可以修改並保存。</p>
+            </div>
+
+            <div class="container">
+                <div class="profile-card">
+                    <div class="text-center mb-4">
+                        <img id="avatarPreview" src="assets/images/faces/1.jpg" alt="大頭貼" class="profile-avatar mb-3">
+                        <div>
+                            <!-- 隱藏檔案選擇 -->
+                            <input type="file" id="avatarInput" accept="image/*" style="display:none">
+                            <button type="button" class="btn btn-upload btn-sm"
+                                onclick="document.getElementById('avatarInput').click();">
+                                上傳大頭貼
+                            </button>
+                        </div>
+                    </div>
+
+                    <form>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="name" class="form-label">姓名<span>*</span></label>
+                                <input type="text" class="form-control" id="name" placeholder="請輸入姓名" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="account" class="form-label">帳號<span>*</span></label>
+                                <input type="text" class="form-control" id="account" placeholder="請輸入帳號" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="password" class="form-label">密碼<span>*</span></label>
+                                <input type="password" class="form-control" id="password" placeholder="********"
+                                    required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">電子郵件<span>*</span></label>
+                                <input type="email" class="form-control" id="email" placeholder="請輸入電子郵件" required>
+                            </div>
+                        </div>
+
+                        <!-- 額外可選欄位 -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="phone" class="form-label">電話</label>
+                                <input type="text" class="form-control" id="phone" placeholder="可選填">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="birthday" class="form-label">生日</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="birthday" placeholder="年／月／日">
+                                    <span class="input-group-text"><i class="bi bi-calendar-event"></i></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="reset" class="btn btn-cancel">取消修改</button>
+                            <button type="submit" class="btn btn-save">保存修改</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <footer>
+                <div class="footer clearfix mb-0 text-muted">
+                    <div class="float-start">
+                        <p>健習生</p>
+                    </div>
+                    <div class="float-end">
+                        <p>謝昀倢 黃詠翰 呂沁垣 游博翔</p>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- JS 套件 -->
+    <script src="assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/main.js"></script>
+
+    <!-- flatpickr 日期套件 -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/zh-tw.js"></script>
+
+    <!-- 大頭貼即時預覽 + 日期格式 -->
+    <script>
+        // 大頭貼即時預覽
+        document.getElementById("avatarInput").addEventListener("change", function () {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById("avatarPreview").src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // flatpickr 日期選擇器，格式：2025年／08月／31日
+        flatpickr("#birthday", {
+            locale: "zh_tw",
+            dateFormat: "Y年／m月／d日",
+            allowInput: true, // ✅ 允許手動輸入
+        });
+    </script>
+</body>
+
+</html>
