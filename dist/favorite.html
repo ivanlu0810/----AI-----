@@ -26,6 +26,21 @@
             vertical-align: middle;
         }
 
+        /* 統一「名稱」與「目標肌群」字體樣式 (顏色與訓練細節相同灰色) */
+        #favorite-list td:nth-child(2),
+        #favorite-list td:nth-child(3) {
+            font-family: 'Nunito', sans-serif !important;
+            font-size: 1rem !important;
+            font-weight: 600 !important;
+            color: #6c757d !important;
+            /* ✅ 統一為灰色 */
+        }
+
+        /* 表格內所有細節統一灰色 */
+        #favorite-list td {
+            color: #6c757d !important;
+        }
+
         .training-details {
             display: flex;
             justify-content: space-between;
@@ -82,6 +97,11 @@
         /* 表格與 footer 間距 */
         #favorite-list {
             margin-bottom: 60px;
+        }
+
+        .mb-4-3 {
+            margin-bottom: 2.1rem !important;
+            /* 40px */
         }
     </style>
 </head>
@@ -150,7 +170,7 @@
                         <div class="col-12 col-md-6 order-md-1 order-last">
                             <h3 class="mb-4-3 me-3">我的最愛🤍</h3>
                             <p class="text-muted mt-2 mb-4" style="font-size: 1rem;">
-                                以下是訓練部位說明，可依此作為訓練參考依據，協助規劃適合您的健身菜單。
+                                以下是您收藏的訓練動作，可作為專屬健身計畫的參考依據，方便快速查看與管理。
                             </p>
                         </div>
                         <div class="col-12 col-md-6 order-md-2 order-first">
@@ -196,6 +216,9 @@
                 <div class="modal-body" id="exerciseModalBody">
                     <!-- JS 動態插入內容 -->
                 </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                </div>
             </div>
         </div>
     </div>
@@ -214,7 +237,7 @@
             if (favorites.length === 0) {
                 list.innerHTML = `
           <div class="d-flex justify-content-center align-items-center" style="height:200px;">
-              <p class="fs-5" style="color:#58474d;">目前沒有收藏任何器材。</p>
+            <p class="fs-5" style="color:#58474d;">目前沒有收藏任何器材。</p>
           </div>
         `;
                 return;
@@ -290,35 +313,53 @@
             }
         }
 
-        // 詳細說明 Modal
+        // 詳細說明 Modal（跟 training.html 一致）
         function openExerciseModal(exercise, index) {
             const modalBody = document.getElementById("exerciseModalBody");
 
             modalBody.innerHTML = `
-
+        <!-- 示範影片 -->
         <div class="mb-3">
-          <h6>示範影片：</h6>
-          <video class="w-100 rounded shadow-sm" controls preload="metadata">
-            <source src="${exercise.video || ''}" type="video/mp4">
-            您的瀏覽器不支援影片播放。
-          </video>
+          <h6 style="color:#2c3e50; font-weight:600; font-size:1rem;">示範影片：</h6>
+          <div class="ratio ratio-16x9">
+            <video id="exerciseVideo" controls playsinline preload="auto">
+              <source src="${exercise.video_url || ''}" type="video/mp4">
+              您的瀏覽器不支援影片播放。
+            </video>
+          </div>
         </div>
 
+        <!-- 動作解說 -->
         <div class="mb-3">
-          <h6>動作解說：</h6>
-          <p>${exercise.description || "暫無說明"}</p>
+          <h6 style="color:#2c3e50; font-weight:600; font-size:1rem;">動作解說：</h6>
+          <p style="color:#6c757d; line-height:1.6;">
+            ${exercise.instruction_full || exercise.description || "此動作暫無解說"}
+          </p>
         </div>
 
-        <div class="mb-3">
-          <h6>適用對象：</h6>
-          <p>${exercise.suitable || "暫無資料"}</p>
+        <!-- 適用對象 -->
+        <div>
+          <h6 style="color:#2c3e50; font-weight:600; font-size:1rem;">適用對象：</h6>
+          <p style="color:#6c757d; line-height:1.6;">
+            ${exercise.user_level || "不限，請依照自身能力選擇是否執行。"}
+          </p>
         </div>
-
+        
+        <!-- 注意事項 -->
         <div class="mb-3">
-          <h6>注意事項：</h6>
-          <p>${exercise.warning || "暫無資料"}</p>
-        </div>
+          <h6 style="color:#2c3e50; font-weight:600; font-size:1rem;">注意事項：</h6>
+          <p style="color:#6c757d; line-height:1.6;">
+            ${exercise.caution || "請保持正確姿勢，避免受傷"}
+          </p>
+        </div>        
       `;
+
+            // Modal 關閉時重置影片
+            const modalEl = document.getElementById('exerciseModal');
+            modalEl.addEventListener("hidden.bs.modal", () => {
+                const v = document.getElementById("exerciseVideo");
+                if (v) { v.pause(); try { v.currentTime = 0; } catch (e) { } }
+            }, { once: true });
         }
     </script>
 </body>
