@@ -1,11 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['started'])) {
-    $_SESSION['started'] = true;
-    $isFirstChat = true;
-} else {
-    $isFirstChat = false;
-}
+
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
@@ -16,6 +11,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
+if (!isset($_SESSION['started'])) {
+    $_SESSION['started'] = true;
+    $isFirstChat = true;
+} else {
+    $isFirstChat = false;
+}
 // ✅ 載入 dotenv
 require __DIR__ . '/vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
