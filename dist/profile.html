@@ -13,9 +13,6 @@
     <link rel="stylesheet" href="assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="assets/css/app.css">
 
-    <!-- flatpickr 日期套件 -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-
     <style>
         .profile-card {
             border-radius: 16px;
@@ -92,6 +89,17 @@
         /* footer 與上方保持 60px 間距 */
         footer {
             margin-top: 60px;
+        }
+
+        /* 載入中狀態 */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .spinner-border-sm {
+            width: 1rem;
+            height: 1rem;
         }
     </style>
 </head>
@@ -175,55 +183,61 @@
                         <div>
                             <!-- 隱藏檔案選擇 -->
                             <input type="file" id="avatarInput" accept="image/*" style="display:none">
-                            <button type="button" class="btn btn-upload btn-sm"
-                                onclick="document.getElementById('avatarInput').click();">
+                            <button type="button" class="btn btn-upload btn-sm" id="uploadBtn">
                                 上傳大頭貼
                             </button>
+                            <div class="mt-2">
+                                <small class="text-muted">支援 JPG、PNG、GIF 格式，檔案大小不超過 5MB</small>
+                            </div>
                         </div>
                     </div>
 
-                    <form>
+                    <form id="profileForm">
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="name" class="form-label">姓名<span>*</span></label>
-                                <input type="text" class="form-control" id="name" placeholder="請輸入姓名" required>
+                                <input type="text" class="form-control" id="name" name="name" placeholder="請輸入姓名" required>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="account" class="form-label">帳號<span>*</span></label>
-                                <input type="text" class="form-control" id="account" placeholder="請輸入帳號" required>
+                                <label for="email" class="form-label">電子郵件<span>*</span></label>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="請輸入電子郵件" required>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="password" class="form-label">密碼<span>*</span></label>
-                                <input type="password" class="form-control" id="password" placeholder="********"
+                                <input type="password" class="form-control" id="password" name="password" placeholder="********"
                                     required>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="email" class="form-label">電子郵件<span>*</span></label>
-                                <input type="email" class="form-control" id="email" placeholder="請輸入電子郵件" required>
+                                <label for="confirmPassword" class="form-label">確認密碼<span>*</span></label>
+                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="********"
+                                    required>
                             </div>
                         </div>
 
-                        <!-- 額外可選欄位 -->
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="phone" class="form-label">電話</label>
-                                <input type="text" class="form-control" id="phone" placeholder="可選填">
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="birthday" class="form-label">生日</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="birthday" placeholder="年／月／日">
-                                    <span class="input-group-text"><i class="bi bi-calendar-event"></i></span>
-                                </div>
+                                <label for="gender" class="form-label">性別<span>*</span></label>
+                                <select class="form-select" id="gender" name="gender" required>
+                                    <option value="">請選擇性別</option>
+                                    <option value="male">男性</option>
+                                    <option value="female">女性</option>
+                                    <option value="other">其他</option>
+                                </select>
                             </div>
                         </div>
 
                         <div class="d-flex justify-content-end gap-2">
                             <button type="reset" class="btn btn-cancel">取消修改</button>
-                            <button type="submit" class="btn btn-save">保存修改</button>
+                            <button type="submit" class="btn btn-save" id="saveBtn">
+                                <span class="btn-text">保存修改</span>
+                                <span class="btn-loading" style="display: none;">
+                                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                    儲存中...
+                                </span>
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -247,29 +261,172 @@
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/main.js"></script>
 
-    <!-- flatpickr 日期套件 -->
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/zh-tw.js"></script>
-
-    <!-- 大頭貼即時預覽 + 日期格式 -->
+    <!-- 大頭貼即時預覽 + 表單處理 -->
     <script>
-        // 大頭貼即時預覽
-        document.getElementById("avatarInput").addEventListener("change", function () {
+        // 頁面載入時獲取用戶資料
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserProfile();
+        });
+
+        // 載入用戶資料
+        async function loadUserProfile() {
+            try {
+                const response = await fetch('get_user_info.php');
+                if (response.ok) {
+                    const userData = await response.json();
+                    
+                    // 填充表單欄位
+                    document.getElementById('name').value = userData.username || '';
+                    document.getElementById('email').value = userData.email || '';
+                    document.getElementById('gender').value = userData.gender || '';
+                    
+                    // 更新大頭貼顯示
+                    if (userData.avatar) {
+                        document.getElementById('avatarPreview').src = userData.avatar;
+                    }
+                    
+                    // 密碼欄位保持空白，讓用戶重新輸入
+                    document.getElementById('password').value = '';
+                    document.getElementById('confirmPassword').value = '';
+                    
+                    console.log('用戶資料載入成功:', userData);
+                } else {
+                    console.error('載入用戶資料失敗:', response.status);
+                    // 如果載入失敗，顯示預設值
+                    document.getElementById('name').value = '請先登入';
+                    document.getElementById('email').value = '請先登入';
+                }
+            } catch (error) {
+                console.error('載入用戶資料時發生錯誤:', error);
+                // 如果發生錯誤，顯示預設值
+                document.getElementById('name').value = '載入失敗';
+                document.getElementById('email').value = '載入失敗';
+            }
+        }
+
+        // 大頭貼上傳按鈕點擊事件
+        document.getElementById("uploadBtn").addEventListener("click", function() {
+            document.getElementById("avatarInput").click();
+        });
+
+        // 大頭貼檔案選擇事件
+        document.getElementById("avatarInput").addEventListener("change", async function () {
             const file = this.files[0];
             if (file) {
+                // 即時預覽
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     document.getElementById("avatarPreview").src = e.target.result;
                 };
                 reader.readAsDataURL(file);
+                
+                // 上傳到伺服器
+                await uploadAvatar(file);
             }
         });
 
-        // flatpickr 日期選擇器，格式：2025年／08月／31日
-        flatpickr("#birthday", {
-            locale: "zh_tw",
-            dateFormat: "Y年／m月／d日",
-            allowInput: true, // ✅ 允許手動輸入
+        // 上傳大頭貼到伺服器
+        async function uploadAvatar(file) {
+            const formData = new FormData();
+            formData.append('avatar', file);
+            
+            try {
+                const response = await fetch('upload_avatar.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('大頭貼上傳成功！');
+                    // 更新顯示的大頭貼路徑
+                    document.getElementById('avatarPreview').src = result.avatar_path;
+                } else {
+                    alert('上傳失敗：' + result.error);
+                    // 恢復原本的大頭貼
+                    loadUserProfile();
+                }
+            } catch (error) {
+                console.error('上傳大頭貼時發生錯誤:', error);
+                alert('上傳失敗，請稍後再試。');
+                // 恢復原本的大頭貼
+                loadUserProfile();
+            }
+        }
+
+        // 表單提交處理
+        document.getElementById('profileForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // 驗證密碼確認
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                alert('密碼確認不符！');
+                return;
+            }
+            
+            // 顯示載入狀態
+            const saveBtn = document.getElementById('saveBtn');
+            const btnText = saveBtn.querySelector('.btn-text');
+            const btnLoading = saveBtn.querySelector('.btn-loading');
+            
+            btnText.style.display = 'none';
+            btnLoading.style.display = 'inline-block';
+            saveBtn.disabled = true;
+            
+            try {
+                // 準備要發送的資料
+                const formData = {
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    password: password,
+                    gender: document.getElementById('gender').value
+                };
+                
+                // 發送 AJAX 請求到後端 API
+                const response = await fetch('update_profile.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert(result.message);
+                    
+                    // 重新載入用戶資料
+                    await loadUserProfile();
+                    
+                    // 清空密碼欄位
+                    document.getElementById('password').value = '';
+                    document.getElementById('confirmPassword').value = '';
+                } else {
+                    alert('更新失敗：' + result.error);
+                }
+                
+            } catch (error) {
+                console.error('更新資料時發生錯誤:', error);
+                alert('更新資料失敗，請稍後再試。');
+            } finally {
+                // 恢復按鈕狀態
+                btnText.style.display = 'inline-block';
+                btnLoading.style.display = 'none';
+                saveBtn.disabled = false;
+            }
+        });
+
+        // 取消修改按鈕
+        document.querySelector('.btn-cancel').addEventListener('click', function() {
+            if (confirm('確定要取消修改嗎？未保存的更改將會遺失。')) {
+                // 重新載入用戶資料，恢復原始值
+                loadUserProfile();
+            }
         });
     </script>
 </body>

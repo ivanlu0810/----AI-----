@@ -103,6 +103,27 @@
             color: #34495e;
             /* 深灰藍，文字更穩重 */
         }
+
+        /* 用戶大頭貼樣式 */
+        .avatar.avatar-xl {
+            width: 80px !important;
+            height: 80px !important;
+            border-radius: 50% !important;
+            overflow: hidden;
+        }
+
+        .avatar img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            border-radius: 50% !important;
+            border: 2px solid #e0e0e0;
+            transition: border-color 0.3s ease;
+        }
+
+        .avatar img:hover {
+            border-color: #95abc3;
+        }
     </style>
 </head>
 
@@ -342,6 +363,27 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- 時間範圍選擇器 -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <h6 class="mb-0">圖表時間範圍</h6>
+                                            <div class="d-flex align-items-center">
+                                                <input type="date" id="start-date" class="form-control me-2" style="width: auto;">
+                                                <span class="me-2">至</span>
+                                                <input type="date" id="end-date" class="form-control me-3" style="width: auto;">
+                                                                                                 <button class="btn btn-primary btn-sm" id="apply-date-range">套用範圍</button>
+                                                 <button class="btn btn-outline-secondary btn-sm ms-2" id="reset-date-range">重置</button>
+                                                 <button class="btn btn-outline-info btn-sm ms-2" id="last-30-days">最近30天</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div class="row">
                             <div class="col-12 col-lg-6">
                                 <div class="card">
@@ -393,7 +435,7 @@
                             <div class="card-body py-4 px-5">
                                 <div class="d-flex align-items-center">
                                     <div class="avatar avatar-xl">
-                                        <img src="assets/images/faces/1.jpg" alt="Face 1">
+                                        <img src="assets/images/faces/1.jpg" alt="預設大頭貼">
                                     </div>
                                     <div class="ms-3 name">
                                         <h5 class="font-bold" id="user-name">John Duck</h5>
@@ -409,43 +451,55 @@
                             <div class="card-content pb-4">
 
                                 <!-- ✅ 每一列包在 w-75 的 container，並靠中對齊 -->
-                                <div class="mx-auto w-75 d-flex align-items-center justify-content-start py-3">
+                                <div class="mx-auto w-75 d-flex align-items-start justify-content-start py-3">
                                     <div class="goal-icon rounded-circle d-flex align-items-center justify-content-center me-3"
-                                        style="width: 40px; height: 40px; background-color: #c1cdd7; overflow: hidden;">
+                                        style="width: 40px; height: 40px; background-color: #c1cdd7; overflow: hidden; flex-shrink: 0;">
                                         <img src="images/barbell.png" alt="目標體重"
                                             style="width: 60%; height: 60%; object-fit: contain; filter: brightness(0) invert(1);">
                                     </div>
-                                    <div class="text-start">
-                                        <h6 class="mb-1 fw-bold">目標體重</h6>
-                                        <p class="text-muted mb-0">70.0 kg</p>
+                                    <div class="text-start flex-grow-1">
+                                        <h6 class="mb-2 fw-bold text-dark">目標體重</h6>
+                                        <div class="d-flex align-items-center" style="min-width: 0;">
+                                            <div class="text-muted fw-normal" style="min-width: 80px;">目前: <span id="current-weight" class="fw-semibold">0.0</span> kg</div>
+                                            <i class="bi bi-arrow-right text-muted mx-2"></i>
+                                            <div class="text-primary fw-semibold">目標: <span id="goal-weight-display" class="fw-bold">70.0</span> kg</div>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div class="mx-auto w-75 d-flex align-items-center justify-content-start py-3">
+                                <div class="mx-auto w-75 d-flex align-items-start justify-content-start py-3">
                                     <div class="goal-icon rounded-circle d-flex align-items-center justify-content-center me-3"
-                                        style="width: 40px; height: 40px; background-color: #cfddd6; overflow: hidden;">
+                                        style="width: 40px; height: 40px; background-color: #cfddd6; overflow: hidden; flex-shrink: 0;">
                                         <img src="images/up.png" alt="目標體脂率"
                                             style="width: 60%; height: 60%; object-fit: contain; filter: brightness(0) invert(1);">
                                     </div>
-                                    <div class="text-start">
-                                        <h6 class="mb-1 fw-bold">目標體脂率</h6>
-                                        <p class="text-muted mb-0">15.0%</p>
+                                    <div class="text-start flex-grow-1">
+                                        <h6 class="mb-2 fw-bold text-dark">目標體脂率</h6>
+                                        <div class="d-flex align-items-center" style="min-width: 0;">
+                                            <div class="text-muted fw-normal" style="min-width: 80px;">目前: <span id="current-fat-percentage" class="fw-semibold">0.0</span>%</div>
+                                            <i class="bi bi-arrow-right text-muted mx-2"></i>
+                                            <div class="text-primary fw-semibold">目標: <span id="goal-fat-percentage-display" class="fw-bold">15.0</span>%</div>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div class="mx-auto w-75 d-flex align-items-center justify-content-start py-3">
+                                <div class="mx-auto w-75 d-flex align-items-start justify-content-start py-3">
                                     <div class="goal-icon rounded-circle d-flex align-items-center justify-content-center me-3"
-                                        style="width: 40px; height: 40px; background-color: #e6d4da; overflow: hidden;">
+                                        style="width: 40px; height: 40px; background-color: #e6d4da; overflow: hidden; flex-shrink: 0;">
                                         <img src="images/line-chart.png" alt="目標肌肉量"
                                             style="width: 60%; height: 60%; object-fit: contain; filter: brightness(0) invert(1);">
                                     </div>
-                                    <div class="text-start">
-                                        <h6 class="mb-1 fw-bold">目標肌肉量</h6>
-                                        <p class="text-muted mb-0">35.0 kg</p>
+                                    <div class="text-start flex-grow-1">
+                                        <h6 class="mb-2 fw-bold text-dark">目標肌肉量</h6>
+                                        <div class="d-flex align-items-center" style="min-width: 0;">
+                                            <div class="text-muted fw-normal" style="min-width: 80px;">目前: <span id="current-muscle" class="fw-semibold">0.0</span> kg</div>
+                                            <i class="bi bi-arrow-right text-muted mx-2"></i>
+                                            <div class="text-primary fw-semibold">目標: <span id="goal-muscle-display" class="fw-bold">35.0</span> kg</div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="px-4">
-                                    <button class="btn btn-block btn-xl btn-light-primary font-bold mt-3">設定目標</button>
+                                    <button class="btn btn-block btn-xl btn-light-primary font-bold mt-3" data-bs-toggle="modal" data-bs-target="#setGoalModal">設定目標</button>
                                 </div>
                             </div>
                         </div>
@@ -490,6 +544,38 @@
     <script src="assets/js/pages/dashboard.js"></script>
 
     <script src="assets/js/main.js"></script>
+
+    <!-- 設定目標彈出視窗 -->
+    <div class="modal fade" id="setGoalModal" tabindex="-1" aria-labelledby="setGoalModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="setGoalModalLabel">設定健康目標</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="goalForm">
+                        <div class="mb-3">
+                            <label for="goal_weight" class="form-label">目標體重 (kg)</label>
+                            <input type="number" class="form-control" id="goal_weight" name="goal_weight" step="0.1" min="30" max="200" value="70.0">
+                        </div>
+                        <div class="mb-3">
+                            <label for="goal_fat_percentage" class="form-label">目標體脂率 (%)</label>
+                            <input type="number" class="form-control" id="goal_fat_percentage" name="goal_fat_percentage" step="0.1" min="5" max="50" value="15.0">
+                        </div>
+                        <div class="mb-3">
+                            <label for="goal_muscle" class="form-label">目標肌肉量 (kg)</label>
+                            <input type="number" class="form-control" id="goal_muscle" name="goal_muscle" step="0.1" min="10" max="100" value="35.0">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="saveGoalBtn">保存目標</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- 新增數據彈出視窗 -->
     <div class="modal fade" id="addDataModal" tabindex="-1" aria-labelledby="addDataModalLabel" aria-hidden="true">
@@ -623,6 +709,17 @@
                 document.getElementById('user-id').textContent = data.userid;
                 document.getElementById('user-name').textContent = data.username;
                 document.getElementById('user-email').textContent = data.email;
+                
+                // 更新用戶大頭貼
+                const userAvatar = document.querySelector('.avatar img');
+                if (data.avatar && data.avatar.trim() !== '') {
+                    userAvatar.src = data.avatar;
+                    userAvatar.alt = data.username + ' 的大頭貼';
+                } else {
+                    // 如果沒有上傳大頭貼，使用預設圖片
+                    userAvatar.src = 'assets/images/faces/1.jpg';
+                    userAvatar.alt = '預設大頭貼';
+                }
             })
             .catch(error => {
                 console.error('Error loading user info:', error);
@@ -647,14 +744,38 @@
                 document.getElementById('avg-fat-percentage').textContent = data.latest_fat_percentage + '%';
                 document.getElementById('avg-metabolism').textContent = data.latest_basal_metabolism + ' kcal';
                 document.getElementById('avg-bmi').textContent = data.latest_bmi;
+
+                // 更新目標追蹤的目前數據
+                document.getElementById('current-weight').textContent = data.latest_weight;
+                document.getElementById('current-fat-percentage').textContent = data.latest_fat_percentage;
+                document.getElementById('current-muscle').textContent = data.latest_skeletal_muscle;
+
+                // 更新目標達成率圖表
+                if (window.goalProgressChart) {
+                    window.goalProgressChart.update();
+                }
             })
             .catch(error => {
                 console.error('Error loading health stats:', error);
             });
 
         // 載入圖表數據
-        function loadChartData() {
-            fetch('get_chart_data.php')
+        function loadChartData(startDate = null, endDate = null) {
+            let url = 'get_chart_data.php';
+            const params = new URLSearchParams();
+            
+            if (startDate && endDate) {
+                params.append('start_date', startDate);
+                params.append('end_date', endDate);
+                url += '?' + params.toString();
+                console.log('Loading chart data with date range:', startDate, 'to', endDate);
+            } else {
+                console.log('Loading all chart data (no date filter)');
+            }
+            
+            console.log('Loading chart data from:', url);
+            
+            fetch(url)
                 .then(response => {
                     if (response.ok) {
                         return response.json();
@@ -663,11 +784,21 @@
                     }
                 })
                 .then(data => {
+                    console.log('Chart data received:', data);
+                    console.log('Total records:', data.total_records);
+                    console.log('Date filter applied:', data.date_filter_applied);
+                    console.log('Filter start date:', data.filter_start_date);
+                    console.log('Filter end date:', data.filter_end_date);
+                    console.log('Dates:', data.dates);
+                    console.log('Weight data:', data.weight);
+                    
                     if (data.dates && data.dates.length > 0) {
                         createWeightChart(data);
                         createBodyCompositionChart(data);
                         createFatPercentageChart(data);
                         createBMIChart(data);
+                    } else {
+                        console.warn('No chart data available');
                     }
                 })
                 .catch(error => {
@@ -677,6 +808,10 @@
 
         // 創建體重變化圖表
         function createWeightChart(data) {
+            // 清除舊的圖表
+            const chartContainer = document.querySelector("#weight-chart");
+            chartContainer.innerHTML = '';
+            
             const weightData = data.weight.filter(val => val !== null);
             const dates = data.dates.filter((_, index) => data.weight[index] !== null);
 
@@ -728,12 +863,16 @@
                 }
             };
 
-            const chart = new ApexCharts(document.querySelector("#weight-chart"), options);
+            const chart = new ApexCharts(chartContainer, options);
             chart.render();
         }
 
         // 創建身體組成圖表
         function createBodyCompositionChart(data) {
+            // 清除舊的圖表
+            const chartContainer = document.querySelector("#body-composition-chart");
+            chartContainer.innerHTML = '';
+            
             const skeletalData = data.skeletal_muscle.filter(val => val !== null);
             const bodyFatData = data.body_fat.filter(val => val !== null);
             const dates = data.dates.filter((_, index) =>
@@ -791,12 +930,16 @@
                 }
             };
 
-            const chart = new ApexCharts(document.querySelector("#body-composition-chart"), options);
+            const chart = new ApexCharts(chartContainer, options);
             chart.render();
         }
 
         // 創建體脂率變化圖表
         function createFatPercentageChart(data) {
+            // 清除舊的圖表
+            const chartContainer = document.querySelector("#fat-percentage-chart");
+            chartContainer.innerHTML = '';
+            
             const fatPercentageData = data.fat_percentage.filter(val => val !== null);
             const dates = data.dates.filter((_, index) => data.fat_percentage[index] !== null);
 
@@ -848,12 +991,16 @@
                 }
             };
 
-            const chart = new ApexCharts(document.querySelector("#fat-percentage-chart"), options);
+            const chart = new ApexCharts(chartContainer, options);
             chart.render();
         }
 
         // 創建BMI變化圖表
         function createBMIChart(data) {
+            // 清除舊的圖表
+            const chartContainer = document.querySelector("#bmi-chart");
+            chartContainer.innerHTML = '';
+            
             const bmiData = data.bmi.filter(val => val !== null);
             const dates = data.dates.filter((_, index) => data.bmi[index] !== null);
 
@@ -905,62 +1052,196 @@
                 }
             };
 
-            const chart = new ApexCharts(document.querySelector("#bmi-chart"), options);
+            const chart = new ApexCharts(chartContainer, options);
             chart.render();
         }
 
+        // 初始化時間範圍選擇器
+        function initializeDateRange() {
+            // 不設置預設值，讓用戶自己選擇
+            console.log('Date range selector initialized - no default values set');
+        }
+        
+        // 時間範圍選擇器事件處理
+        document.getElementById('apply-date-range').addEventListener('click', function() {
+            const startDate = document.getElementById('start-date').value;
+            const endDate = document.getElementById('end-date').value;
+            
+            if (startDate && endDate) {
+                if (startDate > endDate) {
+                    alert('開始日期不能晚於結束日期！');
+                    return;
+                }
+                console.log('Applying date range:', startDate, 'to', endDate);
+                loadChartData(startDate, endDate);
+            } else {
+                alert('請選擇開始和結束日期！');
+            }
+        });
+        
+        document.getElementById('reset-date-range').addEventListener('click', function() {
+            // 清除日期選擇器
+            document.getElementById('start-date').value = '';
+            document.getElementById('end-date').value = '';
+            console.log('Date range reset - loading all data');
+            loadChartData(); // 載入所有數據
+        });
+        
+        // 最近30天按鈕事件
+        document.getElementById('last-30-days').addEventListener('click', function() {
+            const today = new Date();
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(today.getDate() - 30);
+            
+            document.getElementById('start-date').value = thirtyDaysAgo.toISOString().split('T')[0];
+            document.getElementById('end-date').value = today.toISOString().split('T')[0];
+            console.log('Last 30 days selected:', thirtyDaysAgo.toISOString().split('T')[0], 'to', today.toISOString().split('T')[0]);
+            loadChartData(thirtyDaysAgo.toISOString().split('T')[0], today.toISOString().split('T')[0]);
+        });
+        
+        // 初始化時間範圍選擇器
+        initializeDateRange();
+        
         // 載入圖表數據
         loadChartData();
-        // 目標達成率圓環圖
+        // 目標達成率圓環圖 - 動態計算
         function createGoalProgressChart() {
             var chartDom = document.querySelector("#goal-progress-chart");
             var myChart = echarts.init(chartDom);
 
-            var option = {
-                series: [{
-                    type: 'liquidFill',
-                    data: [0.72], // 72%
-                    radius: '65%',
-                    center: ['50%', '50%'],
-                    outline: {
-                        show: true,
-                        borderDistance: 3,
-                        itemStyle: {
-                            borderWidth: 2,
-                            borderColor: '#6b7b8c'
-                        }
-                    },
-                    backgroundStyle: { color: '#f5f7fa' },
-                    label: {
-                        normal: {
-                            formatter: '72%',
-                            fontSize: 20,
-                            color: '#34495e',
-                            fontWeight: 'bold'
-                        }
-                    },
-                    color: [{
-                        type: 'linear',
-                        x: 0, y: 0, x2: 0, y2: 1,
-                        colorStops: [
-                            { offset: 0, color: '#9c99a2' },
-                            { offset: 1, color: '#cddce6' }
-                        ]
+            // 計算目標達成率
+            function calculateGoalProgress() {
+                const currentWeight = parseFloat(document.getElementById('current-weight').textContent) || 0;
+                const currentFatPercentage = parseFloat(document.getElementById('current-fat-percentage').textContent) || 0;
+                const currentMuscle = parseFloat(document.getElementById('current-muscle').textContent) || 0;
+
+                const goalWeight = parseFloat(document.getElementById('goal-weight-display').textContent) || 70;
+                const goalFatPercentage = parseFloat(document.getElementById('goal-fat-percentage-display').textContent) || 15;
+                const goalMuscle = parseFloat(document.getElementById('goal-muscle-display').textContent) || 35;
+
+                // 計算各項指標的達成率 (0-100%)
+                let weightProgress = 0;
+                let fatProgress = 0;
+                let muscleProgress = 0;
+
+                // 體重達成率：基於目前體重與目標體重的差距計算
+                if (currentWeight > 0 && goalWeight > 0) {
+                    if (currentWeight > goalWeight) {
+                        // 減重情況：目前體重 > 目標體重
+                        // 假設起始體重是目標體重的 1.2 倍（20% 超重）
+                        const startWeight = goalWeight * 1.2;
+                        const totalToLose = startWeight - goalWeight;
+                        const alreadyLost = startWeight - currentWeight;
+                        weightProgress = Math.min(100, Math.max(0, (alreadyLost / totalToLose) * 100));
+                    } else if (currentWeight <= goalWeight) {
+                        // 已達到或超過目標體重
+                        weightProgress = 100;
+                    }
+                }
+
+                // 體脂率達成率：基於目前體脂率與目標體脂率的差距計算
+                if (currentFatPercentage > 0 && goalFatPercentage > 0) {
+                    if (currentFatPercentage > goalFatPercentage) {
+                        // 降低體脂率情況
+                        // 假設起始體脂率是目標體脂率的 1.5 倍（50% 超標）
+                        const startFatPercentage = goalFatPercentage * 1.5;
+                        const totalToReduce = startFatPercentage - goalFatPercentage;
+                        const alreadyReduced = startFatPercentage - currentFatPercentage;
+                        fatProgress = Math.min(100, Math.max(0, (alreadyReduced / totalToReduce) * 100));
+                    } else if (currentFatPercentage <= goalFatPercentage) {
+                        // 已達到或超過目標體脂率
+                        fatProgress = 100;
+                    }
+                }
+
+                // 肌肉量達成率：基於目前肌肉量與目標肌肉量的差距計算
+                if (currentMuscle > 0 && goalMuscle > 0) {
+                    if (currentMuscle < goalMuscle) {
+                        // 增肌情況
+                        // 假設起始肌肉量是目標肌肉量的 0.8 倍（20% 不足）
+                        const startMuscle = goalMuscle * 0.8;
+                        const totalToGain = goalMuscle - startMuscle;
+                        const alreadyGained = currentMuscle - startMuscle;
+                        muscleProgress = Math.min(100, Math.max(0, (alreadyGained / totalToGain) * 100));
+                    } else if (currentMuscle >= goalMuscle) {
+                        // 已達到或超過目標肌肉量
+                        muscleProgress = 100;
+                    }
+                }
+
+                // 計算綜合達成率 (加權平均)
+                const overallProgress = Math.round((weightProgress * 0.4 + fatProgress * 0.3 + muscleProgress * 0.3));
+                
+                return Math.min(100, Math.max(0, overallProgress));
+            }
+
+            // 更新圖表
+            function updateGoalProgressChart(progress) {
+                const progressDecimal = progress / 100;
+                
+                var option = {
+                    series: [{
+                        type: 'liquidFill',
+                        data: [progressDecimal],
+                        radius: '65%',
+                        center: ['50%', '50%'],
+                        outline: {
+                            show: true,
+                            borderDistance: 3,
+                            itemStyle: {
+                                borderWidth: 2,
+                                borderColor: '#6b7b8c'
+                            }
+                        },
+                        backgroundStyle: { color: '#f5f7fa' },
+                        label: {
+                            normal: {
+                                formatter: progress + '%',
+                                fontSize: 20,
+                                color: '#34495e',
+                                fontWeight: 'bold'
+                            }
+                        },
+                        color: [{
+                            type: 'linear',
+                            x: 0, y: 0, x2: 0, y2: 1,
+                            colorStops: [
+                                { offset: 0, color: '#9c99a2' },
+                                { offset: 1, color: '#cddce6' }
+                            ]
+                        }]
                     }]
-                }]
-            };
+                };
 
-            myChart.setOption(option);
+                myChart.setOption(option);
+            }
 
-            // ✅ 讓圖表跟隨視窗大小縮放
+            // 初始計算並更新圖表
+            const initialProgress = calculateGoalProgress();
+            updateGoalProgressChart(initialProgress);
+
+            // 讓圖表跟隨視窗大小縮放
             window.addEventListener("resize", function () {
                 myChart.resize();
             });
+
+            // 返回更新函數，供其他地方調用
+            return {
+                update: function() {
+                    const progress = calculateGoalProgress();
+                    updateGoalProgressChart(progress);
+                }
+            };
         }
-        createGoalProgressChart();
+        // 創建目標達成率圖表並保存更新函數
+        window.goalProgressChart = createGoalProgressChart();
 
         // 創建身體組成比例圓餅圖
         function createBodyCompositionPieChart() {
+            // 清除舊的圖表
+            const chartContainer = document.querySelector("#body-composition-pie-chart");
+            chartContainer.innerHTML = '';
+            
             fetch('get_health_stats.php')
                 .then(response => response.json())
                 .then(data => {
@@ -1007,7 +1288,7 @@
                         }
                     };
 
-                    const chart = new ApexCharts(document.querySelector("#body-composition-pie-chart"), options);
+                    const chart = new ApexCharts(chartContainer, options);
                     chart.render();
                 })
                 .catch(error => {
@@ -1017,6 +1298,32 @@
 
         // 載入身體組成比例圖表
         createBodyCompositionPieChart();
+
+        // 設定目標功能
+        document.getElementById('saveGoalBtn').addEventListener('click', function() {
+            const goalWeight = document.getElementById('goal_weight').value;
+            const goalFatPercentage = document.getElementById('goal_fat_percentage').value;
+            const goalMuscle = document.getElementById('goal_muscle').value;
+
+            // 更新顯示的目標值
+            document.getElementById('goal-weight-display').textContent = goalWeight;
+            document.getElementById('goal-fat-percentage-display').textContent = goalFatPercentage;
+            document.getElementById('goal-muscle-display').textContent = goalMuscle;
+
+            // 關閉設定目標視窗
+            const setGoalModal = bootstrap.Modal.getInstance(document.getElementById('setGoalModal'));
+            setGoalModal.hide();
+
+            // 更新目標達成率圖表
+            if (window.goalProgressChart) {
+                window.goalProgressChart.update();
+            }
+
+            // 顯示成功提示
+            document.getElementById('successMessage').textContent = '目標設定成功！';
+            const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+            successModal.show();
+        });
 
         // 保存數據按鈕點擊事件
         document.getElementById('saveDataBtn').addEventListener('click', function () {
@@ -1085,7 +1392,13 @@
                             });
 
                         // 重新載入圖表數據
-                        loadChartData();
+                        const startDate = document.getElementById('start-date').value;
+                        const endDate = document.getElementById('end-date').value;
+                        if (startDate && endDate) {
+                            loadChartData(startDate, endDate);
+                        } else {
+                            loadChartData();
+                        }
                     } else {
                         // 顯示錯誤消息
                         document.getElementById('errorMessage').textContent = result.error || '保存數據時發生錯誤';
