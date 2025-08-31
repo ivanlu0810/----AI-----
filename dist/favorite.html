@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>健習生｜我的最愛</title>
+    <link rel="icon" href="images/fitness.png" type="image/png">
+
+    <!-- 字體 & Bootstrap -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/bootstrap.css">
+    <link rel="stylesheet" href="assets/vendors/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="assets/css/app.css">
+
+    <!-- 自訂樣式 -->
+    <style>
+        #favorite-list table {
+            border: 4px double #212529 !important;
+            border-collapse: collapse;
+        }
+
+        #favorite-list table th,
+        #favorite-list table td {
+            border: 3px double #495057 !important;
+            vertical-align: middle;
+        }
+
+        .training-details {
+            display: flex;
+            justify-content: space-between;
+            text-align: center;
+        }
+
+        .training-details div {
+            flex: 1;
+            padding: 4px 6px;
+            border-right: 3px double #495057;
+        }
+
+        .training-details div:last-child {
+            border-right: none;
+        }
+
+        .training-details strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        /* 動作詳情：莫蘭迪藍灰 */
+        .btn-detail {
+            background-color: #7f90a9 !important;
+            border: none;
+            color: #fff !important;
+        }
+
+        .btn-detail:hover,
+        .btn-detail:active,
+        .btn-detail:focus {
+            background-color: #67798f !important;
+            color: #fff !important;
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+        /* 移除：莫蘭迪紫紅 */
+        .btn-remove {
+            background-color: #94696d !important;
+            border: none;
+            color: #fff !important;
+        }
+
+        .btn-remove:hover,
+        .btn-remove:active,
+        .btn-remove:focus {
+            background-color: #7a5558 !important;
+            color: #fff !important;
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+        /* 表格與 footer 間距 */
+        #favorite-list {
+            margin-bottom: 60px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div id="sidebar" class="active">
+            <div class="sidebar-wrapper active">
+                <div class="sidebar-menu">
+                    <ul class="menu">
+                        <li class="sidebar-title">個人資訊</li>
+                        <li class="sidebar-item">
+                            <a href="index.html" class='sidebar-link'>
+                                <i class="bi bi-file-earmark-medical-fill"></i>
+                                <span>健康儀表板</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="profile.html" class='sidebar-link'>
+                                <i class="bi bi-person-badge-fill"></i>
+                                <span>基本資料</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-title">各類建議</li>
+                        <li class="sidebar-item">
+                            <a href="training.html" class='sidebar-link'>
+                                <i class="bi bi-pentagon-fill"></i>
+                                <span>訓練探索</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="food.html" class='sidebar-link'>
+                                <i class="bi bi-basket-fill"></i>
+                                <span>飲食指南</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-title">其他項目</li>
+                        <li class="sidebar-item active">
+                            <a href="favorite.html" class='sidebar-link'>
+                                <i class="bi bi-grid-1x2-fill"></i>
+                                <span>我的最愛</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="history.html" class='sidebar-link'>
+                                <i class="bi bi-pen-fill"></i>
+                                <span>歷史紀錄</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
+            </div>
+        </div>
+
+        <div id="main">
+            <header class="mb-3">
+                <a href="#" class="burger-btn d-block d-xl-none">
+                    <i class="bi bi-justify fs-3"></i>
+                </a>
+            </header>
+
+            <div class="page-heading">
+                <div class="page-title">
+                    <div class="row">
+                        <div class="col-12 col-md-6 order-md-1 order-last">
+                            <h3 class="mb-4-3 me-3">我的最愛🤍</h3>
+                            <p class="text-muted mt-2 mb-4" style="font-size: 1rem;">
+                                以下是訓練部位說明，可依此作為訓練參考依據，協助規劃適合您的健身菜單。
+                            </p>
+                        </div>
+                        <div class="col-12 col-md-6 order-md-2 order-first">
+                            <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="index.html">健康儀表板</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">我的最愛</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 收藏清單 -->
+            <div class="container">
+                <section class="section">
+                    <div id="favorite-list"></div>
+                </section>
+            </div>
+
+            <footer>
+                <div class="footer clearfix mb-0 text-muted">
+                    <div class="float-start">
+                        <p>健習生</p>
+                    </div>
+                    <div class="float-end">
+                        <p>謝昀倢 黃詠翰 呂沁垣 游博翔</p>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- 詳細說明 Modal -->
+    <div class="modal fade" id="exerciseModal" tabindex="-1" aria-labelledby="exerciseModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exerciseModalLabel">📌詳細說明</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="關閉"></button>
+                </div>
+                <div class="modal-body" id="exerciseModalBody">
+                    <!-- JS 動態插入內容 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS 套件 -->
+    <script src="assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/main.js"></script>
+
+    <!-- 收藏頁面邏輯 -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const list = document.getElementById("favorite-list");
+            const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+            if (favorites.length === 0) {
+                list.innerHTML = `
+          <div class="d-flex justify-content-center align-items-center" style="height:200px;">
+              <p class="fs-5" style="color:#58474d;">目前沒有收藏任何器材。</p>
+          </div>
+        `;
+                return;
+            }
+
+            let tableHTML = `
+        <table class="table text-center align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>#</th>
+              <th>名稱</th>
+              <th>目標肌群</th>
+              <th>增肌訓練</th>
+              <th>減脂訓練</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+            favorites.forEach((exercise, index) => {
+                const hypertrophyWeightMin = Math.round(parseFloat(exercise.hypertrophy_load_min_pct) || 0);
+                const hypertrophyWeightMax = hypertrophyWeightMin + 15;
+                const fatlossWeightMin = hypertrophyWeightMin - 20;
+                const fatlossWeightMax = hypertrophyWeightMin - 5;
+
+                tableHTML += `
+          <tr>
+            <td>${index + 1}</td>
+            <td>${exercise.name}</td>
+            <td>${exercise.target_muscle}</td>
+            <td>
+              <div class="training-details">
+                <div><strong>組數</strong>${exercise.hypertrophy_sets_min}-${exercise.hypertrophy_sets_max}</div>
+                <div><strong>次數</strong>${exercise.hypertrophy_reps_min}-${exercise.hypertrophy_reps_max}</div>
+                <div><strong>重量</strong>${hypertrophyWeightMin}-${hypertrophyWeightMax}%</div>
+              </div>
+            </td>
+            <td>
+              <div class="training-details">
+                <div><strong>組數</strong>${exercise.fatloss_sets_min}-${exercise.fatloss_sets_max}</div>
+                <div><strong>次數</strong>${exercise.fatloss_reps_min}-${exercise.fatloss_reps_max}</div>
+                <div><strong>重量</strong>${fatlossWeightMin}-${fatlossWeightMax}%</div>
+              </div>
+            </td>
+            <td>
+              <button class="btn btn-detail btn-sm me-1" 
+                      data-bs-toggle="modal" 
+                      data-bs-target="#exerciseModal"
+                      onclick='openExerciseModal(${JSON.stringify(exercise)}, ${index})'>
+                詳細說明
+              </button>
+              <button class="btn btn-remove btn-sm" onclick="removeFavorite('${exercise.name}')">
+                移除
+              </button>
+            </td>
+          </tr>
+        `;
+            });
+
+            tableHTML += "</tbody></table>";
+            list.innerHTML = tableHTML;
+        });
+
+        // 移除收藏
+        function removeFavorite(name) {
+            if (confirm(`確定要移除收藏：${name} 嗎？`)) {
+                let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+                favorites = favorites.filter(item => item.name !== name);
+                localStorage.setItem("favorites", JSON.stringify(favorites));
+                alert(`已移除收藏：${name}`);
+                location.reload();
+            }
+        }
+
+        // 詳細說明 Modal
+        function openExerciseModal(exercise, index) {
+            const modalBody = document.getElementById("exerciseModalBody");
+
+            modalBody.innerHTML = `
+
+        <div class="mb-3">
+          <h6>示範影片：</h6>
+          <video class="w-100 rounded shadow-sm" controls preload="metadata">
+            <source src="${exercise.video || ''}" type="video/mp4">
+            您的瀏覽器不支援影片播放。
+          </video>
+        </div>
+
+        <div class="mb-3">
+          <h6>動作解說：</h6>
+          <p>${exercise.description || "暫無說明"}</p>
+        </div>
+
+        <div class="mb-3">
+          <h6>適用對象：</h6>
+          <p>${exercise.suitable || "暫無資料"}</p>
+        </div>
+
+        <div class="mb-3">
+          <h6>注意事項：</h6>
+          <p>${exercise.warning || "暫無資料"}</p>
+        </div>
+      `;
+        }
+    </script>
+</body>
+
+</html>

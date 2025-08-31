@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <!-- 組員上傳就要執行這段指令同步 git pull origin main -->
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts-liquidfill@3/dist/echarts-liquidfill.min.js"></script>
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>健習生</title>
+    <title>健習生｜健康儀表板</title>
     <link rel="icon" href="images/fitness.png" type="image/png">
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -49,13 +51,57 @@
         /* 確保內容足夠長以觸發滾動 */
         .page-content {
             min-height: 120vh !important;
-            padding-bottom: 200px !important;
+            padding-bottom: 50px !important;
         }
 
         html,
         body {
             height: 100%;
             overflow: hidden;
+        }
+
+        .card {
+            border-radius: 16px;
+            /* 統一圓角 */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            /* 柔和陰影 */
+            margin-bottom: 20px;
+            /* 下方留白 */
+        }
+
+        .card .card-body {
+            padding: 1.25rem;
+            /* 讓內距一致 */
+        }
+
+        .card-body {
+            padding-top: 1.5rem !important;
+            /* 預設大約 1rem，加大一點 */
+            padding-bottom: 1.5rem !important;
+        }
+
+        .col-lg-3 .card {
+            margin-bottom: 24px;
+        }
+
+        .card-header {
+            padding: 1.2rem 1rem !important;
+            /* 上下間距 */
+            background-color: #f5f7fa;
+            /* 淡淡的灰藍色背景 */
+            border-bottom: 1px solid #e0e0e0;
+            /* 下邊框淡灰 */
+            border-radius: 12px 12px 0 0;
+            /* 讓標題區域圓角更柔和 */
+        }
+
+        .card-header h4 {
+            margin: 0;
+            line-height: 1.6;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #34495e;
+            /* 深灰藍，文字更穩重 */
         }
     </style>
 </head>
@@ -89,306 +135,46 @@
             <div class="sidebar-wrapper active">
                 <div class="sidebar-menu">
                     <ul class="menu">
-                        <li class="sidebar-title">Menu</li>
+                        <li class="sidebar-title">個人資訊</li>
 
                         <li class="sidebar-item active">
                             <a href="index.html" class='sidebar-link'>
+                                <i class="bi bi-file-earmark-medical-fill"></i>
+                                <span>健康儀表板</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="profile.html" class='sidebar-link'>
                                 <i class="bi bi-person-badge-fill"></i>
                                 <span>基本資料</span>
                             </a>
-                        </li>
-
+                        </li>                        
+                        <li class="sidebar-title">各類建議</li>
                         <li class="sidebar-item">
                             <a href="training.html" class='sidebar-link'>
-                                <i class="bi bi-file-earmark-medical-fill"></i>
-                                <span>訓練部位</span>
-                            </a>
-                        </li>
-
-                        <!-- 其他側邊欄項目保持不變 -->
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-collection-fill"></i>
-                                <span>Extra Components</span>
-                            </a>
-                            <ul class="submenu ">
-                                <li class="submenu-item ">
-                                    <a href="extra-component-avatar.html">Avatar</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="extra-component-sweetalert.html">Sweet Alert</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="extra-component-toastify.html">Toastify</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="extra-component-rating.html">Rating</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="extra-component-divider.html">Divider</a>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-grid-1x2-fill"></i>
-                                <span>Layouts</span>
-                            </a>
-                            <ul class="submenu ">
-                                <li class="submenu-item ">
-                                    <a href="layout-default.html">Default Layout</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="layout-vertical-1-column.html">1 Column</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="layout-vertical-navbar.html">Vertical with Navbar</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="layout-horizontal.html">Horizontal Menu</a>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li class="sidebar-title">Forms &amp; Tables</li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-hexagon-fill"></i>
-                                <span>Form Elements</span>
-                            </a>
-                            <ul class="submenu ">
-                                <li class="submenu-item ">
-                                    <a href="form-element-input.html">Input</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="form-element-input-group.html">Input Group</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="form-element-select.html">Select</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="form-element-radio.html">Radio</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="form-element-checkbox.html">Checkbox</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="form-element-textarea.html">Textarea</a>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li class="sidebar-item  ">
-                            <a href="form-layout.html" class='sidebar-link'>
-                                <i class="bi bi-file-earmark-medical-fill"></i>
-                                <span>Form Layout</span>
-                            </a>
-                        </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-pen-fill"></i>
-                                <span>Form Editor</span>
-                            </a>
-                            <ul class="submenu ">
-                                <li class="submenu-item ">
-                                    <a href="form-editor-quill.html">Quill</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="form-editor-ckeditor.html">CKEditor</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="form-editor-summernote.html">Summernote</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="form-editor-tinymce.html">TinyMCE</a>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li class="sidebar-item  ">
-                            <a href="table.html" class='sidebar-link'>
-                                <i class="bi bi-grid-1x2-fill"></i>
-                                <span>Table</span>
-                            </a>
-                        </li>
-
-                        <li class="sidebar-item  ">
-                            <a href="table-datatable.html" class='sidebar-link'>
-                                <i class="bi bi-file-earmark-spreadsheet-fill"></i>
-                                <span>Datatable</span>
-                            </a>
-                        </li>
-
-                        <li class="sidebar-title">Extra UI</li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
                                 <i class="bi bi-pentagon-fill"></i>
-                                <span>Widgets</span>
+                                <span>訓練探索</span>
                             </a>
-                            <ul class="submenu ">
-                                <li class="submenu-item ">
-                                    <a href="ui-widgets-chatbox.html">Chatbox</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="ui-widgets-pricing.html">Pricing</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="ui-widgets-todolist.html">To-do List</a>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-egg-fill"></i>
-                                <span>Icons</span>
-                            </a>
-                            <ul class="submenu ">
-                                <li class="submenu-item ">
-                                    <a href="ui-icons-bootstrap-icons.html">Bootstrap Icons </a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="ui-icons-fontawesome.html">Fontawesome</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="ui-icons-dripicons.html">Dripicons</a>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-bar-chart-fill"></i>
-                                <span>Charts</span>
-                            </a>
-                            <ul class="submenu ">
-                                <li class="submenu-item ">
-                                    <a href="ui-chart-chartjs.html">ChartJS</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="ui-chart-apexcharts.html">Apexcharts</a>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li class="sidebar-item  ">
-                            <a href="ui-file-uploader.html" class='sidebar-link'>
-                                <i class="bi bi-cloud-arrow-up-fill"></i>
-                                <span>File Uploader</span>
-                            </a>
-                        </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-map-fill"></i>
-                                <span>Maps</span>
-                            </a>
-                            <ul class="submenu ">
-                                <li class="submenu-item ">
-                                    <a href="ui-map-google-map.html">Google Map</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="ui-map-jsvectormap.html">JS Vector Map</a>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li class="sidebar-title">Pages</li>
-
-                        <li class="sidebar-item  ">
-                            <a href="application-email.html" class='sidebar-link'>
-                                <i class="bi bi-envelope-fill"></i>
-                                <span>Email Application</span>
-                            </a>
-                        </li>
-
-                        <li class="sidebar-item  ">
-                            <a href="application-chat.html" class='sidebar-link'>
-                                <i class="bi bi-chat-dots-fill"></i>
-                                <span>Chat Application</span>
-                            </a>
-                        </li>
-
-                        <li class="sidebar-item  ">
-                            <a href="application-gallery.html" class='sidebar-link'>
-                                <i class="bi bi-image-fill"></i>
-                                <span>Photo Gallery</span>
-                            </a>
-                        </li>
-
-                        <li class="sidebar-item  ">
-                            <a href="application-checkout.html" class='sidebar-link'>
+                        </li>                    
+                        <li class="sidebar-item">
+                            <a href="food.html" class='sidebar-link'>
                                 <i class="bi bi-basket-fill"></i>
-                                <span>Checkout Page</span>
+                                <span>飲食指南</span>
                             </a>
                         </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-person-badge-fill"></i>
-                                <span>Authentication</span>
-                            </a>
-                            <ul class="submenu ">
-                                <li class="submenu-item ">
-                                    <a href="auth-login.html">Login</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="auth-register.html">Register</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="auth-forgot-password.html">Forgot Password</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="logout.php">Logout</a>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-x-octagon-fill"></i>
-                                <span>Errors</span>
-                            </a>
-                            <ul class="submenu ">
-                                <li class="submenu-item ">
-                                    <a href="error-403.html">403</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="error-404.html">404</a>
-                                </li>
-                                <li class="submenu-item ">
-                                    <a href="error-500.html">500</a>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li class="sidebar-title">Raise Support</li>
-
-                        <li class="sidebar-item  ">
-                            <a href="https://zuramai.github.io/mazer/docs" class='sidebar-link'>
-                                <i class="bi bi-life-preserver"></i>
-                                <span>Documentation</span>
+                        <li class="sidebar-title">其他項目</li>
+                        <li class="sidebar-item">
+                            <a href="favorite.html" class='sidebar-link'>
+                                <i class="bi bi-grid-1x2-fill"></i>
+                                <span>我的最愛</span>
                             </a>
                         </li>
-
-                        <li class="sidebar-item  ">
-                            <a href="https://github.com/zuramai/mazer/blob/main/CONTRIBUTING.md" class='sidebar-link'>
-                                <i class="bi bi-puzzle"></i>
-                                <span>Contribute</span>
+                        <li class="sidebar-item">
+                            <a href="history.html" class='sidebar-link'>
+                                <i class="bi bi-pen-fill"></i>
+                                <span>歷史紀錄</span>
                             </a>
                         </li>
-
-                        <li class="sidebar-item  ">
-                            <a href="https://github.com/zuramai/mazer#donate" class='sidebar-link'>
-                                <i class="bi bi-cash"></i>
-                                <span>Donate</span>
-                            </a>
-                        </li>
-
                     </ul>
                 </div>
                 <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
@@ -403,13 +189,12 @@
 
             <div class="page-heading">
                 <div class="d-flex align-items-center">
-                    <h3 class="mb-0 me-3">基本資料
+                    <h3 class="mb-0 me-3">健康儀表板🔎
                     </h3>
-                    <button class="btn btn-primary d-flex align-items-center" data-bs-toggle="modal"
+                    <button class="btn btn-custom d-flex align-items-center" data-bs-toggle="modal"
                         data-bs-target="#addDataModal">
                         <i class="bi bi-plus-circle me-2"></i>新增數據
                     </button>
-
                 </div>
             </div>
             <p class="text-muted mt-2 mb-4" style="font-size: 1rem;">
@@ -628,7 +413,7 @@
                                         <p class="text-muted mb-0">70.0 kg</p>
                                     </div>
                                 </div>
-                                
+
                                 <div class="mx-auto w-75 d-flex align-items-center justify-content-start py-3">
                                     <div class="goal-icon rounded-circle d-flex align-items-center justify-content-center me-3"
                                         style="width: 40px; height: 40px; background-color: #cfddd6; overflow: hidden;">
@@ -640,7 +425,7 @@
                                         <p class="text-muted mb-0">15.0%</p>
                                     </div>
                                 </div>
-                                
+
                                 <div class="mx-auto w-75 d-flex align-items-center justify-content-start py-3">
                                     <div class="goal-icon rounded-circle d-flex align-items-center justify-content-center me-3"
                                         style="width: 40px; height: 40px; background-color: #e6d4da; overflow: hidden;">
@@ -657,12 +442,21 @@
                                 </div>
                             </div>
                         </div>
-
-                        <div class="card">
+                        <div class="card text-center equal-h">
+                            <div class="card-header">
+                                <h4 class="fw-bold">目標達成率</h4>
+                            </div>
+                            <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                                <div id="goal-progress-chart"
+                                    style="width: 100%; aspect-ratio: 1/1; max-height: 200px;"></div>
+                                <p class="mt-3 text-muted">離目標只差一點，加油！</p>
+                            </div>
+                        </div>
+                        <div class="card equal-h">
                             <div class="card-header">
                                 <h4 class="text-center">身體組成比例</h4>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body d-flex flex-column justify-content-center align-items-center">
                                 <div id="body-composition-pie-chart"></div>
                             </div>
                         </div>
@@ -887,12 +681,12 @@
                 }],
                 chart: {
                     type: 'line',
-                    height: 350,
+                    height: 390,
                     toolbar: {
                         show: false
                     }
                 },
-                colors: ['#8798D5'],
+                colors: ['#AB8B8B'],
                 dataLabels: {
                     enabled: true,
                     formatter: function (val) {
@@ -950,12 +744,12 @@
                 }],
                 chart: {
                     type: 'line',
-                    height: 350,
+                    height: 390,
                     toolbar: {
                         show: false
                     }
                 },
-                colors: ['#7F5365', '#CDA3A3'],
+                colors: ['#99898C', '#60575A'],
                 dataLabels: {
                     enabled: true,
                     formatter: function (val) {
@@ -1007,12 +801,12 @@
                 }],
                 chart: {
                     type: 'line',
-                    height: 350,
+                    height: 390,
                     toolbar: {
                         show: false
                     }
                 },
-                colors: ['#A1CCCF'],
+                colors: ['#745E60'],
                 dataLabels: {
                     enabled: true,
                     formatter: function (val) {
@@ -1064,12 +858,12 @@
                 }],
                 chart: {
                     type: 'line',
-                    height: 350,
+                    height: 390,
                     toolbar: {
                         show: false
                     }
                 },
-                colors: ['#988AD2'],
+                colors: ['#9C7178'],
                 dataLabels: {
                     enabled: true,
                     formatter: function (val) {
@@ -1109,6 +903,53 @@
 
         // 載入圖表數據
         loadChartData();
+        // 目標達成率圓環圖
+        function createGoalProgressChart() {
+            var chartDom = document.querySelector("#goal-progress-chart");
+            var myChart = echarts.init(chartDom);
+
+            var option = {
+                series: [{
+                    type: 'liquidFill',
+                    data: [0.72], // 72%
+                    radius: '65%',
+                    center: ['50%', '50%'],
+                    outline: {
+                        show: true,
+                        borderDistance: 3,
+                        itemStyle: {
+                            borderWidth: 2,
+                            borderColor: '#6b7b8c'
+                        }
+                    },
+                    backgroundStyle: { color: '#f5f7fa' },
+                    label: {
+                        normal: {
+                            formatter: '72%',
+                            fontSize: 20,
+                            color: '#34495e',
+                            fontWeight: 'bold'
+                        }
+                    },
+                    color: [{
+                        type: 'linear',
+                        x: 0, y: 0, x2: 0, y2: 1,
+                        colorStops: [
+                            { offset: 0, color: '#9c99a2' },
+                            { offset: 1, color: '#cddce6' }
+                        ]
+                    }]
+                }]
+            };
+
+            myChart.setOption(option);
+
+            // ✅ 讓圖表跟隨視窗大小縮放
+            window.addEventListener("resize", function () {
+                myChart.resize();
+            });
+        }
+        createGoalProgressChart();
 
         // 創建身體組成比例圓餅圖
         function createBodyCompositionPieChart() {
@@ -1126,10 +967,10 @@
                         series: [latestSkeletal, latestBodyFat, otherComposition],
                         chart: {
                             type: 'donut',
-                            height: 250
+                            height: 260
                         },
                         labels: ['骨骼肌', '體脂肪', '其他'],
-                        colors: ['#BFC5DB', '#DCBEDA', '#C7C7C7'],
+                        colors: ['#BFC5DB', '#B2ABC5', '#C7C7C7'],
                         dataLabels: {
                             enabled: true,
                             formatter: function (val, opts) {

@@ -56,3 +56,12 @@ app.post("/api/chat", async (req, res) => {
 app.listen(3001, () => {
   console.log("✅ Server running on http://localhost:3001");
 });
+app.get("/api/favorites", async (req, res) => {
+  try {
+    const [rows] = await db.query("SELECT * FROM favorites");
+    res.json(rows);
+  } catch (err) {
+    console.error("❌ 讀取收藏失敗：", err);
+    res.status(500).json({ error: "讀取收藏失敗" });
+  }
+});
