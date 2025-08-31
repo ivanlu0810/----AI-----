@@ -131,7 +131,7 @@ async function sendMessage() {
   } */
 
   try {
-    const response = await fetch("http://localhost:3001/api/chat", {
+    const response = await fetch("http://localhost/chatbox.php", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -141,19 +141,6 @@ async function sendMessage() {
 
     const data = await response.json();
     const aiReply = data.choices?.[0]?.message?.content || "❌ 無法取得回覆";
-
-    // ✅ 特殊指令處理：開啟健康數據 modal
-    if (aiReply === "__trigger_modal_addData__") {
-      const modalBtn = document.querySelector(
-        'button[data-bs-target="#addDataModal"]'
-      );
-      if (modalBtn) {
-        modalBtn.click(); // 直接觸發 modal 開啟
-      } else {
-        console.warn("找不到新增健康數據的按鈕");
-      }
-      return; // 不顯示訊息
-    }
 
     // 🟢 一般訊息照常顯示
     appendMessage(aiReply, "bot");
