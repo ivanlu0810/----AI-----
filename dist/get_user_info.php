@@ -9,6 +9,7 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
 }
 
 $user_info = [
+    'userid' => $_SESSION['user_id'] ?? 'Unknown UserID',
     'username' => $_SESSION['username'] ?? 'Unknown User',
     'email' => $_SESSION['email'] ?? 'No email',
     'gender' => $_SESSION['gender'] ?? 'Unknown',

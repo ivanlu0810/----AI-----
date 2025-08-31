@@ -118,31 +118,19 @@ async function sendMessage() {
 
   appendMessage(text, "user");
   input.value = "";
-
-  // ✅ 只要包含「健康數據」就觸發
-  /* if (text.includes('健康數據')) {
-    const targetBtn = document.querySelector('button[data-bs-target="#addDataModal"]');
-    if (targetBtn) {
-      targetBtn.click(); // 觸發 click 事件
-    } else {
-      console.warn('找不到新增健康數據的按鈕');
-    }
-    return; // 不再呼叫 AI 回覆
-  } */
-
+  const userId = document.getElementById("user-id").textContent;
   try {
     const response = await fetch("http://localhost/chatbox.php", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        user_id: userId, // 帶上 userId
         messages: [{ role: "user", content: text }],
       }),
     });
 
     const data = await response.json();
-    const aiReply = data.choices?.[0]?.message?.content || "❌ 無法取得回覆";
-
-    // 🟢 一般訊息照常顯示
+    const aiReply = data.reply || "❌ 無法取得回覆";
     appendMessage(aiReply, "bot");
   } catch (err) {
     console.error("錯誤：", err);
