@@ -26,7 +26,8 @@
             height: 120px;
             border-radius: 50%;
             object-fit: cover;
-            border: 3px solid #95abc3;
+            border: none;
+            /* 移除外框 */
         }
 
         /* 必填星號（柔和莫蘭迪紅） */
@@ -54,7 +55,7 @@
 
         /* 保存修改 → 藍紫色 */
         .btn-save {
-            background-color: #4e5d94 !important;
+            background-color: #5A628C !important;
             border: none !important;
             color: #fff !important;
         }
@@ -62,7 +63,7 @@
         .btn-save:hover,
         .btn-save:active,
         .btn-save:focus {
-            background-color: #3d4b78 !important;
+            background-color: #4e567d !important;
             color: #fff !important;
             box-shadow: none !important;
             outline: none !important;
@@ -100,6 +101,33 @@
         .spinner-border-sm {
             width: 1rem;
             height: 1rem;
+        }
+
+        /* 讓標題置中 */
+        .card-header {
+            padding: 1rem 1rem;
+            background-color: #f8f9fa;
+            text-align: center;
+            border-bottom: 1px solid #dee2e6;
+            /* 分隔線 */
+            margin-bottom: 0.75rem;
+            /* ✨ 讓 header 與 body 之間有空隙 */
+        }
+
+        .card-header h6 {
+            margin: 0;
+            font-size: 1.05rem;
+            /* 稍微放大字體 */
+            font-weight: 600;
+            color: #2c3e50;
+            /* 深藍灰，辨識度更高 */
+        }
+
+        .card-body {
+            padding-top: 2rem;
+            /* 原本可能是 1rem，往下加大 */
+            padding-bottom: 1.25rem;
+            /* 保持下方間距 */
         }
     </style>
 </head>
@@ -191,55 +219,80 @@
                             </div>
                         </div>
                     </div>
-
                     <form id="profileForm">
                         <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="name" class="form-label">姓名<span>*</span></label>
-                                <input type="text" class="form-control" id="name" name="name" placeholder="請輸入姓名" required>
+                            <!-- 基本資料 -->
+                            <div class="col-12 mb-4">
+                                <div class="card shadow-sm">
+                                    <div class="card-header bg-light">
+                                        <h6 class="mb-0">基本資料</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <!-- 第一行：姓名 + 性別 -->
+                                            <div class="col-md-6 mb-3">
+                                                <label for="name" class="form-label">姓名 *</label>
+                                                <input type="text" class="form-control" id="name" name="name" required>
+                                            </div>
+
+                                            <div class="col-md-6 mb-3">
+                                                <label for="gender" class="form-label">性別 *</label>
+                                                <select class="form-control" id="gender" name="gender" required>
+                                                    <option value="male">男性</option>
+                                                    <option value="female">女性</option>
+                                                </select>
+                                            </div>
+
+                                            <!-- 第二行：電子郵件，佔滿一整行 -->
+                                            <div class="col-md-12 mb-3">
+                                                <label for="email" class="form-label">電子郵件 *</label>
+                                                <input type="email" class="form-control" id="email" name="email"
+                                                    required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="email" class="form-label">電子郵件<span>*</span></label>
-                                <input type="email" class="form-control" id="email" name="email" placeholder="請輸入電子郵件" required>
+
+                            <!-- 帳號安全 -->
+                            <div class="col-12 mb-4">
+                                <div class="card shadow-sm">
+                                    <div class="card-header bg-light">
+                                        <h6 class="mb-0">帳號安全</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="password" class="form-label">密碼<span>*</span></label>
+                                                <input type="password" class="form-control" id="password"
+                                                    name="password" placeholder="********" required>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="confirmPassword"
+                                                    class="form-label">確認密碼<span>*</span></label>
+                                                <input type="password" class="form-control" id="confirmPassword"
+                                                    name="confirmPassword" placeholder="********" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="password" class="form-label">密碼<span>*</span></label>
-                                <input type="password" class="form-control" id="password" name="password" placeholder="********"
-                                    required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="confirmPassword" class="form-label">確認密碼<span>*</span></label>
-                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="********"
-                                    required>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="gender" class="form-label">性別<span>*</span></label>
-                                <select class="form-select" id="gender" name="gender" required>
-                                    <option value="">請選擇性別</option>
-                                    <option value="male">男性</option>
-                                    <option value="female">女性</option>
-                                    <option value="other">其他</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="d-flex justify-content-end gap-2">
+                        <!-- 按鈕區 -->
+                        <div class="d-flex justify-content-end gap-2 mt-3">
                             <button type="reset" class="btn btn-cancel">取消修改</button>
                             <button type="submit" class="btn btn-save" id="saveBtn">
                                 <span class="btn-text">保存修改</span>
                                 <span class="btn-loading" style="display: none;">
-                                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                    <span class="spinner-border spinner-border-sm me-2" role="status"
+                                        aria-hidden="true"></span>
                                     儲存中...
                                 </span>
                             </button>
                         </div>
                     </form>
+
                 </div>
             </div>
 
@@ -264,7 +317,7 @@
     <!-- 大頭貼即時預覽 + 表單處理 -->
     <script>
         // 頁面載入時獲取用戶資料
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             loadUserProfile();
         });
 
@@ -274,38 +327,40 @@
                 const response = await fetch('get_user_info.php');
                 if (response.ok) {
                     const userData = await response.json();
-                    
+
                     // 填充表單欄位
                     document.getElementById('name').value = userData.username || '';
                     document.getElementById('email').value = userData.email || '';
                     document.getElementById('gender').value = userData.gender || '';
-                    
+
                     // 更新大頭貼顯示
                     if (userData.avatar) {
                         document.getElementById('avatarPreview').src = userData.avatar;
                     }
-                    
+
                     // 密碼欄位保持空白，讓用戶重新輸入
-                    document.getElementById('password').value = '';
-                    document.getElementById('confirmPassword').value = '';
-                    
+                    if (document.getElementById('password')) {
+                        document.getElementById('password').value = '';
+                    }
+                    if (document.getElementById('confirmPassword')) {
+                        document.getElementById('confirmPassword').value = '';
+                    }
+
                     console.log('用戶資料載入成功:', userData);
                 } else {
                     console.error('載入用戶資料失敗:', response.status);
-                    // 如果載入失敗，顯示預設值
                     document.getElementById('name').value = '請先登入';
                     document.getElementById('email').value = '請先登入';
                 }
             } catch (error) {
                 console.error('載入用戶資料時發生錯誤:', error);
-                // 如果發生錯誤，顯示預設值
                 document.getElementById('name').value = '載入失敗';
                 document.getElementById('email').value = '載入失敗';
             }
         }
 
         // 大頭貼上傳按鈕點擊事件
-        document.getElementById("uploadBtn").addEventListener("click", function() {
+        document.getElementById("uploadBtn").addEventListener("click", function () {
             document.getElementById("avatarInput").click();
         });
 
@@ -319,7 +374,7 @@
                     document.getElementById("avatarPreview").src = e.target.result;
                 };
                 reader.readAsDataURL(file);
-                
+
                 // 上傳到伺服器
                 await uploadAvatar(file);
             }
@@ -329,15 +384,15 @@
         async function uploadAvatar(file) {
             const formData = new FormData();
             formData.append('avatar', file);
-            
+
             try {
                 const response = await fetch('upload_avatar.php', {
                     method: 'POST',
                     body: formData
                 });
-                
+
                 const result = await response.json();
-                
+
                 if (result.success) {
                     alert('大頭貼上傳成功！');
                     // 更新顯示的大頭貼路徑
@@ -356,27 +411,27 @@
         }
 
         // 表單提交處理
-        document.getElementById('profileForm').addEventListener('submit', async function(e) {
+        document.getElementById('profileForm').addEventListener('submit', async function (e) {
             e.preventDefault();
-            
+
             // 驗證密碼確認
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
-            
+
             if (password !== confirmPassword) {
                 alert('密碼確認不符！');
                 return;
             }
-            
+
             // 顯示載入狀態
             const saveBtn = document.getElementById('saveBtn');
             const btnText = saveBtn.querySelector('.btn-text');
             const btnLoading = saveBtn.querySelector('.btn-loading');
-            
+
             btnText.style.display = 'none';
             btnLoading.style.display = 'inline-block';
             saveBtn.disabled = true;
-            
+
             try {
                 // 準備要發送的資料
                 const formData = {
@@ -385,7 +440,7 @@
                     password: password,
                     gender: document.getElementById('gender').value
                 };
-                
+
                 // 發送 AJAX 請求到後端 API
                 const response = await fetch('update_profile.php', {
                     method: 'POST',
@@ -394,22 +449,22 @@
                     },
                     body: JSON.stringify(formData)
                 });
-                
+
                 const result = await response.json();
-                
+
                 if (result.success) {
                     alert(result.message);
-                    
+
                     // 重新載入用戶資料
                     await loadUserProfile();
-                    
+
                     // 清空密碼欄位
                     document.getElementById('password').value = '';
                     document.getElementById('confirmPassword').value = '';
                 } else {
                     alert('更新失敗：' + result.error);
                 }
-                
+
             } catch (error) {
                 console.error('更新資料時發生錯誤:', error);
                 alert('更新資料失敗，請稍後再試。');
@@ -422,7 +477,7 @@
         });
 
         // 取消修改按鈕
-        document.querySelector('.btn-cancel').addEventListener('click', function() {
+        document.querySelector('.btn-cancel').addEventListener('click', function () {
             if (confirm('確定要取消修改嗎？未保存的更改將會遺失。')) {
                 // 重新載入用戶資料，恢復原始值
                 loadUserProfile();

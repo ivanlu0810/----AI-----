@@ -21,6 +21,10 @@
     <link rel="stylesheet" href="assets/css/chatbox.css" />
     <link rel="shortcut icon" href="assets/images/favicon.svg" type="image/x-icon">
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/zh.js"></script>
+
     <style>
         .stats-icon.orange {
             background-color: #ff9500;
@@ -66,27 +70,38 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
             /* 柔和陰影 */
             margin-bottom: 20px;
-            /* 下方留白 */
+            /* 統一上下間距 */
+            margin-top: 20px;
         }
 
         .card .card-body {
-            padding: 1.25rem;
-            /* 讓內距一致 */
+            padding: 1rem;
+            /* 減少內距 */
         }
 
         .card-body {
-            padding-top: 1.5rem !important;
-            /* 預設大約 1rem，加大一點 */
-            padding-bottom: 1.5rem !important;
+            padding-top: 1.25rem !important;
+            /* 減少上下內距 */
+            padding-bottom: 1.25rem !important;
         }
 
         .col-lg-3 .card {
-            margin-bottom: 24px;
+            margin-bottom: 20px;
+            margin-top: 20px;
+        }
+
+        /* 統計卡片緊湊樣式 */
+        .stats-card .card-body {
+            padding: 0.75rem 1rem !important;
+        }
+
+        .stats-card h6 {
+            margin-bottom: 0.25rem !important;
         }
 
         .card-header {
-            padding: 1.2rem 1rem !important;
-            /* 上下間距 */
+            padding: 1rem 1rem !important;
+            /* 減少上下間距 */
             background-color: #f5f7fa;
             /* 淡淡的灰藍色背景 */
             border-bottom: 1px solid #e0e0e0;
@@ -124,6 +139,91 @@
         .avatar img:hover {
             border-color: #95abc3;
         }
+
+        /* 讓左右欄位高度一致 */
+        /* 取消第一列卡片的 margin-top */
+        .col-lg-9 .row:first-child .card {
+            margin-top: 0 !important;
+        }
+
+        .col-lg-3 {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 讓卡片能填滿高度 */
+        .card {
+            flex: 1 1 auto;
+        }
+
+        .date-input {
+            width: 160px !important;
+            /* 增加寬度（原本140px → 160px） */
+            text-align: center;
+            /* 文字置中 */
+            display: inline-block;
+            padding-right: 6px;
+            /* 預留內距，避免文字貼邊 */
+            padding-left: 6px;
+        }
+
+        /* 基本樣式 */
+        .date-btn {
+            border: none;
+            color: #fff;
+            /* 預設白字 */
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 6px;
+            transition: background-color 0.3s ease;
+        }
+
+        /* 三顆按鈕各自顏色 */
+        #apply-date-range {
+            background-color: #b0bccf;
+            /* 深藍灰 */
+        }
+
+        #apply-date-range:hover {
+            background-color: #9daac0;
+            /* hover 深一點 */
+            color: #fff;
+            /* 保持白字 */
+        }
+
+        #reset-date-range {
+            background-color: #9aaec7;
+            /* 中灰藍 */
+        }
+
+        #reset-date-range:hover {
+            background-color: #869bb5;
+            /* hover 深一點 */
+            color: #fff;
+        }
+
+        #last-30-days {
+            background-color: #c7d3e6;
+            /* 淺灰藍 */
+        }
+
+        #last-30-days:hover {
+            background-color: #b2bfd8;
+            /* hover 深一點 */
+            color: #fff;
+        }
+
+        .btn-primary {
+            background-color: #5A628C !important;
+            border-color: #5A628C !important;
+            color: #fff !important;
+        }
+
+        .btn-primary:hover {
+            background-color: #4e567d !important;
+            border-color: #4e567d !important;
+        }
+                
     </style>
 </head>
 
@@ -229,11 +329,11 @@
                 以下為您目前最新的基本身體資料，系統會自動統計最近一次的數值顯示於下方。
             </p>
             <div class="page-content">
-                <section class="row">
-                    <div class="col-12 col-lg-9">
+                <section class="row align-items-stretch">
+                    <div class="col-12 col-lg-9 d-flex flex-column">
                         <div class="row">
                             <div class="col-12 col-sm-6 col-md-6 col-lg-3">
-                                <div class="card">
+                                <div class="card stats-card">
                                     <div class="card-body d-flex justify-content-center align-items-center">
                                         <div class="d-flex align-items-center">
                                             <!-- 紫色 ICON -->
@@ -243,7 +343,7 @@
                                             </div>
                                             <!-- 文字內容 -->
                                             <div class="text-center">
-                                                <h6 class="text-muted font-semibold">記錄筆數</h6>
+                                                <h6 class="text-muted font-semibold mb-1">記錄筆數</h6>
                                                 <h6 class="font-extrabold mb-0" id="total-records">0 筆</h6>
                                             </div>
                                         </div>
@@ -251,7 +351,7 @@
                                 </div>
                             </div>
                             <div class="col-12 col-sm-6 col-md-6 col-lg-3">
-                                <div class="card">
+                                <div class="card stats-card">
                                     <div class="card-body d-flex justify-content-center align-items-center">
                                         <div class="d-flex align-items-center">
                                             <div class="stats-icon morandi-blue me-3">
@@ -267,7 +367,7 @@
                                 </div>
                             </div>
                             <div class="col-12 col-sm-6 col-md-6 col-lg-3">
-                                <div class="card">
+                                <div class="card stats-card">
                                     <div class="card-body d-flex justify-content-center align-items-center">
                                         <div class="d-flex align-items-center">
                                             <div class="stats-icon morandi-green me-3">
@@ -283,7 +383,7 @@
                                 </div>
                             </div>
                             <div class="col-12 col-sm-6 col-md-6 col-lg-3">
-                                <div class="card">
+                                <div class="card stats-card">
                                     <div class="card-body d-flex justify-content-center align-items-center">
                                         <div class="d-flex align-items-center">
                                             <div class="stats-icon morandi-pink me-3">
@@ -299,7 +399,7 @@
                                 </div>
                             </div>
                             <div class="col-12 col-sm-6 col-md-6 col-lg-3">
-                                <div class="card">
+                                <div class="card stats-card">
                                     <div class="card-body d-flex justify-content-center align-items-center">
                                         <div class="d-flex align-items-center">
                                             <div class="stats-icon morandi-apricot me-3">
@@ -315,7 +415,7 @@
                                 </div>
                             </div>
                             <div class="col-12 col-sm-6 col-md-6 col-lg-3">
-                                <div class="card">
+                                <div class="card stats-card">
                                     <div class="card-body d-flex justify-content-center align-items-center">
                                         <div class="d-flex align-items-center">
                                             <div class="stats-icon morandi-graygreen me-3">
@@ -331,7 +431,7 @@
                                 </div>
                             </div>
                             <div class="col-12 col-sm-6 col-md-6 col-lg-3">
-                                <div class="card">
+                                <div class="card stats-card">
                                     <div class="card-body d-flex justify-content-center align-items-center">
                                         <div class="d-flex align-items-center">
                                             <div class="stats-icon morandi-gray me-3">
@@ -347,7 +447,7 @@
                                 </div>
                             </div>
                             <div class="col-12 col-sm-6 col-md-6 col-lg-3">
-                                <div class="card">
+                                <div class="card stats-card">
                                     <div class="card-body d-flex justify-content-center align-items-center">
                                         <div class="d-flex align-items-center">
                                             <div class="stats-icon morandi-cream me-3">
@@ -364,27 +464,38 @@
                             </div>
                         </div>
                         <!-- 時間範圍選擇器 -->
-                        <div class="row mb-4">
+                        <div class="row mb-2">
                             <div class="col-12">
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="d-flex align-items-center justify-content-between">
                                             <h6 class="mb-0">圖表時間範圍</h6>
                                             <div class="d-flex align-items-center">
-                                                <input type="date" id="start-date" class="form-control me-2" style="width: auto;">
+
+                                                <!-- 開始日期 -->
+                                                <input type="date" id="start-date" class="form-control me-2 date-input"
+                                                    placeholder="年／月／日">
                                                 <span class="me-2">至</span>
-                                                <input type="date" id="end-date" class="form-control me-3" style="width: auto;">
-                                                                                                 <button class="btn btn-primary btn-sm" id="apply-date-range">套用範圍</button>
-                                                 <button class="btn btn-outline-secondary btn-sm ms-2" id="reset-date-range">重置</button>
-                                                 <button class="btn btn-outline-info btn-sm ms-2" id="last-30-days">最近30天</button>
+
+                                                <!-- 結束日期 -->
+                                                <input type="date" id="end-date" class="form-control me-3 date-input"
+                                                    placeholder="年／月／日">
+
+                                                <!-- 操作按鈕 -->
+                                                <button class="btn date-btn btn-sm" id="apply-date-range">套用範圍</button>
+                                                <button class="btn date-btn btn-sm ms-2"
+                                                    id="last-30-days">最近30天</button>
+                                                <button class="btn date-btn btn-sm ms-2"
+                                                    id="reset-date-range">重置</button>
+
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
-                        <div class="row">
+
+                        <div class="row mt-0">
                             <div class="col-12 col-lg-6">
                                 <div class="card">
                                     <div class="card-header">
@@ -430,8 +541,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-3">
-                        <div class="card">
+                    <div class="col-12 col-lg-3 d-flex flex-column">
+                        <div class="card mt-0">
                             <div class="card-body py-4 px-5">
                                 <div class="d-flex align-items-center">
                                     <div class="avatar avatar-xl">
@@ -444,7 +555,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card text-center">
+                        <div class="card text-center mt-3">
                             <div class="card-header">
                                 <h4 class="fw-bold">健康目標追蹤</h4>
                             </div>
@@ -460,9 +571,11 @@
                                     <div class="text-start flex-grow-1">
                                         <h6 class="mb-2 fw-bold text-dark">目標體重</h6>
                                         <div class="d-flex align-items-center" style="min-width: 0;">
-                                            <div class="text-muted fw-normal" style="min-width: 80px;">目前: <span id="current-weight" class="fw-semibold">0.0</span> kg</div>
+                                            <div class="text-muted fw-normal" style="min-width: 80px;">目前：<span
+                                                    id="current-weight" class="fw-semibold">0.0</span> kg</div>
                                             <i class="bi bi-arrow-right text-muted mx-2"></i>
-                                            <div class="text-primary fw-semibold">目標: <span id="goal-weight-display" class="fw-bold">70.0</span> kg</div>
+                                            <div class="text-primary fw-semibold">目標：<span id="goal-weight-display"
+                                                    class="fw-bold">70.0</span> kg</div>
                                         </div>
                                     </div>
                                 </div>
@@ -476,9 +589,11 @@
                                     <div class="text-start flex-grow-1">
                                         <h6 class="mb-2 fw-bold text-dark">目標體脂率</h6>
                                         <div class="d-flex align-items-center" style="min-width: 0;">
-                                            <div class="text-muted fw-normal" style="min-width: 80px;">目前: <span id="current-fat-percentage" class="fw-semibold">0.0</span>%</div>
+                                            <div class="text-muted fw-normal" style="min-width: 80px;">目前：<span
+                                                    id="current-fat-percentage" class="fw-semibold">0.0</span>%</div>
                                             <i class="bi bi-arrow-right text-muted mx-2"></i>
-                                            <div class="text-primary fw-semibold">目標: <span id="goal-fat-percentage-display" class="fw-bold">15.0</span>%</div>
+                                            <div class="text-primary fw-semibold">目標：<span
+                                                    id="goal-fat-percentage-display" class="fw-bold">15.0</span>%</div>
                                         </div>
                                     </div>
                                 </div>
@@ -492,18 +607,21 @@
                                     <div class="text-start flex-grow-1">
                                         <h6 class="mb-2 fw-bold text-dark">目標肌肉量</h6>
                                         <div class="d-flex align-items-center" style="min-width: 0;">
-                                            <div class="text-muted fw-normal" style="min-width: 80px;">目前: <span id="current-muscle" class="fw-semibold">0.0</span> kg</div>
+                                            <div class="text-muted fw-normal" style="min-width: 80px;">目前: <span
+                                                    id="current-muscle" class="fw-semibold">0.0</span> kg</div>
                                             <i class="bi bi-arrow-right text-muted mx-2"></i>
-                                            <div class="text-primary fw-semibold">目標: <span id="goal-muscle-display" class="fw-bold">35.0</span> kg</div>
+                                            <div class="text-primary fw-semibold">目標: <span id="goal-muscle-display"
+                                                    class="fw-bold">35.0</span> kg</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="px-4">
-                                    <button class="btn btn-block btn-xl btn-light-primary font-bold mt-3" data-bs-toggle="modal" data-bs-target="#setGoalModal">設定目標</button>
+                                    <button class="btn btn-block btn-xl btn-light-primary font-bold mt-3"
+                                        data-bs-toggle="modal" data-bs-target="#setGoalModal">設定目標</button>
                                 </div>
                             </div>
                         </div>
-                        <div class="card text-center equal-h">
+                        <div class="card text-center equal-h mt-3">
                             <div class="card-header">
                                 <h4 class="fw-bold">目標達成率</h4>
                             </div>
@@ -513,7 +631,7 @@
                                 <p class="mt-3 text-muted">離目標只差一點，加油！</p>
                             </div>
                         </div>
-                        <div class="card equal-h">
+                        <div class="card equal-h mt-3">
                             <div class="card-header">
                                 <h4 class="text-center">身體組成比例</h4>
                             </div>
@@ -557,21 +675,24 @@
                     <form id="goalForm">
                         <div class="mb-3">
                             <label for="goal_weight" class="form-label">目標體重 (kg)</label>
-                            <input type="number" class="form-control" id="goal_weight" name="goal_weight" step="0.1" min="30" max="200" value="70.0">
+                            <input type="number" class="form-control" id="goal_weight" name="goal_weight" step="0.1"
+                                min="30" max="200" value="70.0">
                         </div>
                         <div class="mb-3">
                             <label for="goal_fat_percentage" class="form-label">目標體脂率 (%)</label>
-                            <input type="number" class="form-control" id="goal_fat_percentage" name="goal_fat_percentage" step="0.1" min="5" max="50" value="15.0">
+                            <input type="number" class="form-control" id="goal_fat_percentage"
+                                name="goal_fat_percentage" step="0.1" min="5" max="50" value="15.0">
                         </div>
                         <div class="mb-3">
                             <label for="goal_muscle" class="form-label">目標肌肉量 (kg)</label>
-                            <input type="number" class="form-control" id="goal_muscle" name="goal_muscle" step="0.1" min="10" max="100" value="35.0">
+                            <input type="number" class="form-control" id="goal_muscle" name="goal_muscle" step="0.1"
+                                min="10" max="100" value="35.0">
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-primary" id="saveGoalBtn">保存目標</button>
+                    <button type="submit" class="btn btn-primary">保存目標</button>
                 </div>
             </div>
         </div>
@@ -709,7 +830,7 @@
                 document.getElementById('user-id').textContent = data.userid;
                 document.getElementById('user-name').textContent = data.username;
                 document.getElementById('user-email').textContent = data.email;
-                
+
                 // 更新用戶大頭貼
                 const userAvatar = document.querySelector('.avatar img');
                 if (data.avatar && data.avatar.trim() !== '') {
@@ -763,7 +884,7 @@
         function loadChartData(startDate = null, endDate = null) {
             let url = 'get_chart_data.php';
             const params = new URLSearchParams();
-            
+
             if (startDate && endDate) {
                 params.append('start_date', startDate);
                 params.append('end_date', endDate);
@@ -772,9 +893,9 @@
             } else {
                 console.log('Loading all chart data (no date filter)');
             }
-            
+
             console.log('Loading chart data from:', url);
-            
+
             fetch(url)
                 .then(response => {
                     if (response.ok) {
@@ -791,7 +912,7 @@
                     console.log('Filter end date:', data.filter_end_date);
                     console.log('Dates:', data.dates);
                     console.log('Weight data:', data.weight);
-                    
+
                     if (data.dates && data.dates.length > 0) {
                         createWeightChart(data);
                         createBodyCompositionChart(data);
@@ -811,7 +932,7 @@
             // 清除舊的圖表
             const chartContainer = document.querySelector("#weight-chart");
             chartContainer.innerHTML = '';
-            
+
             const weightData = data.weight.filter(val => val !== null);
             const dates = data.dates.filter((_, index) => data.weight[index] !== null);
 
@@ -872,7 +993,7 @@
             // 清除舊的圖表
             const chartContainer = document.querySelector("#body-composition-chart");
             chartContainer.innerHTML = '';
-            
+
             const skeletalData = data.skeletal_muscle.filter(val => val !== null);
             const bodyFatData = data.body_fat.filter(val => val !== null);
             const dates = data.dates.filter((_, index) =>
@@ -939,7 +1060,7 @@
             // 清除舊的圖表
             const chartContainer = document.querySelector("#fat-percentage-chart");
             chartContainer.innerHTML = '';
-            
+
             const fatPercentageData = data.fat_percentage.filter(val => val !== null);
             const dates = data.dates.filter((_, index) => data.fat_percentage[index] !== null);
 
@@ -1000,7 +1121,7 @@
             // 清除舊的圖表
             const chartContainer = document.querySelector("#bmi-chart");
             chartContainer.innerHTML = '';
-            
+
             const bmiData = data.bmi.filter(val => val !== null);
             const dates = data.dates.filter((_, index) => data.bmi[index] !== null);
 
@@ -1061,12 +1182,12 @@
             // 不設置預設值，讓用戶自己選擇
             console.log('Date range selector initialized - no default values set');
         }
-        
+
         // 時間範圍選擇器事件處理
-        document.getElementById('apply-date-range').addEventListener('click', function() {
+        document.getElementById('apply-date-range').addEventListener('click', function () {
             const startDate = document.getElementById('start-date').value;
             const endDate = document.getElementById('end-date').value;
-            
+
             if (startDate && endDate) {
                 if (startDate > endDate) {
                     alert('開始日期不能晚於結束日期！');
@@ -1078,30 +1199,30 @@
                 alert('請選擇開始和結束日期！');
             }
         });
-        
-        document.getElementById('reset-date-range').addEventListener('click', function() {
+
+        document.getElementById('reset-date-range').addEventListener('click', function () {
             // 清除日期選擇器
             document.getElementById('start-date').value = '';
             document.getElementById('end-date').value = '';
             console.log('Date range reset - loading all data');
             loadChartData(); // 載入所有數據
         });
-        
+
         // 最近30天按鈕事件
-        document.getElementById('last-30-days').addEventListener('click', function() {
+        document.getElementById('last-30-days').addEventListener('click', function () {
             const today = new Date();
             const thirtyDaysAgo = new Date();
             thirtyDaysAgo.setDate(today.getDate() - 30);
-            
+
             document.getElementById('start-date').value = thirtyDaysAgo.toISOString().split('T')[0];
             document.getElementById('end-date').value = today.toISOString().split('T')[0];
             console.log('Last 30 days selected:', thirtyDaysAgo.toISOString().split('T')[0], 'to', today.toISOString().split('T')[0]);
             loadChartData(thirtyDaysAgo.toISOString().split('T')[0], today.toISOString().split('T')[0]);
         });
-        
+
         // 初始化時間範圍選擇器
         initializeDateRange();
-        
+
         // 載入圖表數據
         loadChartData();
         // 目標達成率圓環圖 - 動態計算
@@ -1171,14 +1292,14 @@
 
                 // 計算綜合達成率 (加權平均)
                 const overallProgress = Math.round((weightProgress * 0.4 + fatProgress * 0.3 + muscleProgress * 0.3));
-                
+
                 return Math.min(100, Math.max(0, overallProgress));
             }
 
             // 更新圖表
             function updateGoalProgressChart(progress) {
                 const progressDecimal = progress / 100;
-                
+
                 var option = {
                     series: [{
                         type: 'liquidFill',
@@ -1227,7 +1348,7 @@
 
             // 返回更新函數，供其他地方調用
             return {
-                update: function() {
+                update: function () {
                     const progress = calculateGoalProgress();
                     updateGoalProgressChart(progress);
                 }
@@ -1241,7 +1362,7 @@
             // 清除舊的圖表
             const chartContainer = document.querySelector("#body-composition-pie-chart");
             chartContainer.innerHTML = '';
-            
+
             fetch('get_health_stats.php')
                 .then(response => response.json())
                 .then(data => {
@@ -1300,7 +1421,7 @@
         createBodyCompositionPieChart();
 
         // 設定目標功能
-        document.getElementById('saveGoalBtn').addEventListener('click', function() {
+        document.getElementById('saveGoalBtn').addEventListener('click', function () {
             const goalWeight = document.getElementById('goal_weight').value;
             const goalFatPercentage = document.getElementById('goal_fat_percentage').value;
             const goalMuscle = document.getElementById('goal_muscle').value;
@@ -1416,6 +1537,38 @@
                     const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
                     errorModal.show();
                 });
+        });
+        document.addEventListener("DOMContentLoaded", function () {
+            flatpickr("#start-date", {
+                dateFormat: "Y-m-d",   // 傳給後端的格式：2025-09-01
+                altInput: true,        // 顯示替代輸入框
+                altFormat: "Y年m月d日", // 使用者看到的格式：2025年09月01日
+                locale: "zh"           // 中文語系
+            });
+
+            flatpickr("#end-date", {
+                dateFormat: "Y-m-d",
+                altInput: true,
+                altFormat: "Y年m月d日",
+                locale: "zh"
+            });
+        });
+        document.addEventListener("DOMContentLoaded", function () {
+            // 開始日期
+            flatpickr("#start-date", {
+                dateFormat: "Y-m-d",     // 後端格式：2025-09-01
+                altInput: true,          // 顯示替代輸入框
+                altFormat: "Y年m月d日",   // 使用者看到的格式
+                locale: "zh"             // 中文介面
+            });
+
+            // 結束日期
+            flatpickr("#end-date", {
+                dateFormat: "Y-m-d",
+                altInput: true,
+                altFormat: "Y年m月d日",
+                locale: "zh"
+            });
         });
     </script>
 </body>
