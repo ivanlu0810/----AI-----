@@ -120,7 +120,7 @@ async function sendMessage() {
   input.value = "";
   const userId = document.getElementById("user-id").textContent;
   try {
-    const response = await fetch("http://localhost/chatbox.php", {
+    const response = await fetch("https://jianshen.ngrok.app/%E5%81%A5%E7%BF%92%E7%94%9F/dist/chatbox.php", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
