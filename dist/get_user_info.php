@@ -13,7 +13,8 @@ $user_info = [
     'username' => $_SESSION['username'] ?? 'Unknown User',
     'email' => $_SESSION['email'] ?? 'No email',
     'gender' => $_SESSION['gender'] ?? 'Unknown',
-    'role' => $_SESSION['role'] ?? 'user'
+    'role' => $_SESSION['role'] ?? 'user',
+    'avatar' => $_SESSION['avatar'] ?? null
 ];
 
 echo json_encode($user_info);
