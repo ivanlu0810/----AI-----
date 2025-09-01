@@ -129,6 +129,11 @@
             padding-bottom: 1.25rem;
             /* 保持下方間距 */
         }
+
+        .mb-4-3 {
+            margin-bottom: 2.1rem !important;
+            /* 40px */
+        }
     </style>
 </head>
 
@@ -200,8 +205,24 @@
             </header>
 
             <div class="page-heading">
-                <h3 class="mb-4">基本資料⚙️</h3>
-                <p class="text-muted">以下為您的個人檔案資訊，您可以修改並保存。</p>
+                <div class="page-title">
+                    <div class="row">
+                        <div class="col-12 col-md-6 order-md-1 order-last">
+                            <h3 class="mb-4-3 me-3">基本資料⚙️</h3>
+                            <p class="text-muted mt-2 mb-4" style="font-size: 1rem;">
+                                以下為您的個人檔案資訊，您可以修改並保存。
+                            </p>
+                        </div>
+                        <div class="col-12 col-md-6 order-md-2 order-first">
+                            <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="index.html">健康儀表板</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">基本資料</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="container">

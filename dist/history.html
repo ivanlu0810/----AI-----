@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>健習生｜歷史紀錄</title>
+    <link rel="icon" href="images/fitness.png" type="image/png">
+
+    <!-- 字體 & Bootstrap -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/bootstrap.css">
+    <link rel="stylesheet" href="assets/vendors/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="assets/css/app.css">
+
+    <!-- 自訂樣式 -->
+    <style>
+        #favorite-list table {
+            border: 4px double #212529 !important;
+            border-collapse: collapse;
+        }
+
+        #favorite-list table th,
+        #favorite-list table td {
+            border: 3px double #495057 !important;
+            vertical-align: middle;
+        }
+
+        /* 統一「名稱」與「目標肌群」字體樣式 */
+        #favorite-list td:nth-child(2),
+        #favorite-list td:nth-child(3) {
+            font-family: 'Nunito', sans-serif !important;
+            font-size: 1rem !important;
+            font-weight: 600 !important;
+            color: #6c757d !important;
+        }
+
+        /* 表格內所有細節統一灰色 */
+        #favorite-list td {
+            color: #6c757d !important;
+        }
+
+        .training-details {
+            display: flex;
+            justify-content: space-between;
+            text-align: center;
+        }
+
+        .training-details div {
+            flex: 1;
+            padding: 4px 6px;
+            border-right: 3px double #495057;
+        }
+
+        .training-details div:last-child {
+            border-right: none;
+        }
+
+        .training-details strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        /* 動作詳情：莫蘭迪藍灰 */
+        .btn-detail {
+            background-color: #7f90a9 !important;
+            border: none;
+            color: #fff !important;
+        }
+
+        .btn-detail:hover,
+        .btn-detail:active,
+        .btn-detail:focus {
+            background-color: #67798f !important;
+            color: #fff !important;
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+        /* 移除：莫蘭迪紫紅 */
+        .btn-remove {
+            background-color: #94696d !important;
+            border: none;
+            color: #fff !important;
+        }
+
+        .btn-remove:hover,
+        .btn-remove:active,
+        .btn-remove:focus {
+            background-color: #7a5558 !important;
+            color: #fff !important;
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+        /* 表格與 footer 間距 */
+        #favorite-list {
+            margin-bottom: 60px;
+        }
+
+        .mb-4-3 {
+            margin-bottom: 2.1rem !important;
+        }
+
+        /* 統計卡片樣式 */
+        .card.bg-primary,
+        .card.bg-success,
+        .card.bg-info {
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .card.bg-primary:hover,
+        .card.bg-success:hover,
+        .card.bg-info:hover {
+            transform: translateY(-2px);
+        }
+
+        /* 搜尋和控制面板樣式 */
+        .input-group .form-control:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+        }
+
+        /* 記錄卡片 body → 白色背景 */
+        .card.shadow-lg {
+            background-color: #ffffff !important;
+            color: #333333 !important;
+            transition: all 0.3s ease;
+        }
+
+        .card.shadow-lg:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+        }
+
+        /* 卡片 header → 深莫蘭迪綠灰 */
+        .card-header.bg-gradient-primary {
+            background-color: #edf0ed !important;
+            color: #ffffff !important;
+        }
+
+        /* 響應式調整 */
+        @media (max-width: 768px) {
+
+            .card-body .row .col-4,
+            .card-body .row .col-6 {
+                margin-bottom: 0.5rem;
+            }
+
+            .border-end {
+                border-right: none !important;
+                border-bottom: 1px solid #dee2e6 !important;
+                padding-bottom: 0.5rem;
+                margin-bottom: 0.5rem;
+            }
+        }
+
+        /* 統計卡片 (統一深莫蘭迪綠灰) */
+        .card.bg-primary,
+        .card.bg-success,
+        .card.bg-info {
+            background-color: #bbc2bd !important;
+            color: #fff !important;
+        }
+
+        /* 統一卡片內標題顏色 */
+        .card.shadow-lg strong {
+            color: #646c8f !important;
+            /* 跟 header 一樣的深莫蘭迪綠灰 */
+        }
+
+        /* 卡片內容置中對齊 */
+        .card.shadow-lg .card-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            /* 垂直置中 */
+            height: 100%;
+            /* 填滿卡片高度 */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div id="sidebar" class="active">
+            <div class="sidebar-wrapper active">
+                <div class="sidebar-menu">
+                    <ul class="menu">
+                        <li class="sidebar-title">我的檔案</li>
+
+                        <li class="sidebar-item">
+                            <a href="index.html" class='sidebar-link'>
+                                <i class="bi bi-file-earmark-medical-fill"></i>
+                                <span>健康儀表板</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="profile.html" class='sidebar-link'>
+                                <i class="bi bi-person-badge-fill"></i>
+                                <span>基本資料</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item active">
+                            <a href="history.html" class='sidebar-link'>
+                                <i class="bi bi-pen-fill"></i>
+                                <span>歷史紀錄</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-title">智慧建議</li>
+                        <li class="sidebar-item">
+                            <a href="training.html" class='sidebar-link'>
+                                <i class="bi bi-pentagon-fill"></i>
+                                <span>訓練探索</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="food.html" class='sidebar-link'>
+                                <i class="bi bi-basket-fill"></i>
+                                <span>飲食指南</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="favorite.html" class='sidebar-link'>
+                                <i class="bi bi-grid-1x2-fill"></i>
+                                <span>我的最愛</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-title">更多選項</li>
+                        <li class="sidebar-item">
+                            <a href="logout.php" class='sidebar-link'>
+                                <i class="bi bi-egg-fill"></i>
+                                <span>登出帳戶</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
+            </div>
+        </div>
+        <div id="main">
+            <header class="mb-3">
+                <a href="#" class="burger-btn d-block d-xl-none">
+                    <i class="bi bi-justify fs-3"></i>
+                </a>
+            </header>
+
+            <div class="page-heading">
+                <div class="page-title">
+                    <div class="row">
+                        <div class="col-12 col-md-6 order-md-1 order-last">
+                            <h3 class="mb-4-3 me-3">歷史紀錄📊</h3>
+                            <p class="text-muted mt-2 mb-4" style="font-size: 1rem;">
+                                以下是您的健康數據記錄，包含體重、體脂、骨骼肌等詳細資訊，方便您追蹤身體變化。
+                            </p>
+                        </div>
+                        <div class="col-12 col-md-6 order-md-2 order-first">
+                            <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="index.html">健康儀表板</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">歷史紀錄</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 統計資訊 -->
+            <div class="container">
+                <section class="section">
+                    <div id="stats-container"></div>
+                </section>
+            </div>
+
+            <!-- 歷史記錄清單 -->
+            <div class="container">
+                <section class="section">
+                    <div id="history-list" class="row g-4"></div>
+                </section>
+            </div>
+
+            <footer>
+                <div class="footer clearfix mb-0 text-muted">
+                    <div class="float-start">
+                        <p>健習生</p>
+                    </div>
+                    <div class="float-end">
+                        <p>謝昀倢 黃詠翰 呂沁垣 游博翔</p>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        async function loadHistory() {
+            try {
+                const response = await fetch("get_history.php", {
+                    credentials: "include"
+                });
+
+                const text = await response.text();
+                console.log("伺服器回傳:", text);
+
+                let result;
+                try {
+                    result = JSON.parse(text);
+                } catch (e) {
+                    document.getElementById("history-list").innerHTML =
+                        `<div class="alert alert-danger" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            伺服器回傳的不是 JSON，請檢查 console log
+                        </div>`;
+                    return;
+                }
+
+                if (!result.success) {
+                    document.getElementById("history-list").innerHTML =
+                        `<div class="alert alert-danger" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            ${result.error || '載入資料時發生錯誤'}
+                        </div>`;
+                    return;
+                }
+
+                updateStats(result.stats);
+                renderData(result.data);
+
+            } catch (err) {
+                console.error("❌ 載入失敗:", err);
+                document.getElementById("history-list").innerHTML =
+                    `<div class="alert alert-danger" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        載入紀錄時發生錯誤: ${err.message}
+                    </div>`;
+            }
+        }
+
+        function updateStats(stats) {
+            const statsContainer = document.getElementById("stats-container");
+            if (statsContainer) {
+                statsContainer.innerHTML = `
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <div class="card bg-primary text-white">
+                                <div class="card-body text-center">
+                                    <h4 class="card-title">${stats.total_records}</h4>
+                                    <p class="card-text">您的健康記錄總數</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function renderData(data) {
+            const container = document.getElementById("history-list");
+            container.innerHTML = "";
+
+            if (data.length === 0) {
+                container.innerHTML = `
+                    <div class="col-12">
+                        <div class="alert alert-info text-center" role="alert">
+                            <i class="bi bi-info-circle-fill me-2"></i>
+                            目前沒有歷史紀錄，請先新增健康數據
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            data.forEach((record, index) => {
+                const card = document.createElement("div");
+                card.className = "col-12 col-md-6 col-lg-4 mb-4";
+
+                card.innerHTML = `
+                    <div class="card shadow-lg border-0 rounded-4 h-100">
+                        <div class="card-header bg-gradient-primary text-white">
+                            <h5 class="card-title mb-1">
+                                📅 ${record.Date} 
+                                <small class="opacity-75">#${index + 1}</small>
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-4 text-center">
+                                    <div class="border-end">
+                                        <strong class="d-block text-primary">年齡</strong>
+                                        <span class="text-muted">${record.age}</span>
+                                    </div>
+                                </div>
+                                <div class="col-4 text-center">
+                                    <div class="border-end">
+                                        <strong class="d-block text-primary">身高</strong>
+                                        <span class="text-muted">${record.height_cm} cm</span>
+                                    </div>
+                                </div>
+                                <div class="col-4 text-center">
+                                    <strong class="d-block text-primary">體重</strong>
+                                    <span class="text-muted">${record.weight_kg} kg</span>
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-4 text-center">
+                                    <div class="border-end">
+                                        <strong class="d-block text-success">骨骼肌</strong>
+                                        <span class="text-muted">${record.skeletal_muscle} kg</span>
+                                    </div>
+                                </div>
+                                <div class="col-4 text-center">
+                                    <div class="border-end">
+                                        <strong class="d-block text-warning">體脂重</strong>
+                                        <span class="text-muted">${record.body_fat} kg</span>
+                                    </div>
+                                </div>
+                                <div class="col-4 text-center">
+                                    <strong class="d-block text-info">體脂率</strong>
+                                    <span class="text-muted">${record.fat_percentage}%</span>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-6 text-center">
+                                    <div class="border-end">
+                                        <strong class="d-block text-danger">基礎代謝</strong>
+                                        <span class="text-muted">${record.basal_metabolism} kcal</span>
+                                    </div>
+                                </div>
+                                <div class="col-6 text-center">
+                                    <strong class="d-block text-secondary">BMI</strong>
+                                    <span class="text-muted">${record.bmi}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-light">
+                            <small class="text-muted">
+                                <i class="bi bi-clock me-1"></i>
+                                記錄 ID: ${record.record_id.substring(0, 8)}...
+                            </small>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // 頁面載入時初始化
+        document.addEventListener('DOMContentLoaded', function () {
+            loadHistory();
+        });
+    </script>
+
+</body>
+
+</html>
