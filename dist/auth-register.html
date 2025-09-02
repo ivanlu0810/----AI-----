@@ -1,30 +1,87 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 
 <head>
-  <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Skydash Admin</title>
+  <title>健習生｜註冊帳戶</title>
+  <link rel="icon" href="images/fitness.png" type="image/png">
   <!-- plugins:css -->
   <link rel="stylesheet" href="vendors/feather/feather.css">
   <link rel="stylesheet" href="vendors/ti-icons/css/themify-icons.css">
   <link rel="stylesheet" href="vendors/css/vendor.bundle.base.css">
   <!-- endinject -->
-  <!-- Plugin css for this page -->
-  <!-- End plugin css for this page -->
   <!-- inject:css -->
   <link rel="stylesheet" href="css/vertical-layout-light/style.css">
+  <!-- endinject -->
   <style>
-    .form-control::placeholder {
-      text-align: left;
+    .brand-logo img {
+      max-width: 100px;
+      height: auto;
     }
-    .form-group {
-      margin-bottom: 0.5rem;
+
+    /* 註冊按鈕 */
+    .auth-form-btn {
+      background-color: #D9E1E6 !important;
+      border: none !important;
+      color: #333 !important;
+      border-radius: 8px !important;
+      transition: all 0.3s ease;
+    }
+
+    .auth-form-btn:hover {
+      background-color: #c8d5db !important;
+      box-shadow: 0 0 8px rgba(151, 173, 181, 0.6);
+    }
+
+    /* 輸入框 */
+    .form-control {
+      border-radius: 8px !important;
+      border: 1px solid #ccc;
+      padding: 0.75rem 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+      border-color: #97ADB5;
+      box-shadow: 0 0 6px rgba(151, 173, 181, 0.6);
+    }
+
+    .form-control::placeholder {
+      color: #aaa;
+      font-size: 0.95rem;
+    }
+
+    .auth-form-light {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(127, 144, 169, 0.3),
+        0 0 15px rgba(127, 144, 169, 0.3);
+    }
+
+    /* 底部提示與連結風格 */
+    .text-center.font-weight-light {
+      color: #908d8d !important;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 0.95rem;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+    }
+
+    .text-center.font-weight-light a {
+      color: #97ADB5 !important;
+      text-decoration: none;
+    }
+
+    .text-center.font-weight-light a:hover {
+      text-decoration: underline !important;
+    }
+
+    .mb-2-5 {
+      margin-bottom: 0.75rem !important;
     }
   </style>
-  <!-- endinject -->
-  <link rel="shortcut icon" href="images/favicon.png" />
 </head>
 
 <body>
@@ -35,28 +92,25 @@
           <div class="col-lg-4 mx-auto">
             <div class="auth-form-light text-left py-5 px-4 px-sm-5">
               <div class="brand-logo d-flex justify-content-center mb-1">
-                <img src="images/logo.svg" alt="logo">
+                <img src="images/apple-fitness.png" alt="logo">
               </div>
+              <h4 class="text-center mb-2-5">建立新帳號</h4>
               <form class="pt-3" action="register.php" method="POST">
                 <div class="form-group">
-                  <label for="exampleInputUsername1">使用者名稱</label>
-                  <input type="text" class="form-control form-control-lg" id="exampleInputUsername1" placeholder="請輸入使用者名稱" name="username" required>
+                  <input type="text" class="form-control form-control-lg" placeholder="使用者名稱" name="username" required>
                 </div>
                 <div class="form-group">
-                  <label for="exampleInputEmail1">電子郵件</label>
-                  <input type="email" class="form-control form-control-lg" id="exampleInputEmail1" placeholder="請輸入電子郵件" name="email" required>
+                  <input type="email" class="form-control form-control-lg" placeholder="電子郵件" name="email" required>
                 </div>
                 <div class="form-group">
-                  <label for="exampleInputPassword1">密碼</label>
-                  <input type="password" class="form-control form-control-lg" id="exampleInputPassword1" placeholder="請輸入密碼" name="password" required>
+                  <input type="password" class="form-control form-control-lg" placeholder="密碼" name="password" required>
                 </div>
                 <div class="form-group">
-                  <label for="exampleInputPassword2">確認密碼</label>
-                  <input type="password" class="form-control form-control-lg" id="exampleInputPassword2" placeholder="請再次輸入密碼" name="confirm_password" required>
+                  <input type="password" class="form-control form-control-lg" placeholder="確認密碼" name="confirm_password"
+                    required>
                 </div>
                 <div class="form-group">
-                  <label for="exampleInputGender">性別</label>
-                  <select class="form-control form-control-lg" id="exampleInputGender" name="gender" required>
+                  <select class="form-control form-control-lg" name="gender" required>
                     <option value="">請選擇性別</option>
                     <option value="male">男</option>
                     <option value="female">女</option>
@@ -65,7 +119,7 @@
                 </div>
                 <input type="hidden" name="role" value="user">
                 <div class="mt-3">
-                  <button type="submit" class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn">註冊</button>
+                  <button type="submit" class="btn btn-block btn-lg font-weight-medium auth-form-btn">註冊帳戶</button>
                 </div>
                 <div class="text-center mt-4 font-weight-light">
                   已經有帳號了嗎？<a href="auth-login.html" class="text-primary">登入</a>
@@ -80,18 +134,12 @@
     <!-- page-body-wrapper ends -->
   </div>
   <!-- container-scroller -->
-  <!-- plugins:js -->
   <script src="vendors/js/vendor.bundle.base.js"></script>
-  <!-- endinject -->
-  <!-- Plugin js for this page -->
-  <!-- End plugin js for this page -->
-  <!-- inject:js -->
   <script src="js/off-canvas.js"></script>
   <script src="js/hoverable-collapse.js"></script>
   <script src="js/template.js"></script>
   <script src="js/settings.js"></script>
   <script src="js/todolist.js"></script>
-  <!-- endinject -->
 </body>
 
 </html>
