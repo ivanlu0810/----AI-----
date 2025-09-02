@@ -12,7 +12,8 @@ if (!isset($_SESSION['username']) && !isset($_COOKIE['username'])) {
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Skydash Admin</title>
+  <title>健習生｜基本資料</title>
+  <link rel="icon" href="images/fitness.png" type="image/png">
   <!-- plugins:css -->
   <link rel="stylesheet" href="vendors/feather/feather.css">
   <link rel="stylesheet" href="vendors/ti-icons/css/themify-icons.css">
@@ -22,9 +23,99 @@ if (!isset($_SESSION['username']) && !isset($_COOKIE['username'])) {
   <!-- End plugin css for this page -->
   <!-- inject:css -->
   <link rel="stylesheet" href="css/vertical-layout-light/style.css">
-  <!-- endinject -->
-  <link rel="shortcut icon" href="images/favicon.png" />
 </head>
+<style>
+  .auth-link {
+    margin-top: 10px;
+    /* 往下推 10px，可依需求調整 */
+    display: inline-block;
+    /* 讓 margin-top 生效 */
+  }
+
+  .brand-logo img {
+    max-width: 100px;
+    height: auto;
+  }
+
+  /* 登入按鈕 */
+  .auth-form-btn {
+    background-color: #D9E1E6 !important;
+    /* 淡灰藍 */
+    border: none !important;
+    color: #333 !important;
+    border-radius: 8px !important;
+    /* 圓角一致 */
+    transition: all 0.3s ease;
+    /* 平滑動畫 */
+  }
+
+  /* 登入按鈕 hover 效果 */
+  .auth-form-btn:hover {
+    background-color: #c8d5db !important;
+    /* 深一點灰藍 */
+    box-shadow: 0 0 8px rgba(151, 173, 181, 0.6);
+    /* 同樣灰藍光暈 */
+  }
+
+  /* 忘記密碼 (深灰藍色 #97ADB5) */
+  .auth-link {
+    color: #97ADB5 !important;
+  }
+
+  /* "還沒有註冊過帳戶嗎" (深灰色) */
+  .text-center.font-weight-light {
+    color: #908d8d !important;
+  }
+
+  /* 註冊帳戶連結 (灰藍 #7F99A2) */
+  .text-center.font-weight-light a {
+    color: #97ADB5 !important;
+    text-decoration: none;
+  }
+
+  .text-center.font-weight-light a:hover {
+    text-decoration: underline !important;
+  }
+
+  /* 忘記密碼 & 還沒有註冊過帳戶嗎 → 字體統一 */
+  .auth-link,
+  .text-center.font-weight-light {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    /* 或你要的字體 */
+    font-size: 0.95rem;
+    /* 大小一致，可依需求調整 */
+    font-weight: 400;
+    /* 普通粗細 */
+    letter-spacing: 0.5px;
+    /* 可選，字距統一 */
+  }
+
+  /* 輸入框：和按鈕統一圓角 */
+  .form-control {
+    border-radius: 8px !important;
+    border: 1px solid #ccc;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+  }
+
+  .form-control:focus {
+    border-color: #97ADB5;
+    box-shadow: 0 0 6px rgba(151, 173, 181, 0.6);
+  }
+
+  .form-control::placeholder {
+    color: #aaa;
+    /* placeholder 字體灰一點 */
+    font-size: 0.95rem;
+  }
+
+  .auth-form-light {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+</style>
 
 <body>
   <div class="container-scroller">
@@ -34,7 +125,7 @@ if (!isset($_SESSION['username']) && !isset($_COOKIE['username'])) {
           <div class="col-lg-4 mx-auto">
             <div class="auth-form-light text-left py-5 px-4 px-sm-5">
               <div class="brand-logo d-flex justify-content-center mb-1">
-                <img src="images/logo.svg" alt="logo">
+                <img src="images/apple-fitness.png" alt="logo">
               </div>
               <form class="pt-3" action="login.php" method="POST">
                 <div class="form-group">
@@ -44,11 +135,11 @@ if (!isset($_SESSION['username']) && !isset($_COOKIE['username'])) {
                   <input type="password" class="form-control form-control-lg" name="password" placeholder="密碼" required>
                 </div>
                 <div class="mt-3">
-                  <button type="submit" class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn">登入</button>
+                  <button type="submit" class="btn btn-block btn-lg font-weight-medium auth-form-btn">登入</button>
                 </div>
                 <div class="my-2 d-flex justify-content-between align-items-center">
                   <div class="form-check">
-                      <!-- <input type="checkbox" class="form-check-input" name="remember_me" id="rememberMe">
+                    <!-- <input type="checkbox" class="form-check-input" name="remember_me" id="rememberMe">
                   <label class="form-check-label text-muted" for="rememberMe">
                       Keep me signed in...
                     </label> -->
@@ -56,7 +147,7 @@ if (!isset($_SESSION['username']) && !isset($_COOKIE['username'])) {
                   <a href="auth-forgot-password.html" class="auth-link text-black">忘記密碼</a>
                 </div>
                 <div class="text-center mt-4 font-weight-light">
-                  還沒有註冊過帳戶嗎 <a href="auth-register.html" class="text-primary">註冊帳戶</a>
+                  還沒有註冊過帳戶嗎？<a href="auth-register.html" class="text-primary">註冊帳戶</a>
                 </div>
               </form>
             </div>
